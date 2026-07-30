@@ -4,6 +4,10 @@
 # For license and copyright information please follow this link:
 # https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
+# TG_CHANGE_BEGIN: tg-cli-build-option
+option(BUILD_TG_CLI "Build the tg_cli console executable" OFF)
+
+# TG_CHANGE_END: tg-cli-build-option
 add_executable(Telegram WIN32 MACOSX_BUNDLE)
 init_non_host_target(Telegram)
 
@@ -21,6 +25,12 @@ add_subdirectory(lib_webrtc)
 add_subdirectory(lib_webview)
 add_subdirectory(codegen)
 
+# TG_CHANGE_BEGIN: tg-cli-subdirectory
+if (BUILD_TG_CLI)
+    add_subdirectory(tg_cli)
+endif()
+
+# TG_CHANGE_END: tg-cli-subdirectory
 get_filename_component(src_loc SourceFiles REALPATH)
 get_filename_component(res_loc Resources REALPATH)
 
@@ -55,6 +65,15 @@ endif()
 
 set_target_properties(Telegram PROPERTIES AUTOMOC ON)
 
+# TG_CHANGE_BEGIN: tg-cli-capability-desktop-sources
+target_sources(Telegram PRIVATE
+    tg_cli/capabilities/account_network_capabilities.cpp
+    tg_cli/capabilities/session_service_capabilities.cpp
+    tg_cli/capabilities/storage_settings_capabilities.cpp
+    tg_cli/capabilities/domain_lifecycle_capabilities.cpp
+)
+
+# TG_CHANGE_END: tg-cli-capability-desktop-sources
 target_link_libraries(Telegram
 PRIVATE
     tdesktop::lib_fido2
@@ -2270,7 +2289,9 @@ else()
         set(bundle_identifier "com.tdesktop.Telegram")
     endif()
     set(bundle_entitlements "Telegram.entitlements")
-    set(output_name "Telegram")
+    # TG_CHANGE_BEGIN: tg-executable-name
+    set(output_name "tg")
+    # TG_CHANGE_END: tg-executable-name
 endif()
 
 if (CMAKE_GENERATOR STREQUAL Xcode)
