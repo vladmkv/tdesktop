@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0/A1/A2 implemented; desktop run validation blocked by active PDB lock **high**
+Status: [TODO] A0/A1/A2 committed; A0.1/A2.1 corrections and desktop validation required before A3 **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -93,7 +93,7 @@ New TG-owned capability implementations and checker files require no fences.
 ## Granular Probes
 
 ### A0: Fence Enforcement Baseline
-Status: [DONE] Checker added, CMake fences retrofitted, valid/invalid cases tested; desktop rerun pending lock clear.
+Status: [PARTIAL] Checker and CMake fences exist, but full branch validation against `12e8d4a956` fails on unfenced AGENTS.md and dav1d changes; mixed-hunk deletion coverage is missing.
 1. Add Telegram/tg_cli/tools/check_tg_change_fences.py.
 2. Retrofit named CMake fences around current uncommitted changes.
 3. Run checker against branch base.
@@ -102,6 +102,15 @@ Status: [DONE] Checker added, CMake fences retrofitted, valid/invalid cases test
 Pass:
 - Checker passes and deliberately injected test violations fail.
 - tg_cli still builds/runs.
+
+### A0.1: Fence Enforcement Corrections
+Status: [DONE] Completed on tg-cli; full-branch checker PASS against `12e8d4a956`.
+Implementor packet: PLAN_tg_probe_18_a0_1_fence_corrections.md
+1. Validate deletions in mixed hunks, not only deletion-only hunks.
+2. Add mixed-hunk/adjacent-block/duplicate-ID self-tests.
+3. Fence TG additions in AGENTS.md and the dav1d mirror replacement in prepare.py.
+4. Remove the historical dav1d checker exception from policy.
+5. Require full checker PASS against `12e8d4a956`.
 
 ### A1: Capability Inventory (read-only)
 Status: [DONE] Completed in NOTE_tg_probe_14_a1_inventory.md with per-call-site classification, lifecycle tags, methods, and fence IDs.
@@ -113,7 +122,7 @@ Pass:
 - No fifth broad catch-all capability is needed.
 
 ### A2: Interface Types + Desktop Implementations
-Status: [DONE] TG-owned interfaces and desktop forwarders added; fenced CMake wiring added; desktop build blocked once by PDB lock while validating unchanged behavior.
+Status: [PARTIAL] Interfaces/desktop forwarders and fenced CMake wiring are committed. Desktop behavior is not yet validated; prior logs show both PDB update failures and later disk exhaustion.
 1. Add TG-owned capability interface files.
 2. Add desktop forwarding implementations.
 3. Wire files into the desktop build inside fenced CMake blocks only.
@@ -123,7 +132,17 @@ Pass:
 - Desktop Debug builds/runs with no behavior change.
 - Fence checker passes.
 
+### A2.1: Capability Baseline Corrections
+Status: [TODO] Must pass before A3.
+Implementor packet: PLAN_tg_probe_19_a2_1_baseline_corrections.md
+1. Include `crl::time` from its direct declaration header.
+2. Document intentional TG-owned ProxyChange DTO boundary.
+3. Confirm no tg_cli path calls desktop factories that require Core::App().
+4. Validate disk/process preconditions before desktop build.
+5. Complete desktop Debug build and startup smoke test.
+
 ### A3: Main::Account Injection
+Implementor packet: PLAN_tg_probe_17_a3_account_network_injection.md
 1. Add an overload/accessor while preserving current constructor.
 2. Replace only Main::Account network/config globals with AccountNetworkCapabilities.
 3. Existing desktop constructor selects desktop capabilities.
@@ -154,6 +173,8 @@ Pass:
 1. Add capability-bundle constructor overload; preserve `Domain(const QString&)`.
 2. Convert required lifecycle calls first.
 3. Convert optional presentation hooks one cluster at a time.
+4. Add a fenced Main::Domain account factory that selects capability implementations.
+5. Change Storage::Domain account construction to call the owner factory; preserve desktop output and account ordering.
 
 Pass:
 - Desktop multi-account activation/window behavior passes.
@@ -205,3 +226,24 @@ After each protected edit:
 - 2026-07-30: A1 completed. Added TG_PROBES/NOTE_tg_probe_14_a1_inventory.md with full scoped mapping for main_account/main_session/main_domain/storage_account/storage_domain.
 - 2026-07-30: A2 completed. Added TG-owned capability interfaces and desktop forwarding implementations under Telegram/tg_cli/capabilities/.
 - 2026-07-30: tg_cli Debug build and run pass. Desktop Telegram build hit fatal error C1033 on vc143.pdb lock; follow-up desktop run/build must occur after lock is cleared.
+- 2026-07-30: Review found A0 full-branch checker failure (unfenced AGENTS/dav1d), mixed-hunk deletion gap, direct-include fragility, and unverified desktop A2 behavior. Prior build history also contained `No space left on device`; validation blocker is environmental but not proven to be only a PDB lock.
+- 2026-07-30: Added PLAN_tg_probe_17_a3_account_network_injection.md with exact ownership, overload, fence IDs, validation, and stop conditions.
+- 2026-07-30: A0.1 completed via PLAN_tg_probe_18_a0_1_fence_corrections.md. Added per-deleted-line deletion anchors in checker hunk parsing, expanded self-tests (mixed replacement fail path, valid replacement pass path, adjacent blocks, duplicate IDs), fenced AGENTS.md (`tg-cli-agent-guidance`) and prepare.py dav1d stage (`dav1d-github-mirror`), removed obsolete policy exception, and validated with self-test PASS, base `12e8d4a956` PASS, prepare.py py_compile PASS, dav1d print-path (`p` then quit), and `git diff --check` PASS.
+
+## A0-A2 Review Disposition
+
+Mandatory before A3:
+- Fix mixed add/delete hunk enforcement and expand checker self-tests.
+- Fence AGENTS.md and dav1d branch changes so full checker validation passes.
+- Use the direct `crl/crl_time.h` include for `crl::time`.
+- Complete desktop Debug build/startup validation after disk/process preconditions pass.
+
+Intentional/no change:
+- Desktop executable output remains `tg`; this is an explicit product requirement, not a review defect.
+- `TgCli::Capabilities::ProxyChange` remains a TG-owned DTO to avoid exposing Core::Application types in the capability interface.
+- New TG-owned files remain unfenced per policy.
+
+Deferred to relevant injection stage:
+- Replace `std::function` callback interfaces with the project's move-only callback types before DomainLifecycleCapabilities injection (A6), if signatures can remain dependency-cohesive.
+- Evaluate `nice_target_sources` versus raw `target_sources`; this is organization/portability consistency, not an A3 functional blocker.
+- CLI no-op behavior for TonSite/theme/window capabilities is implemented and tested in A4-A6, not in the desktop-only A2 forwarders.

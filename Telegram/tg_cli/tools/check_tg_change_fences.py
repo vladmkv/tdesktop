@@ -141,6 +141,7 @@ class Hunk:
 	header: str
 	new_start: int
 	added_lines: list[int]
+	deletion_anchors: list[int]
 	has_additions: bool
 	has_deletions: bool
 
@@ -159,6 +160,7 @@ def parse_hunks(diff_text: str) -> list[Hunk]:
 		new_line = int(match.group(3))
 		i += 1
 		added_lines: list[int] = []
+		deletion_anchors: list[int] = []
 		has_additions = False
 		has_deletions = False
 
@@ -173,6 +175,7 @@ def parse_hunks(diff_text: str) -> list[Hunk]:
 				new_line += 1
 			elif current.startswith("-"):
 				has_deletions = True
+				deletion_anchors.append(new_line)
 			elif current.startswith(" "):
 				new_line += 1
 			i += 1
@@ -181,6 +184,7 @@ def parse_hunks(diff_text: str) -> list[Hunk]:
 			header=line,
 			new_start=int(match.group(3)),
 			added_lines=added_lines,
+			deletion_anchors=deletion_anchors,
 			has_additions=has_additions,
 			has_deletions=has_deletions,
 		))
@@ -207,9 +211,9 @@ def nearest_marker_id(line_number: int, blocks: list[MarkerBlock]) -> str | None
 	return marker.marker_id
 
 
-def deletion_hunk_overlaps_block(new_start: int, blocks: Iterable[MarkerBlock]) -> bool:
+def deletion_anchor_overlaps_block(anchor: int, blocks: Iterable[MarkerBlock]) -> bool:
 	for block in blocks:
-		if block.begin_line - 1 <= new_start <= block.end_line + 1:
+		if block.begin_line - 1 <= anchor <= block.end_line + 1:
 			return True
 	return False
 
@@ -290,14 +294,16 @@ def validate(repo: pathlib.Path, base: str, verbose: bool) -> int:
 						marker_id=nearest_marker_id(line_number, blocks),
 						message="changed line is outside any TG_CHANGE fence",
 					))
-			elif hunk.has_deletions:
-				if not deletion_hunk_overlaps_block(hunk.new_start, blocks):
+			if hunk.has_deletions:
+				for anchor in hunk.deletion_anchors:
+					if deletion_anchor_overlaps_block(anchor, blocks):
+						continue
 					violations.append(Violation(
 						file_path=file_path,
 						hunk_header=hunk.header,
-						line=hunk.new_start,
-						marker_id=nearest_marker_id(hunk.new_start, blocks),
-						message="deletion-only hunk does not overlap a fenced replacement block",
+						line=anchor,
+						marker_id=nearest_marker_id(anchor, blocks),
+						message="deleted line anchor does not overlap a fenced replacement block",
 					))
 
 	if violations:
@@ -360,6 +366,48 @@ v = 1
 	hunks = parse_hunks(hunk_text)
 	if len(hunks) != 1 or not hunks[0].has_additions or hunks[0].added_lines != [10, 11]:
 		print("SELFTEST FAIL: hunk parsing failed")
+		return 1
+	if hunks[0].deletion_anchors != [10]:
+		print("SELFTEST FAIL: expected deletion anchor for mixed hunk")
+		return 1
+
+	valid_replacement_block = [MarkerBlock(marker_id="replace", begin_line=9, end_line=12)]
+	if not deletion_anchor_overlaps_block(10, valid_replacement_block):
+		print("SELFTEST FAIL: expected valid fenced replacement overlap")
+		return 1
+
+	mixed_outside_block = [MarkerBlock(marker_id="replace", begin_line=20, end_line=24)]
+	if deletion_anchor_overlaps_block(10, mixed_outside_block):
+		print("SELFTEST FAIL: expected mixed-hunk deletion outside fence to fail")
+		return 1
+
+	adjacent = """
+# TG_CHANGE_BEGIN: first
+one = 1
+# TG_CHANGE_END: first
+# TG_CHANGE_BEGIN: second
+two = 2
+# TG_CHANGE_END: second
+""".strip("\n")
+	adjacent_blocks, adjacent_violations, adjacent_marker_lines = parse_markers("adjacent.py", adjacent)
+	if adjacent_violations:
+		print("SELFTEST FAIL: adjacent blocks should parse cleanly")
+		return 1
+	if not line_in_blocks(2, adjacent_blocks, adjacent_marker_lines) or not line_in_blocks(5, adjacent_blocks, adjacent_marker_lines):
+		print("SELFTEST FAIL: adjacent block contents should be inside fences")
+		return 1
+
+	duplicate = """
+# TG_CHANGE_BEGIN: dup
+one = 1
+# TG_CHANGE_END: dup
+# TG_CHANGE_BEGIN: dup
+two = 2
+# TG_CHANGE_END: dup
+""".strip("\n")
+	_, duplicate_violations, _ = parse_markers("duplicate.py", duplicate)
+	if not any("duplicate marker id" in issue.message for issue in duplicate_violations):
+		print("SELFTEST FAIL: expected duplicate marker ID violation")
 		return 1
 
 	print("SELFTEST PASS: valid and invalid fence cases behaved as expected.")

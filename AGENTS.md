@@ -86,6 +86,7 @@ cmake --build "l:\Telegram\tx64\out" --config Debug --target Telegram
 - **`Telegram/build/version`** - Version information
 - **`out/`** - Build output directory
 
+<!-- TG_CHANGE_BEGIN: tg-cli-agent-guidance -->
 ## TG CLI Planning And Fence Docs
 
 For any tg_cli feature work, protected-source edits, or upstream merge/rebase reconciliation, read these files first:
@@ -97,6 +98,7 @@ For any tg_cli feature work, protected-source edits, or upstream merge/rebase re
 
 Then locate any additional matching probe docs under `TG_PROBES/NOTE_*.md` and `TG_PROBES/PLAN_*.md` relevant to the current stage.
 
+<!-- TG_CHANGE_END: tg-cli-agent-guidance -->
 ## Troubleshooting
 
 ### "Libraries not found"

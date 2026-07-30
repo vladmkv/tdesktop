@@ -50,13 +50,11 @@ If an upstream file is copied into a TG-owned directory, the copy is TG-owned bu
 - Preserve the original desktop API and behavior whenever possible.
 - Never edit generated files, vendored dependencies, or prepared build outputs to create a seam.
 
-## Current Changes To Retrofit Before Commit
+## Branch Changes Requiring Retrofit
 Telegram/CMakeLists.txt:
 - `tg-cli-build-option`: BUILD_TG_CLI option.
 - `tg-cli-subdirectory`: guarded add_subdirectory(tg_cli).
 - `tg-executable-name`: output_name change to tg.
-
-The dav1d mirror commit predates this policy and is independent of tg_cli architecture; it is accepted as historical and is not rewritten.
 
 ## Automated Enforcement
 Add a TG-owned checker under Telegram/tg_cli/tools/ before the first protected-source seam edit.
@@ -67,7 +65,7 @@ The checker must:
 3. For every modified existing file, parse language-appropriate markers.
 4. Reject unmatched, nested, duplicate, or empty marker blocks.
 5. Reject changed/additional lines outside a fenced block.
-6. Reject deletion-only hunks unless the resulting hunk overlaps a named fenced replacement block.
+6. Reject every hunk containing deletions (including mixed add/delete hunks) unless the resulting hunk overlaps a named fenced replacement block.
 7. Print file, hunk, and nearest marker ID for each violation.
 
 Run the checker:
