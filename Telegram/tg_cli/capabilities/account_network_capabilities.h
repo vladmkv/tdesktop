@@ -15,6 +15,7 @@ class Config;
 
 namespace TgCli::Capabilities {
 
+// TG-owned DTO boundary to keep desktop Core::Application types out of shared capability interfaces.
 struct ProxyChange {
 	MTP::ProxyData was;
 	MTP::ProxyData now;

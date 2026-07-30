@@ -122,7 +122,7 @@ Pass:
 - No fifth broad catch-all capability is needed.
 
 ### A2: Interface Types + Desktop Implementations
-Status: [PARTIAL] Interfaces/desktop forwarders and fenced CMake wiring are committed. Desktop behavior is not yet validated; prior logs show both PDB update failures and later disk exhaustion.
+Status: [DONE] Interfaces/desktop forwarders and fenced CMake wiring committed; desktop Debug build and startup/connect smoke validated in A2.1.
 1. Add TG-owned capability interface files.
 2. Add desktop forwarding implementations.
 3. Wire files into the desktop build inside fenced CMake blocks only.
@@ -133,7 +133,7 @@ Pass:
 - Fence checker passes.
 
 ### A2.1: Capability Baseline Corrections
-Status: [TODO] Must pass before A3.
+Status: [DONE] Completed on tg-cli with precondition record and single-attempt desktop validation.
 Implementor packet: PLAN_tg_probe_19_a2_1_baseline_corrections.md
 1. Include `crl::time` from its direct declaration header.
 2. Document intentional TG-owned ProxyChange DTO boundary.
@@ -229,6 +229,7 @@ After each protected edit:
 - 2026-07-30: Review found A0 full-branch checker failure (unfenced AGENTS/dav1d), mixed-hunk deletion gap, direct-include fragility, and unverified desktop A2 behavior. Prior build history also contained `No space left on device`; validation blocker is environmental but not proven to be only a PDB lock.
 - 2026-07-30: Added PLAN_tg_probe_17_a3_account_network_injection.md with exact ownership, overload, fence IDs, validation, and stop conditions.
 - 2026-07-30: A0.1 completed via PLAN_tg_probe_18_a0_1_fence_corrections.md. Added per-deleted-line deletion anchors in checker hunk parsing, expanded self-tests (mixed replacement fail path, valid replacement pass path, adjacent blocks, duplicate IDs), fenced AGENTS.md (`tg-cli-agent-guidance`) and prepare.py dav1d stage (`dav1d-github-mirror`), removed obsolete policy exception, and validated with self-test PASS, base `12e8d4a956` PASS, prepare.py py_compile PASS, dav1d print-path (`p` then quit), and `git diff --check` PASS.
+- 2026-07-30: A2.1 completed via PLAN_tg_probe_19_a2_1_baseline_corrections.md. Replaced transitive `base/timer.h` with direct `<crl/crl_time.h>`, documented `ProxyChange` as intentional TG-owned DTO boundary, verified tg_cli skeleton does not call `CreateDesktop*Capabilities`, retained raw fenced `target_sources` for tg_cli capability sources as intentional due `nice_target_sources` source-root mismatch, and validated with checker self-test PASS, checker base `12e8d4a956` PASS, tg_cli build/help PASS, desktop `Telegram` Debug build PASS on single attempt, desktop `out/Debug/tg.exe` startup with established TCP connection, and `git diff --check` PASS.
 
 ## A0-A2 Review Disposition
 

@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "base/timer.h"
+#include <crl/crl_time.h>
 
 namespace Main {
 class Account;
