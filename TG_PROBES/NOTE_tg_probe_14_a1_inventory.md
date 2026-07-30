@@ -1,0 +1,217 @@
+# NOTE_tg_probe_14_a1_inventory
+Parent: PLAN_tg_probe_14_core_extraction.md
+Scope: A1 read-only capability inventory for Main/Storage target files
+
+## Target files
+- Telegram/SourceFiles/main/main_account.cpp
+- Telegram/SourceFiles/main/main_session.cpp
+- Telegram/SourceFiles/main/main_domain.cpp
+- Telegram/SourceFiles/storage/storage_account.cpp
+- Telegram/SourceFiles/storage/storage_domain.cpp
+
+## Result
+No fifth catch-all capability is required for the scoped files. All call sites fit one of the four locked interfaces.
+
+## Capability mapping
+
+### AccountNetworkCapabilities (required lifecycle)
+- main_account.cpp:83
+  - `Core::App().fallbackProductionConfig()`
+  - Method: `std::unique_ptr<MTP::Config> fallbackProductionConfigCopy() const`
+  - Fence ID: `account-network-fallback-config`
+- main_account.cpp:97
+  - `Core::App().proxyChanges()`
+  - Method: `rpl::producer<ProxyChange> proxyChanges() const`
+  - Fence ID: `account-network-proxy-changes`
+- main_account.cpp:465
+  - `Core::App().settings().proxy().connectionTypeChangesNotify()`
+  - Method: `void notifyProxyConnectionTypeChanged()`
+  - Fence ID: `account-network-proxy-connection-notify`
+- main_account.cpp:466
+  - `Core::App().checkProxyRotation(this, state)`
+  - Method: `void checkProxyRotation(Main::Account *account, int state)`
+  - Fence ID: `account-network-proxy-rotation`
+
+### SessionServiceCapabilities
+- main_session.cpp:143
+  - `Core::App().lockBySetupEmail()`
+  - Classification: required lifecycle
+  - Method: `void lockBySetupEmail()`
+  - Fence ID: `session-service-setup-email-lock`
+- main_session.cpp:150
+  - `Core::App().unlockSetupEmail()`
+  - Classification: required lifecycle
+  - Method: `void unlockSetupEmail()`
+  - Fence ID: `session-service-setup-email-unlock`
+- main_session.cpp:261
+  - `Core::App().downloadManager().trackSession(this)`
+  - Classification: required lifecycle
+  - Method: `void trackDownloadSession(Main::Session *session)`
+  - Fence ID: `session-service-download-track`
+- main_session.cpp:542
+  - `Core::App().windowFor(message->history()->peer)`
+  - Classification: optional presentation
+  - Method: `Window::Controller *windowForPeer(PeerData *peer) const`
+  - Fence ID: `session-service-window-for-peer`
+- main_session.cpp:543
+  - `Core::App().activePrimaryWindow()`
+  - Classification: optional presentation
+  - Method: `Window::Controller *activePrimaryWindow() const`
+  - Fence ID: `session-service-active-window`
+
+### StorageSettingsCapabilities
+- storage_account.cpp:429
+  - `Window::Theme::IsNightMode()`
+  - Classification: optional presentation
+  - Method: `bool isNightMode() const`
+  - Fence ID: `storage-settings-night-mode`
+- storage_account.cpp:1141
+  - `Window::Theme::Background()->setTileDayValue(context.tileDay)`
+  - Classification: optional presentation
+  - Method: `void setBackgroundTileValues(bool dayTile, bool nightTile)`
+  - Fence ID: `storage-settings-background-tiles`
+- storage_account.cpp:1142
+  - `Window::Theme::Background()->setTileNightValue(context.tileNight)`
+  - Classification: optional presentation
+  - Method: `void setBackgroundTileValues(bool dayTile, bool nightTile)`
+  - Fence ID: `storage-settings-background-tiles`
+- storage_account.cpp:3720
+  - `Core::App().settings().tonsiteStorageToken()`
+  - Classification: unsupported for CLI
+  - Method: `QByteArray tonsiteStorageToken() const`
+  - Fence ID: `storage-settings-tonsite-token-read`
+- storage_account.cpp:3725
+  - `Core::App().settings().setTonsiteStorageToken(result.token)`
+  - Classification: unsupported for CLI
+  - Method: `void setTonsiteStorageToken(const QByteArray &token)`
+  - Fence ID: `storage-settings-tonsite-token-write`
+- storage_account.cpp:3726
+  - `Core::App().saveSettingsDelayed()`
+  - Classification: unsupported for CLI
+  - Method: `void saveSettingsDelayed()`
+  - Fence ID: `storage-settings-tonsite-save-delayed`
+
+### DomainLifecycleCapabilities
+- main_domain.cpp:37
+  - `Core::App().startSettingsAndBackground()`
+  - Classification: required lifecycle
+  - Method: `void startSettingsAndBackground()`
+  - Fence ID: `domain-lifecycle-start-settings-background`
+- main_domain.cpp:40
+  - `Core::App().notifications().createManager()`
+  - Classification: optional presentation
+  - Method: `void createNotificationsManager()`
+  - Fence ID: `domain-lifecycle-notification-manager`
+- main_domain.cpp:72
+  - `crl::on_main(&Core::App(), ...)`
+  - Classification: required lifecycle
+  - Method: `void runOnMain(std::function<void()> callback)`
+  - Fence ID: `domain-lifecycle-on-main-export-suggest`
+- main_domain.cpp:148
+  - `Core::App().settings().accountsOrder()`
+  - Classification: required lifecycle
+  - Method: `std::vector<uint64> accountsOrder() const`
+  - Fence ID: `domain-lifecycle-accounts-order`
+- main_domain.cpp:264
+  - `Core::App().postponeCall(...)`
+  - Classification: required lifecycle
+  - Method: `void postponeCall(std::function<void()> callback)`
+  - Fence ID: `domain-lifecycle-postpone-unread-badge`
+- main_domain.cpp:292
+  - `Core::App().fallbackProductionConfig()`
+  - Classification: required lifecycle
+  - Method: `std::unique_ptr<MTP::Config> fallbackProductionConfigCopy() const`
+  - Fence ID: `domain-lifecycle-fallback-config-copy`
+- main_domain.cpp:309
+  - `Core::App().settings().mainMenuAccountsShown()`
+  - Classification: required lifecycle
+  - Method: `bool mainMenuAccountsShown() const`
+  - Fence ID: `domain-lifecycle-main-menu-shown-read`
+- main_domain.cpp:312
+  - `Core::App().saveSettingsDelayed()`
+  - Classification: required lifecycle
+  - Method: `void saveSettingsDelayed(crl::time delay = 0)`
+  - Fence ID: `domain-lifecycle-main-menu-save-delayed`
+- main_domain.cpp:321
+  - `Core::App().ensureSeparateWindowFor(account)`
+  - Classification: optional presentation
+  - Method: `Window::Controller *ensureSeparateWindowFor(Main::Account *account)`
+  - Fence ID: `domain-lifecycle-ensure-separate-window`
+- main_domain.cpp:322
+  - `Core::App().separateWindowFor(account)`
+  - Classification: optional presentation
+  - Method: `Window::Controller *separateWindowFor(Main::Account *account) const`
+  - Fence ID: `domain-lifecycle-separate-window-for-activation`
+- main_domain.cpp:366
+  - `crl::on_main(&Core::App(), ...)`
+  - Classification: required lifecycle
+  - Method: `void runOnMain(std::function<void()> callback)`
+  - Fence ID: `domain-lifecycle-on-main-remove-redundant`
+- main_domain.cpp:379
+  - `Core::App().separateWindowFor(other)`
+  - Classification: optional presentation
+  - Method: `Window::Controller *separateWindowFor(Main::Account *account) const`
+  - Fence ID: `domain-lifecycle-separate-window-for-close-check`
+- main_domain.cpp:380
+  - `Core::App().separateWindowFor(account)`
+  - Classification: optional presentation
+  - Method: `Window::Controller *separateWindowFor(Main::Account *account) const`
+  - Fence ID: `domain-lifecycle-separate-window-for-close-target`
+- main_domain.cpp:401
+  - `Core::App().passcodeLocked()`
+  - Classification: required lifecycle
+  - Method: `bool passcodeLocked() const`
+  - Fence ID: `domain-lifecycle-passcode-locked`
+- main_domain.cpp:402
+  - `Core::App().unlockPasscode()`
+  - Classification: required lifecycle
+  - Method: `void unlockPasscode()`
+  - Fence ID: `domain-lifecycle-unlock-passcode`
+- main_domain.cpp:408
+  - `Core::App().settings().setSystemUnlockEnabled(false)`
+  - Classification: required lifecycle
+  - Method: `void setSystemUnlockEnabled(bool enabled)`
+  - Fence ID: `domain-lifecycle-system-unlock-set`
+- main_domain.cpp:409
+  - `Core::App().saveSettingsDelayed()`
+  - Classification: required lifecycle
+  - Method: `void saveSettingsDelayed(crl::time delay = 0)`
+  - Fence ID: `domain-lifecycle-system-unlock-save`
+- main_domain.cpp:418
+  - `Core::App().separateWindowFor(account)`
+  - Classification: optional presentation
+  - Method: `Window::Controller *separateWindowFor(Main::Account *account) const`
+  - Fence ID: `domain-lifecycle-separate-window-for-prune`
+- main_domain.cpp:445
+  - `Core::App().refreshFallbackProductionConfig(mtp->config())`
+  - Classification: required lifecycle
+  - Method: `void refreshFallbackProductionConfig(const MTP::Config &config)`
+  - Fence ID: `domain-lifecycle-refresh-fallback-config`
+- main_domain.cpp:449
+  - `Core::App().separateWindowFor(account)`
+  - Classification: optional presentation
+  - Method: `Window::Controller *separateWindowFor(Main::Account *account) const`
+  - Fence ID: `domain-lifecycle-separate-window-for-maybe-activate`
+- main_domain.cpp:452
+  - `Core::App().preventOrInvoke(...)`
+  - Classification: required lifecycle
+  - Method: `void preventOrInvoke(std::function<void()> callback)`
+  - Fence ID: `domain-lifecycle-prevent-or-invoke`
+- main_domain.cpp:459
+  - `Core::App().separateWindowFor(account)`
+  - Classification: optional presentation
+  - Method: `Window::Controller *separateWindowFor(Main::Account *account) const`
+  - Fence ID: `domain-lifecycle-separate-window-for-activate`
+- main_domain.cpp:487
+  - `crl::on_main(&Core::App(), ...)`
+  - Classification: required lifecycle
+  - Method: `void runOnMain(std::function<void()> callback)`
+  - Fence ID: `domain-lifecycle-on-main-remove-redundant-after-activate`
+- main_domain.cpp:499
+  - `crl::on_main(&Core::App(), ...)`
+  - Classification: required lifecycle
+  - Method: `void runOnMain(std::function<void()> callback)`
+  - Fence ID: `domain-lifecycle-on-main-write-accounts`
+
+## Unsupported-for-CLI notes
+- TonSite webview token read/write is marked unsupported for the early CLI. CLI implementations should return empty token and no-op writes until a CLI webview storage policy exists.
