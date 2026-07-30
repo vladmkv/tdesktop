@@ -170,4 +170,4 @@ CLI capability selection will later require a fenced Account factory path becaus
     - Result: success (no output).
 
 ## Commit
-- Packet commit hash: recorded after commit creation.
+- Packet commit hash: `4ff1e1b250`
