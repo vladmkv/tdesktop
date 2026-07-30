@@ -39,6 +39,11 @@ class AuthKey;
 using AuthKeyPtr = std::shared_ptr<AuthKey>;
 } // namespace MTP
 
+// TG_CHANGE_BEGIN: storage-settings-capability-forward-declaration
+namespace TgCli::Capabilities {
+class StorageSettingsCapabilities;
+} // namespace TgCli::Capabilities
+// TG_CHANGE_END: storage-settings-capability-forward-declaration
 namespace Storage {
 namespace details {
 struct ReadSettingsContext;
@@ -66,6 +71,12 @@ struct MessageDraftSource {
 class Account final {
 public:
 	Account(not_null<Main::Account*> owner, const QString &dataName);
+	// TG_CHANGE_BEGIN: storage-settings-capability-overload
+	Account(
+		not_null<Main::Account*> owner,
+		const QString &dataName,
+		std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> capabilities);
+	// TG_CHANGE_END: storage-settings-capability-overload
 	~Account();
 
 	[[nodiscard]] StartResult legacyStart(const QByteArray &passcode);
@@ -310,6 +321,9 @@ private:
 		std::string_view key);
 
 	const not_null<Main::Account*> _owner;
+	// TG_CHANGE_BEGIN: storage-settings-capability-member
+	const std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> _settingsCapabilities;
+	// TG_CHANGE_END: storage-settings-capability-member
 	const QString _dataName;
 	const FileKey _dataNameKey = 0;
 	const QString _basePath;
@@ -396,5 +410,9 @@ private:
 };
 
 [[nodiscard]] Webview::StorageId TonSiteStorageId();
+// TG_CHANGE_BEGIN: storage-settings-tonsite-overload
+[[nodiscard]] Webview::StorageId TonSiteStorageId(
+	TgCli::Capabilities::StorageSettingsCapabilities &capabilities);
+// TG_CHANGE_END: storage-settings-tonsite-overload
 
 } // namespace Storage

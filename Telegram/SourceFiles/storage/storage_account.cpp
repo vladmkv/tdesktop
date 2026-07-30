@@ -41,6 +41,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "export/export_settings.h"
 #include "webview/webview_interface.h"
 #include "window/themes/window_theme.h"
+// TG_CHANGE_BEGIN: storage-settings-capability-include
+#include "../../tg_cli/capabilities/storage_settings_capabilities.h"
+// TG_CHANGE_END: storage-settings-capability-include
 
 namespace Storage {
 namespace {
@@ -169,8 +172,20 @@ auto EmptyMessageDraftSources()
 
 } // namespace
 
+// TG_CHANGE_BEGIN: storage-settings-capability-constructor
 Account::Account(not_null<Main::Account*> owner, const QString &dataName)
+: Account(
+		owner,
+		dataName,
+		TgCli::Capabilities::CreateDesktopStorageSettingsCapabilities()) {
+}
+
+Account::Account(
+		not_null<Main::Account*> owner,
+		const QString &dataName,
+		std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> capabilities)
 : _owner(owner)
+, _settingsCapabilities(std::move(capabilities))
 , _dataName(dataName)
 , _dataNameKey(ComputeDataNameKey(dataName))
 , _basePath(BaseGlobalPath() + ToFilePart(_dataNameKey) + QChar('/'))
@@ -184,7 +199,9 @@ Account::Account(not_null<Main::Account*> owner, const QString &dataName)
 , _writePrefsTimer([=] { writePrefs(); })
 , _writeLocationsTimer([=] { writeLocations(); })
 , _writeSearchSuggestionsTimer([=] { writeSearchSuggestions(); }) {
+	Expects(_settingsCapabilities != nullptr);
 }
+// TG_CHANGE_END: storage-settings-capability-constructor
 
 Account::~Account() {
 	Expects(!_writeSearchSuggestionsTimer.isActive());
@@ -426,9 +443,11 @@ Account::ReadMapResult Account::readMapWith(
 			map.stream >> recentStickersKeyOld;
 		} break;
 		case lskBackgroundOldOld: {
-			map.stream >> (Window::Theme::IsNightMode()
+			// TG_CHANGE_BEGIN: storage-settings-night-mode
+			map.stream >> (_settingsCapabilities->isNightMode()
 				? legacyBackgroundKeyNight
 				: legacyBackgroundKeyDay);
+			// TG_CHANGE_END: storage-settings-night-mode
 		} break;
 		case lskBackgroundOld: {
 			map.stream >> legacyBackgroundKeyDay >> legacyBackgroundKeyNight;
@@ -1138,8 +1157,11 @@ std::unique_ptr<Main::SessionSettings> Account::applyReadContext(
 	}
 
 	if (context.tileRead) {
-		Window::Theme::Background()->setTileDayValue(context.tileDay);
-		Window::Theme::Background()->setTileNightValue(context.tileNight);
+		// TG_CHANGE_BEGIN: storage-settings-background-tiles
+		_settingsCapabilities->setBackgroundTileValues(
+			context.tileDay,
+			context.tileNight);
+		// TG_CHANGE_END: storage-settings-background-tiles
 	}
 
 	return std::move(context.sessionSettingsStorage);
@@ -3714,20 +3736,29 @@ bool Account::decrypt(
 	return true;
 }
 
-Webview::StorageId TonSiteStorageId() {
+// TG_CHANGE_BEGIN: storage-settings-tonsite-storage-id
+Webview::StorageId TonSiteStorageId(
+		TgCli::Capabilities::StorageSettingsCapabilities &capabilities) {
 	auto result = Webview::StorageId{
 		.path = BaseGlobalPath() + u"webview-tonsite"_q,
-		.token = Core::App().settings().tonsiteStorageToken(),
+		.token = capabilities.tonsiteStorageToken(),
 	};
 	if (result.token.isEmpty()) {
 		result.token = QByteArray::fromStdString(
 			Webview::GenerateStorageToken());
-		Core::App().settings().setTonsiteStorageToken(result.token);
-		Core::App().saveSettingsDelayed();
+		capabilities.setTonsiteStorageToken(result.token);
+		capabilities.saveSettingsDelayed();
 	}
 	return result;
 }
 
+Webview::StorageId TonSiteStorageId() {
+	auto capabilities
+		= TgCli::Capabilities::CreateDesktopStorageSettingsCapabilities();
+	Expects(capabilities != nullptr);
+	return TonSiteStorageId(*capabilities);
+}
+// TG_CHANGE_END: storage-settings-tonsite-storage-id
 void Account::clearPref(std::string_view key) {
 	const auto i = _prefs.find(QByteArray(key.data(), key.size()));
 	if (i == end(_prefs)) {

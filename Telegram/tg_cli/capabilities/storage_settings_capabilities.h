@@ -18,5 +18,6 @@ public:
 };
 
 [[nodiscard]] std::unique_ptr<StorageSettingsCapabilities> CreateDesktopStorageSettingsCapabilities();
+[[nodiscard]] std::unique_ptr<StorageSettingsCapabilities> CreateCliStorageSettingsCapabilities();
 
 } // namespace TgCli::Capabilities

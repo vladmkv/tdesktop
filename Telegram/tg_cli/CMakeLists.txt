@@ -1,7 +1,10 @@
 add_executable(tg_cli)
 init_non_host_target(tg_cli)
 
-target_sources(tg_cli PRIVATE main.cpp)
+target_sources(tg_cli PRIVATE
+    main.cpp
+    capabilities/storage_settings_capabilities_cli.cpp
+)
 
 target_link_libraries(tg_cli
 PRIVATE

@@ -29,6 +29,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "main/main_session_settings.h"
 // TG_CHANGE_BEGIN: account-network-capability-include
 #include "../../tg_cli/capabilities/account_network_capabilities.h"
+#include "../../tg_cli/capabilities/storage_settings_capabilities.h"
 // TG_CHANGE_END: account-network-capability-include
 
 namespace Main {
@@ -61,14 +62,36 @@ Account::Account(
 		const QString &dataName,
 		int index,
 		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> capabilities)
-: _domain(domain)
-, _networkCapabilities(std::move(capabilities))
-, _local(std::make_unique<Storage::Account>(
-	this,
-	ComposeDataString(dataName, index))) {
-	Expects(_networkCapabilities != nullptr);
+: Account(
+		domain,
+		dataName,
+		index,
+		std::move(capabilities),
+		TgCli::Capabilities::CreateDesktopStorageSettingsCapabilities()) {
 }
 // TG_CHANGE_END: account-network-capability-constructor
+// TG_CHANGE_BEGIN: account-storage-capability-constructor
+Account::Account(
+		not_null<Domain*> domain,
+		const QString &dataName,
+		int index,
+		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> networkCapabilities,
+		std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> storageCapabilities)
+: _domain(domain)
+, _networkCapabilities([&] {
+	Expects(networkCapabilities != nullptr);
+	return std::move(networkCapabilities);
+}())
+, _local(std::make_unique<Storage::Account>(
+	this,
+	ComposeDataString(dataName, index),
+	[&] {
+		Expects(storageCapabilities != nullptr);
+		return std::move(storageCapabilities);
+	}())) {
+	Expects(_networkCapabilities != nullptr);
+}
+// TG_CHANGE_END: account-storage-capability-constructor
 
 Account::~Account() {
 	if (const auto session = maybeSession()) {

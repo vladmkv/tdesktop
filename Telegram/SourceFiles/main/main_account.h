@@ -27,6 +27,11 @@ namespace TgCli::Capabilities {
 class AccountNetworkCapabilities;
 } // namespace TgCli::Capabilities
 // TG_CHANGE_END: account-network-capability-forward-declaration
+// TG_CHANGE_BEGIN: account-storage-capability-forward-declaration
+namespace TgCli::Capabilities {
+class StorageSettingsCapabilities;
+} // namespace TgCli::Capabilities
+// TG_CHANGE_END: account-storage-capability-forward-declaration
 namespace Main {
 
 class Domain;
@@ -44,6 +49,14 @@ public:
 		int index,
 		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> capabilities);
 	// TG_CHANGE_END: account-network-capability-overload
+	// TG_CHANGE_BEGIN: account-storage-capability-overload
+	Account(
+		not_null<Domain*> domain,
+		const QString &dataName,
+		int index,
+		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> networkCapabilities,
+		std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> storageCapabilities);
+	// TG_CHANGE_END: account-storage-capability-overload
 	~Account();
 
 	[[nodiscard]] Domain &domain() const {
