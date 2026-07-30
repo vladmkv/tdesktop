@@ -31,6 +31,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "../../tg_cli/capabilities/account_network_capabilities.h"
 #include "../../tg_cli/capabilities/storage_settings_capabilities.h"
 // TG_CHANGE_END: account-network-capability-include
+// TG_CHANGE_BEGIN: account-session-capability-include
+#include "../../tg_cli/capabilities/session_service_capabilities.h"
+// TG_CHANGE_END: account-session-capability-include
 
 namespace Main {
 namespace {
@@ -77,10 +80,31 @@ Account::Account(
 		int index,
 		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> networkCapabilities,
 		std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> storageCapabilities)
+: Account(
+		domain,
+		dataName,
+		index,
+		std::move(networkCapabilities),
+		std::move(storageCapabilities),
+		TgCli::Capabilities::CreateDesktopSessionServiceCapabilities()) {
+}
+// TG_CHANGE_END: account-storage-capability-constructor
+// TG_CHANGE_BEGIN: account-session-capability-constructor
+Account::Account(
+		not_null<Domain*> domain,
+		const QString &dataName,
+		int index,
+		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> networkCapabilities,
+		std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> storageCapabilities,
+		std::unique_ptr<TgCli::Capabilities::SessionServiceCapabilities> sessionCapabilities)
 : _domain(domain)
 , _networkCapabilities([&] {
 	Expects(networkCapabilities != nullptr);
 	return std::move(networkCapabilities);
+}())
+, _sessionCapabilities([&] {
+	Expects(sessionCapabilities != nullptr);
+	return std::move(sessionCapabilities);
 }())
 , _local(std::make_unique<Storage::Account>(
 	this,
@@ -90,8 +114,9 @@ Account::Account(
 		return std::move(storageCapabilities);
 	}())) {
 	Expects(_networkCapabilities != nullptr);
+	Expects(_sessionCapabilities != nullptr);
 }
-// TG_CHANGE_END: account-storage-capability-constructor
+// TG_CHANGE_END: account-session-capability-constructor
 
 Account::~Account() {
 	if (const auto session = maybeSession()) {
@@ -105,6 +130,13 @@ Storage::Domain &Account::domainLocal() const {
 	return _domain->local();
 }
 
+// TG_CHANGE_BEGIN: account-session-capability-accessor
+TgCli::Capabilities::SessionServiceCapabilities &Account::sessionServiceCapabilities() const {
+	Expects(_sessionCapabilities != nullptr);
+
+	return *_sessionCapabilities;
+}
+// TG_CHANGE_END: account-session-capability-accessor
 [[nodiscard]] Storage::StartResult Account::legacyStart(
 		const QByteArray &passcode) {
 	Expects(!_appConfig);

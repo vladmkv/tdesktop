@@ -83,6 +83,11 @@ namespace Ui {
 struct ColorIndicesCompressed;
 } // namespace Ui
 
+// TG_CHANGE_BEGIN: session-service-capability-forward-declaration
+namespace TgCli::Capabilities {
+class SessionServiceCapabilities;
+} // namespace TgCli::Capabilities
+// TG_CHANGE_END: session-service-capability-forward-declaration
 namespace Main {
 
 class Account;
@@ -303,6 +308,9 @@ private:
 
 	const UserId _userId;
 	const not_null<Account*> _account;
+	// TG_CHANGE_BEGIN: session-service-capability-member
+	const not_null<TgCli::Capabilities::SessionServiceCapabilities*> _sessionServiceCapabilities;
+	// TG_CHANGE_END: session-service-capability-member
 
 	const std::unique_ptr<SessionSettings> _settings;
 	const std::unique_ptr<Data::Changes> _changes;

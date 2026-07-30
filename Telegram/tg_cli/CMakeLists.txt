@@ -3,6 +3,7 @@ init_non_host_target(tg_cli)
 
 target_sources(tg_cli PRIVATE
     main.cpp
+    capabilities/session_service_capabilities_cli.cpp
     capabilities/storage_settings_capabilities_cli.cpp
 )
 

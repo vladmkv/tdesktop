@@ -72,6 +72,36 @@ Companion note: NOTE_tg_console_mode.md
 	- Current result: STOP. Probe 11 failed after three bounded expansions with 153 unresolved externals; Probes 12/13 are blocked. Select a fallback architecture before continuing.
 	- Selected planning direction: fallback A, four fenced capability seams. Implementation remains gated by TG_PROBES/PLAN_tg_probe_14_core_extraction.md.
 
+### Next Implementor Queue
+Execute in this exact order; do not combine commits:
+1. TG_PROBES/PLAN_tg_probe_21_a5_session_service_injection.md
+2. A6 DomainLifecycleCapabilities and account-factory packet (write and approve after A5 passes).
+3. A7 synthetic Domain/Account/Session construction packet.
+4. A8 profile ownership and workdir-resolution packet.
+5. A9 passcode, account selection, and status packet.
+6. A10 chats and paged-history packet.
+
+Current readiness:
+- A0.1 through A4 are complete and validated; A4 is committed as `530dec607a`.
+- Plan 21 is the only packet ready for implementation.
+- Do not write or implement A6 in parallel; use A5 validation findings to finalize the capability-bundle and account-factory contract.
+
+### First Runnable Read-Only Version (V0)
+V0 is reached after A10 and provides these one-shot commands over an existing desktop-authenticated profile:
+- `tg_cli --workdir <path> status`
+- `tg_cli --workdir <path> accounts`
+- `tg_cli --workdir <path> --account <index> chats --limit <count>`
+- `tg_cli --workdir <path> --account <index> read <chat-id> --limit <count>`
+
+V0 requirements:
+- tg desktop must be closed; tg_cli acquires and retains tg-compatible exclusive profile ownership before any tdata read.
+- Missing profile, busy profile, wrong workdir, wrong passcode, corrupt profile, and missing authentication are distinct failures.
+- Only the selected account starts a session.
+- History is paged; text and media metadata are displayed without downloading media.
+- Mark-read behavior is configurable and stored in tg_cli-owned configuration outside tdata.
+- Human-readable output is required; `--json` remains experimental.
+- Send, edit, delete, watch, and native CLI authentication are not part of V0.
+
 4. [TODO] Stage 3: Safe shared-profile bootstrap (**high**)
 - Define deterministic workflow: authenticate in tg desktop once, then fully close it.
 - Resolve desktop default workdir with --workdir override.

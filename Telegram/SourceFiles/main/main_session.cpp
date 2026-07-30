@@ -60,6 +60,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/text/text_utilities.h"
 #include "ui/layers/generic_box.h"
 #include "styles/style_layers.h"
+// TG_CHANGE_BEGIN: session-service-capability-include
+#include "../../tg_cli/capabilities/session_service_capabilities.h"
+// TG_CHANGE_END: session-service-capability-include
 
 #ifndef TDESKTOP_DISABLE_SPELLCHECK
 #include "chat_helpers/spellchecker_common.h"
@@ -101,6 +104,9 @@ Session::Session(
 	std::unique_ptr<SessionSettings> settings)
 : _userId(user.c_user().vid())
 , _account(account)
+// TG_CHANGE_BEGIN: session-service-capability-initializer
+, _sessionServiceCapabilities(&account->sessionServiceCapabilities())
+// TG_CHANGE_END: session-service-capability-initializer
 , _settings(std::move(settings))
 , _changes(std::make_unique<Data::Changes>(this))
 , _api(std::make_unique<ApiWrap>(this))
@@ -140,14 +146,18 @@ Session::Session(
 			|| _settings->setupEmailState() == State::SetupNoSkip) {
 			crl::on_main([=] {
 			// base::call_delayed(5000, [=] {
-				Core::App().lockBySetupEmail();
+				// TG_CHANGE_BEGIN: session-service-setup-email-lock
+				_sessionServiceCapabilities->lockBySetupEmail();
+				// TG_CHANGE_END: session-service-setup-email-lock
 			});
 			const auto unlockLifetime = std::make_shared<rpl::lifetime>();
 			_promoSuggestions->setupEmailStateValue(
 			) | rpl::filter([](Data::SetupEmailState s) {
 				return s == Data::SetupEmailState::None;
 			}) | rpl::take(1) | rpl::on_next(crl::guard(this, [=] {
-				Core::App().unlockSetupEmail();
+				// TG_CHANGE_BEGIN: session-service-setup-email-unlock
+				_sessionServiceCapabilities->unlockSetupEmail();
+				// TG_CHANGE_END: session-service-setup-email-unlock
 				_settings->setSetupEmailState(State::None);
 				saveSettingsDelayed(200);
 				unlockLifetime->destroy();
@@ -258,7 +268,9 @@ Session::Session(
 	_api->requestNotifySettings(MTP_inputNotifyChats());
 	_api->requestNotifySettings(MTP_inputNotifyBroadcasts());
 
-	Core::App().downloadManager().trackSession(this);
+	// TG_CHANGE_BEGIN: session-service-download-track
+	_sessionServiceCapabilities->trackDownloadSession(this);
+	// TG_CHANGE_END: session-service-download-track
 
 	appConfig().value(
 	) | rpl::on_next([=] {
@@ -538,9 +550,11 @@ void Session::uploadsStopWithConfirmation(Fn<void()> done) {
 	const auto id = _uploader->currentUploadId();
 	const auto message = data().message(id);
 	const auto exists = (message != nullptr);
+	// TG_CHANGE_BEGIN: session-service-window-selection
 	const auto window = message
-		? Core::App().windowFor(message->history()->peer)
-		: Core::App().activePrimaryWindow();
+		? _sessionServiceCapabilities->windowForPeer(message->history()->peer)
+		: _sessionServiceCapabilities->activePrimaryWindow();
+	// TG_CHANGE_END: session-service-window-selection
 	if (!window) {
 		done();
 		return;

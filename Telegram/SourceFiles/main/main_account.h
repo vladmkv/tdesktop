@@ -32,6 +32,11 @@ namespace TgCli::Capabilities {
 class StorageSettingsCapabilities;
 } // namespace TgCli::Capabilities
 // TG_CHANGE_END: account-storage-capability-forward-declaration
+// TG_CHANGE_BEGIN: account-session-capability-forward-declaration
+namespace TgCli::Capabilities {
+class SessionServiceCapabilities;
+} // namespace TgCli::Capabilities
+// TG_CHANGE_END: account-session-capability-forward-declaration
 namespace Main {
 
 class Domain;
@@ -57,6 +62,15 @@ public:
 		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> networkCapabilities,
 		std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> storageCapabilities);
 	// TG_CHANGE_END: account-storage-capability-overload
+	// TG_CHANGE_BEGIN: account-session-capability-overload
+	Account(
+		not_null<Domain*> domain,
+		const QString &dataName,
+		int index,
+		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> networkCapabilities,
+		std::unique_ptr<TgCli::Capabilities::StorageSettingsCapabilities> storageCapabilities,
+		std::unique_ptr<TgCli::Capabilities::SessionServiceCapabilities> sessionCapabilities);
+	// TG_CHANGE_END: account-session-capability-overload
 	~Account();
 
 	[[nodiscard]] Domain &domain() const {
@@ -96,6 +110,9 @@ public:
 	[[nodiscard]] Storage::Account &local() const {
 		return *_local;
 	}
+	// TG_CHANGE_BEGIN: account-session-capability-accessor
+	[[nodiscard]] TgCli::Capabilities::SessionServiceCapabilities &sessionServiceCapabilities() const;
+	// TG_CHANGE_END: account-session-capability-accessor
 
 	[[nodiscard]] bool sessionExists() const;
 	[[nodiscard]] Session &session() const;
@@ -170,6 +187,9 @@ private:
 	// TG_CHANGE_BEGIN: account-network-capability-member
 	const std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> _networkCapabilities;
 	// TG_CHANGE_END: account-network-capability-member
+	// TG_CHANGE_BEGIN: account-session-capability-member
+	const std::unique_ptr<TgCli::Capabilities::SessionServiceCapabilities> _sessionCapabilities;
+	// TG_CHANGE_END: account-session-capability-member
 	const std::unique_ptr<Storage::Account> _local;
 
 	std::unique_ptr<MTP::Instance> _mtp;

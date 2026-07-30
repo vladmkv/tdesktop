@@ -26,5 +26,6 @@ public:
 };
 
 [[nodiscard]] std::unique_ptr<SessionServiceCapabilities> CreateDesktopSessionServiceCapabilities();
+[[nodiscard]] std::unique_ptr<SessionServiceCapabilities> CreateCliSessionServiceCapabilities();
 
 } // namespace TgCli::Capabilities
