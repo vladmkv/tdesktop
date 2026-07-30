@@ -22,6 +22,11 @@ class AuthKey;
 class Config;
 } // namespace MTP
 
+// TG_CHANGE_BEGIN: account-network-capability-forward-declaration
+namespace TgCli::Capabilities {
+class AccountNetworkCapabilities;
+} // namespace TgCli::Capabilities
+// TG_CHANGE_END: account-network-capability-forward-declaration
 namespace Main {
 
 class Domain;
@@ -32,6 +37,13 @@ class AppConfig;
 class Account final : public base::has_weak_ptr {
 public:
 	Account(not_null<Domain*> domain, const QString &dataName, int index);
+	// TG_CHANGE_BEGIN: account-network-capability-overload
+	Account(
+		not_null<Domain*> domain,
+		const QString &dataName,
+		int index,
+		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> capabilities);
+	// TG_CHANGE_END: account-network-capability-overload
 	~Account();
 
 	[[nodiscard]] Domain &domain() const {
@@ -142,6 +154,9 @@ private:
 	void destroySession(DestroyReason reason);
 
 	const not_null<Domain*> _domain;
+	// TG_CHANGE_BEGIN: account-network-capability-member
+	const std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> _networkCapabilities;
+	// TG_CHANGE_END: account-network-capability-member
 	const std::unique_ptr<Storage::Account> _local;
 
 	std::unique_ptr<MTP::Instance> _mtp;

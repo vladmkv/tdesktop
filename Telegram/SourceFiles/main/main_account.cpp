@@ -27,6 +27,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "main/main_session.h"
 #include "main/main_domain.h"
 #include "main/main_session_settings.h"
+// TG_CHANGE_BEGIN: account-network-capability-include
+#include "../../tg_cli/capabilities/account_network_capabilities.h"
+// TG_CHANGE_END: account-network-capability-include
 
 namespace Main {
 namespace {
@@ -44,12 +47,28 @@ constexpr auto kWideIdsTag = ~uint64(0);
 
 } // namespace
 
+// TG_CHANGE_BEGIN: account-network-capability-constructor
 Account::Account(not_null<Domain*> domain, const QString &dataName, int index)
+: Account(
+	domain,
+	dataName,
+	index,
+	TgCli::Capabilities::CreateDesktopAccountNetworkCapabilities()) {
+}
+
+Account::Account(
+		not_null<Domain*> domain,
+		const QString &dataName,
+		int index,
+		std::unique_ptr<TgCli::Capabilities::AccountNetworkCapabilities> capabilities)
 : _domain(domain)
+, _networkCapabilities(std::move(capabilities))
 , _local(std::make_unique<Storage::Account>(
 	this,
 	ComposeDataString(dataName, index))) {
+	Expects(_networkCapabilities != nullptr);
 }
+// TG_CHANGE_END: account-network-capability-constructor
 
 Account::~Account() {
 	if (const auto session = maybeSession()) {
@@ -77,10 +96,13 @@ std::unique_ptr<MTP::Config> Account::prepareToStart(
 
 void Account::start(std::unique_ptr<MTP::Config> config) {
 	_appConfig = std::make_unique<AppConfig>(this);
-	startMtp(config
-		? std::move(config)
-		: std::make_unique<MTP::Config>(
-			Core::App().fallbackProductionConfig()));
+	// TG_CHANGE_BEGIN: account-network-fallback-config
+	if (!config) {
+		config = _networkCapabilities->fallbackProductionConfigCopy();
+		Expects(config != nullptr);
+	}
+	startMtp(std::move(config));
+	// TG_CHANGE_END: account-network-fallback-config
 	_appConfig->start();
 	watchProxyChanges();
 	watchSessionChanges();
@@ -92,9 +114,10 @@ void Account::prepareToStartAdded(
 }
 
 void Account::watchProxyChanges() {
-	using ProxyChange = Core::Application::ProxyChange;
+	// TG_CHANGE_BEGIN: account-network-proxy-changes
+	using ProxyChange = TgCli::Capabilities::ProxyChange;
 
-	Core::App().proxyChanges(
+	_networkCapabilities->proxyChanges(
 	) | rpl::on_next([=](const ProxyChange &change) {
 		const auto key = [&](const MTP::ProxyData &proxy) {
 			return (proxy.type == MTP::ProxyData::Type::Mtproto)
@@ -111,6 +134,7 @@ void Account::watchProxyChanges() {
 			_mtpForKeysDestroy->restart();
 		}
 	}, _lifetime);
+	// TG_CHANGE_END: account-network-proxy-changes
 }
 
 void Account::watchSessionChanges() {
@@ -462,8 +486,10 @@ void Account::startMtp(std::unique_ptr<MTP::Config> config) {
 	});
 	_mtp->setStateChangedHandler([=](MTP::ShiftedDcId dc, int32 state) {
 		if (dc == _mtp->mainDcId()) {
-			Core::App().settings().proxy().connectionTypeChangesNotify();
-			Core::App().checkProxyRotation(this, state);
+			// TG_CHANGE_BEGIN: account-network-proxy-state-change
+			_networkCapabilities->notifyProxyConnectionTypeChanged();
+			_networkCapabilities->checkProxyRotation(this, state);
+			// TG_CHANGE_END: account-network-proxy-state-change
 		}
 	});
 	_mtp->setSessionResetHandler([=](MTP::ShiftedDcId shiftedDcId) {

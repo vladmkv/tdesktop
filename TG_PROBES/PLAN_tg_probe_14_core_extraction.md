@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0/A1/A2 committed; A0.1/A2.1 corrections and desktop validation required before A3 **high**
+Status: [TODO] A0/A1/A2/A3 completed; A4+ pending **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -143,6 +143,7 @@ Implementor packet: PLAN_tg_probe_19_a2_1_baseline_corrections.md
 
 ### A3: Main::Account Injection
 Implementor packet: PLAN_tg_probe_17_a3_account_network_injection.md
+Status: [DONE] Completed on tg-cli with fenced Main::Account capability injection and desktop/tg_cli validation.
 1. Add an overload/accessor while preserving current constructor.
 2. Replace only Main::Account network/config globals with AccountNetworkCapabilities.
 3. Existing desktop constructor selects desktop capabilities.
@@ -230,6 +231,7 @@ After each protected edit:
 - 2026-07-30: Added PLAN_tg_probe_17_a3_account_network_injection.md with exact ownership, overload, fence IDs, validation, and stop conditions.
 - 2026-07-30: A0.1 completed via PLAN_tg_probe_18_a0_1_fence_corrections.md. Added per-deleted-line deletion anchors in checker hunk parsing, expanded self-tests (mixed replacement fail path, valid replacement pass path, adjacent blocks, duplicate IDs), fenced AGENTS.md (`tg-cli-agent-guidance`) and prepare.py dav1d stage (`dav1d-github-mirror`), removed obsolete policy exception, and validated with self-test PASS, base `12e8d4a956` PASS, prepare.py py_compile PASS, dav1d print-path (`p` then quit), and `git diff --check` PASS.
 - 2026-07-30: A2.1 completed via PLAN_tg_probe_19_a2_1_baseline_corrections.md. Replaced transitive `base/timer.h` with direct `<crl/crl_time.h>`, documented `ProxyChange` as intentional TG-owned DTO boundary, verified tg_cli skeleton does not call `CreateDesktop*Capabilities`, retained raw fenced `target_sources` for tg_cli capability sources as intentional due `nice_target_sources` source-root mismatch, and validated with checker self-test PASS, checker base `12e8d4a956` PASS, tg_cli build/help PASS, desktop `Telegram` Debug build PASS on single attempt, desktop `out/Debug/tg.exe` startup with established TCP connection, and `git diff --check` PASS.
+- 2026-07-30: A3 completed via PLAN_tg_probe_17_a3_account_network_injection.md. Injected `AccountNetworkCapabilities` into `Main::Account` with additive constructor overload and preserved legacy constructor delegation. Replaced fallback config/proxy producer/proxy state-change global calls with capability methods under fence IDs `account-network-capability-forward-declaration`, `account-network-capability-overload`, `account-network-capability-member`, `account-network-capability-include`, `account-network-capability-constructor`, `account-network-fallback-config`, `account-network-proxy-changes`, and `account-network-proxy-state-change`. Validation: checker self-test PASS, checker base `12e8d4a956` PASS, tg_cli build/help PASS, desktop build succeeded after transient `C1033` lock retries, startup/connect smoke PASS with `-workdir C:/Users/wd985049/bin/Release`, and user-reported manual proxy toggle smoke PASS.
 
 ## A0-A2 Review Disposition
 
