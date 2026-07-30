@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0/A1/A2/A3/A4 completed; A5+ pending **high**
+Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 executable closure packet pending **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -66,7 +66,7 @@ Responsibilities are split into required lifecycle and optional desktop presenta
 Every optional presentation hook must be explicit and no-op capable. If domain logic requires a real Window::Controller, the extraction fails.
 
 ### Capability Bundle
-Main::Domain receives an additive constructor overload accepting a non-owning bundle of the four capabilities. The existing `Domain(const QString&)` remains and delegates to desktop capabilities, preserving existing call sites.
+Main::Domain receives an additive constructor overload accepting an owning Domain capability bundle (lifecycle capability plus per-account capability factory). The existing `Domain(const QString&)` remains and delegates to desktop capability-bundle selection, preserving existing call sites.
 
 Main::Account and Storage::Account receive capabilities transitively from their owner. Existing constructors remain available and preserve desktop behavior.
 
@@ -165,7 +165,7 @@ Pass:
 
 ### A5: Main::Session Injection
 Implementor packet: PLAN_tg_probe_21_a5_session_service_injection.md
-Status: [DONE] Completed on tg-cli with SessionService capability ownership/borrowing injection and scoped global replacements.
+Status: [DONE] Completed on tg-cli with SessionService capability ownership/borrowing injection and scoped global replacements; implementation commit `16babf664f`, review-fix commit `884cb247de`.
 1. Pass SessionServiceCapabilities transitively from Main::Account.
 2. Replace email-lock/download/window global calls.
 3. Require null-safe optional window behavior.
@@ -174,24 +174,35 @@ Pass:
 - Desktop session startup and window selection remain correct.
 - CLI construction creates no windows.
 
-### A6: Main::Domain Injection
+### A6: Main::Domain Desktop Seam Injection
+Implementor packet: PLAN_tg_probe_22_a6_domain_lifecycle_account_factory.md
+Status: [DONE] Completed on tg-cli with Domain lifecycle capability ownership + owner account-factory routing for all four account creation paths; desktop seam only.
 1. Add capability-bundle constructor overload; preserve `Domain(const QString&)`.
 2. Convert required lifecycle calls first.
 3. Convert optional presentation hooks one cluster at a time.
-4. Add a fenced Main::Domain account factory that selects capability implementations.
-5. Change Storage::Domain account construction to call the owner factory; preserve desktop output and account ordering.
+4. Add generic per-account `DomainAccountFactoryCapabilities` and bundle types.
+5. Add a fenced Main::Domain owner account factory and route all four account construction paths through it.
+6. Provide/validate desktop Domain capability bundle/factory only; do not declare or implement `CreateCliDomainCapabilityBundle()` in A6.
 
 Pass:
 - Desktop multi-account activation/window behavior passes.
-- CLI can start Domain without notifications/windows/export prompts.
+- tg_cli remains unchanged and `--help` still passes.
+- Static checks confirm fresh per-account bundle creation and single ownership transfer.
 
-### A7: Account/Session Construction Probe
-1. Use TG-owned capabilities and synthetic temporary workdir.
-2. Construct Domain/Account without real profile access.
-3. Determine QCoreApplication versus QApplication requirement.
+### A7: CLI Bundle + Synthetic Construction/Runtime Closure
+1. Declare and implement `CreateCliDomainCapabilityBundle()` and CLI bundle/factory wiring.
+2. Move shared CLI fallback `MTP::Config(MTP::Environment::Production)` state into A7 and share it across CLI lifecycle + per-account network capabilities.
+3. Move CLI never-proxy producer behavior (`proxyChanges() -> rpl::never<ProxyChange>()`) and related no-op proxy hooks into A7.
+4. Resolve tg_cli executable linkage/source closure required by CLI bundle/runtime behavior.
+5. Use TG-owned capabilities and synthetic temporary workdir.
+6. Construct Domain/Account/Session without real profile access.
+7. Determine QCoreApplication versus QApplication requirement.
 
 Pass:
 - Clean construction/teardown, no windows, no profile mutation.
+
+Stop condition:
+- If `MTP::Instance` construction still requires `Core::App` coupling after bounded closure attempts, stop and produce a new executable closure decision packet before any A8 profile work.
 
 ### A8: Shared Profile Read Probe
 1. Acquire tg-compatible profile ownership first.
@@ -241,6 +252,13 @@ After each protected edit:
 - 2026-07-30: A4 completed via PLAN_tg_probe_20_a4_storage_settings_injection.md. Added Main::Account 5-arg overload (network + storage) and preserved existing 3-arg/4-arg constructor APIs through delegation. Added Storage::Account capability-taking overload and non-null owned `_settingsCapabilities`. Replaced scoped `Window::Theme`/`Core::App()` uses in `storage_account.cpp` with storage-capability methods and added TonSite overload that preserves the no-arg API used by `iv_instance.cpp`. Added TG-owned CLI storage implementation (`CreateCliStorageSettingsCapabilities`) and compiled it only into `tg_cli` with QtCore-only linkage. Validation: fence self-test PASS, fence base `12e8d4a956` PASS, `storage_account.cpp` direct-global search empty, tg_cli build/help PASS, desktop Debug build PASS, startup/connect smoke PASS with `-workdir C:/Users/wd985049/bin/Release`, manual day/night toggle + restart restoration PASS, TonSite manual path skipped, `git diff --check` PASS.
 - 2026-07-30: A5 completed via PLAN_tg_probe_21_a5_session_service_injection.md. Added Main::Account 6-arg overload including SessionService capability ownership and kept existing constructors source-compatible through delegation. Added Main::Session non-owning capability borrowing from account accessor and replaced five scoped globals in `main_session.cpp` (setup-email lock/unlock, download session tracking, optional window selection). Added TG-owned CLI implementation (`CreateCliSessionServiceCapabilities`) and compiled it only into `tg_cli` with QtCore linkage. Validation: checker self-test PASS, checker base `12e8d4a956` PASS, scoped direct-global search empty, tg_cli build/help PASS, user-verified desktop build rerun PASS (`Telegram.vcxproj -> .../out/Debug/tg.exe`), automated startup/connect smoke PASS with established TCP connection and clean teardown, `git diff --check` PASS; ordinary download, upload-stop confirmation, and setup-email manual regressions not exercised in this packet.
 - 2026-07-30: Independent A5 review found deferred setup-email lock in `main_session.cpp` capturing Session state via `crl::on_main([=] { ... })` without lifetime protection. Fixed in place by wrapping the deferred callback with `crl::guard(this, ...)` inside the existing `session-service-setup-email-lock` fence to preserve timing and capability behavior while making Session-lifetime access safe.
+- 2026-07-30: A5 review fix committed as `884cb247de` and A5 marked fully complete for queue advancement.
+- 2026-07-30: Authored PLAN_tg_probe_22_a6_domain_lifecycle_account_factory.md with exact Domain capability bundle ownership, owner account-factory design for all Storage::Domain construction paths, callback signature correction (`std::function` -> `Fn`/`FnMut`), fence IDs, validation, and A7 deferral.
+- 2026-07-30: Completed read-only CLI config probe correction for A6 packet 22. Locked one CLI-owned shared fallback production config state (`MTP::Config(MTP::Environment::Production)`) consumed by CLI Domain lifecycle + per-account CLI network capabilities; removed planned public `CreateCliAccountNetworkCapabilities`/separate CLI account-network TU unless real C++ boundaries require them; added explicit `tdesktop::td_mtproto` narrow-link probe/stop condition; recorded `MTP::Instance` Core::App coupling as A7-only blocker concern.
+- 2026-07-30: A6 pre-source linkage probe stopped per packet rule. Linking `tg_cli` with `tdesktop::td_mtproto` plus `tdesktop::td_scheme` failed (`cmake --build out --config Debug --target tg_cli`) with unresolved symbols requiring additional mtproto/core/logging closure (`MTP::details::AbstractConnection`, `MTP::Instance`, `Logs::*`, `tl::utf16`). No protected-source edits were made; packet 22 is marked blocked with CLARIFY question 2q.
+- 2026-07-30: Executed bounded A6 linkage-only follow-up (max 3 expansions) and resolved packet 22 CLARIFY 2q to stop A6 here. Expansion 1 (only `mtproto_config.cpp`) failed compile on `base/bytes.h` include chain; expansion 2 (`mtproto_dc_options.cpp` plus `desktop-app::lib_base`/`desktop-app::lib_tl`) failed compile on missing mtproto prelude types (`DcId`, `MTPDcOption`, `base::flat_map`, `rpl::event_stream`); expansion 3 (`/FI mtproto_pch.h`) failed compile on missing generated `scheme.h`. Restored `Telegram/tg_cli/CMakeLists.txt` to best-known state by removing disproved broad `tdesktop::td_mtproto`/`tdesktop::td_scheme` linkage and removing temporary source wiring.
+- 2026-07-31: Re-scoped packet 22 to unblock A6. Kept bounded linkage probe failures as recorded evidence, removed blocked/CLARIFY state, narrowed A6 to desktop Domain seam + owner account-factory routing, and explicitly moved CLI bundle/factory implementation, shared CLI fallback config state, never-proxy behavior, and tg_cli executable closure decisions to A7.
+- 2026-07-31: A6 completed via PLAN_tg_probe_22_a6_domain_lifecycle_account_factory.md. Added `DomainCapabilityBundle`/`DomainAccountFactoryCapabilities` and desktop bundle factory, corrected lifecycle callback types to `Fn`/`FnMut`, preserved `Domain(const QString&)` via delegating overload, replaced scoped `Core::App`/`crl::on_main` use in `main_domain.cpp` with capability calls, routed all Storage::Domain and Main::Domain add account construction paths through `createAccountForStorage`, and validated with fence checker self-test PASS, fence checker base `12e8d4a956` PASS, tg_cli build/help PASS, desktop Telegram Debug build PASS, desktop smoke run with safe workdir and no tg_cli profile open, and `git diff --check` PASS.
 
 ## A0-A2 Review Disposition
 
@@ -256,6 +274,6 @@ Intentional/no change:
 - New TG-owned files remain unfenced per policy.
 
 Deferred to relevant injection stage:
-- Replace `std::function` callback interfaces with the project's move-only callback types before DomainLifecycleCapabilities injection (A6), if signatures can remain dependency-cohesive.
+- Replace `std::function` callback interfaces with the project's move-only callback types during DomainLifecycleCapabilities injection (A6) per packet 22.
 - Evaluate `nice_target_sources` versus raw `target_sources`; this is organization/portability consistency, not an A3 functional blocker.
 - CLI no-op behavior for TonSite/theme/window capabilities is implemented and tested in A4-A6, not in the desktop-only A2 forwarders.

@@ -74,17 +74,17 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. TG_PROBES/PLAN_tg_probe_21_a5_session_service_injection.md
-2. A6 DomainLifecycleCapabilities and account-factory packet (write and approve after A5 passes).
-3. A7 synthetic Domain/Account/Session construction packet.
-4. A8 profile ownership and workdir-resolution packet.
-5. A9 passcode, account selection, and status packet.
-6. A10 chats and paged-history packet.
+1. A7 CLI bundle + synthetic Domain/Account/Session construction/runtime-closure packet (includes executable closure decision gate for `MTP::Instance`/`Core::App` coupling).
+2. A8 profile ownership and workdir-resolution packet.
+3. A9 passcode, account selection, and status packet.
+4. A10 chats and paged-history packet.
 
 Current readiness:
-- A0.1 through A4 are complete and validated; A4 is committed as `530dec607a`.
-- Plan 21 is the only packet ready for implementation.
-- Do not write or implement A6 in parallel; use A5 validation findings to finalize the capability-bundle and account-factory contract.
+- A0.1 through A5 are complete and validated.
+- A4 implementation commit: `530dec607a`.
+- A5 implementation commit: `16babf664f`; A5 review-fix commit: `884cb247de`.
+- A6 is complete and validated as desktop seam only (Domain lifecycle extraction + owner account-factory routing).
+- A7 is now the active next packet for CLI bundle/factory wiring plus synthetic construction/runtime closure before any profile work.
 
 ### First Runnable Read-Only Version (V0)
 V0 is reached after A10 and provides these one-shot commands over an existing desktop-authenticated profile:
@@ -183,6 +183,7 @@ V0 requirements:
 - 2026-07-30: Locked shared-profile ownership to fail-closed acquisition of tg-compatible QLocalServer before any tdata access.
 - 2026-07-30: Executable Probe 11 failed the selected-source/no-protected-edit architecture after three attempts; 153 unresolved externals spanned Core/Main/Data/Storage/Window/UI. Gate B failed for this architecture; Probes 12/13 blocked.
 - 2026-07-30: Designed fallback A using four capability interfaces (domain lifecycle, account network, session services, storage settings), additive overloads, and mandatory named TG_CHANGE fences with automated enforcement.
+- 2026-07-31: A6 desktop seam packet completed and validated; Domain lifecycle capability routing and owner account-factory account construction are in place, with CLI domain bundle/runtime closure intentionally deferred to A7.
 
 ## Stage Command Matrix
 

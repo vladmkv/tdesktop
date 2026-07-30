@@ -52,7 +52,8 @@ StartResult Domain::start(const QByteArray &passcode) {
 		startFromScratch();
 		return StartResult::Success;
 	}
-	auto legacy = std::make_unique<Main::Account>(_owner, _dataName, 0);
+	// TG_CHANGE_BEGIN: storage-domain-owner-account-factory
+	auto legacy = _owner->createAccountForStorage(0);
 	const auto result = legacy->legacyStart(passcode);
 	if (result == StartResult::Success) {
 		_oldVersion = legacy->local().oldMapVersion();
@@ -177,10 +178,7 @@ Domain::StartModernResult Domain::startModern(
 		if (index >= 0
 			&& index < Main::Domain::kPremiumMaxAccounts
 			&& tried.emplace(index).second) {
-			auto account = std::make_unique<Main::Account>(
-				_owner,
-				_dataName,
-				index);
+			auto account = _owner->createAccountForStorage(index);
 			auto config = account->prepareToStart(_localKey);
 			const auto sessionId = account->willHaveSessionUniqueId(
 				config.get());
@@ -240,8 +238,9 @@ void Domain::writeAccounts() {
 void Domain::startFromScratch() {
 	startWithSingleAccount(
 		QByteArray(),
-		std::make_unique<Main::Account>(_owner, _dataName, 0));
+		_owner->createAccountForStorage(0));
 }
+// TG_CHANGE_END: storage-domain-owner-account-factory
 
 bool Domain::checkPasscode(const QByteArray &passcode) const {
 	Expects(!_passcodeKeySalt.isEmpty());

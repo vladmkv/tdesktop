@@ -25,20 +25,48 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "window/notifications_manager.h"
 #include "window/window_controller.h"
 #include "data/data_peer_values.h" // Data::AmPremiumValue.
+// TG_CHANGE_BEGIN: domain-capability-bundle-include
+#include "../../tg_cli/capabilities/domain_lifecycle_capabilities.h"
+// TG_CHANGE_END: domain-capability-bundle-include
 
 namespace Main {
 
+// TG_CHANGE_BEGIN: domain-capability-constructor-delegation
 Domain::Domain(const QString &dataName)
+: Domain(
+	dataName,
+	TgCli::Capabilities::CreateDesktopDomainCapabilityBundle()) {
+}
+// TG_CHANGE_END: domain-capability-constructor-delegation
+// TG_CHANGE_BEGIN: domain-capability-constructor-overload
+Domain::Domain(
+		const QString &dataName,
+		TgCli::Capabilities::DomainCapabilityBundle capabilityBundle)
 : _dataName(dataName)
+, _domainLifecycleCapabilities([&] {
+	Expects(capabilityBundle.lifecycle != nullptr);
+	return std::move(capabilityBundle.lifecycle);
+}())
+, _domainAccountFactoryCapabilities([&] {
+	Expects(capabilityBundle.accountFactory != nullptr);
+	return std::move(capabilityBundle.accountFactory);
+}())
 , _local(std::make_unique<Storage::Domain>(this, dataName)) {
+	Expects(_domainLifecycleCapabilities != nullptr);
+	Expects(_domainAccountFactoryCapabilities != nullptr);
+// TG_CHANGE_END: domain-capability-constructor-overload
 	_active.changes(
 	) | rpl::take(1) | rpl::on_next([=] {
 		// In case we had a legacy passcoded app we start settings here.
-		Core::App().startSettingsAndBackground();
+		// TG_CHANGE_BEGIN: domain-lifecycle-start-settings-background
+		_domainLifecycleCapabilities->startSettingsAndBackground();
+		// TG_CHANGE_END: domain-lifecycle-start-settings-background
 
-		crl::on_main(this, [=] {
-			Core::App().notifications().createManager();
-		});
+		// TG_CHANGE_BEGIN: domain-lifecycle-notification-manager
+		_domainLifecycleCapabilities->runOnMain(crl::guard(this, [=] {
+			_domainLifecycleCapabilities->createNotificationsManager();
+		}));
+		// TG_CHANGE_END: domain-lifecycle-notification-manager
 	}, _lifetime);
 
 	_active.changes(
@@ -69,7 +97,11 @@ Storage::StartResult Domain::start(const QByteArray &passcode) {
 	const auto result = _local->start(passcode);
 	if (result == Storage::StartResult::Success) {
 		activateAfterStarting();
-		crl::on_main(&Core::App(), [=] { suggestExportIfNeeded(); });
+		// TG_CHANGE_BEGIN: domain-lifecycle-on-main-export-suggest
+		_domainLifecycleCapabilities->runOnMain(crl::guard(this, [=] {
+			suggestExportIfNeeded();
+		}));
+		// TG_CHANGE_END: domain-lifecycle-on-main-export-suggest
 	} else {
 		Assert(!started());
 	}
@@ -114,6 +146,22 @@ int Domain::activeForStorage() const {
 	return _accountToActivate;
 }
 
+// TG_CHANGE_BEGIN: domain-account-factory-implementation
+std::unique_ptr<Main::Account> Domain::createAccountForStorage(int index) {
+	auto bundle = _domainAccountFactoryCapabilities->createAccountCapabilityBundle();
+	Expects(bundle.network != nullptr);
+	Expects(bundle.storage != nullptr);
+	Expects(bundle.session != nullptr);
+
+	return std::make_unique<Main::Account>(
+		this,
+		_dataName,
+		index,
+		std::move(bundle.network),
+		std::move(bundle.storage),
+		std::move(bundle.session));
+}
+// TG_CHANGE_END: domain-account-factory-implementation
 void Domain::resetWithForgottenPasscode() {
 	if (_accounts.empty()) {
 		_local->startFromScratch();
@@ -145,7 +193,9 @@ const std::vector<Domain::AccountWithIndex> &Domain::accounts() const {
 }
 
 std::vector<not_null<Account*>> Domain::orderedAccounts() const {
-	const auto order = Core::App().settings().accountsOrder();
+	// TG_CHANGE_BEGIN: domain-lifecycle-accounts-order
+	const auto order = _domainLifecycleCapabilities->accountsOrder();
+	// TG_CHANGE_END: domain-lifecycle-accounts-order
 	auto accounts = ranges::views::all(
 		_accounts
 	) | ranges::views::transform([](const Domain::AccountWithIndex &a) {
@@ -261,10 +311,12 @@ void Domain::scheduleUpdateUnreadBadge() {
 		return;
 	}
 	_unreadBadgeUpdateScheduled = true;
-	Core::App().postponeCall(crl::guard(&Core::App(), [=] {
+	// TG_CHANGE_BEGIN: domain-lifecycle-postpone-unread-badge
+	_domainLifecycleCapabilities->postponeCall(crl::guard(this, [=] {
 		_unreadBadgeUpdateScheduled = false;
 		updateUnreadBadge();
 	}));
+	// TG_CHANGE_END: domain-lifecycle-postpone-unread-badge
 }
 
 not_null<Main::Account*> Domain::add(MTP::Environment environment) {
@@ -288,44 +340,55 @@ not_null<Main::Account*> Domain::add(MTP::Environment environment) {
 				return accountConfig(account.get());
 			}
 		}
-		return (environment == MTP::Environment::Production)
-			? cloneConfig(Core::App().fallbackProductionConfig())
-			: std::make_unique<MTP::Config>(environment);
+		// TG_CHANGE_BEGIN: domain-lifecycle-fallback-config-copy
+		if (environment == MTP::Environment::Production) {
+			auto copy = _domainLifecycleCapabilities->fallbackProductionConfigCopy();
+			Expects(copy != nullptr);
+			return copy;
+		}
+		return std::make_unique<MTP::Config>(environment);
+		// TG_CHANGE_END: domain-lifecycle-fallback-config-copy
 	}();
 	auto index = 0;
 	while (ranges::contains(_accounts, index, &AccountWithIndex::index)) {
 		++index;
 	}
+	// TG_CHANGE_BEGIN: domain-add-account-factory-usage
 	_accounts.push_back(AccountWithIndex{
 		.index = index,
-		.account = std::make_unique<Account>(this, _dataName, index)
+		.account = createAccountForStorage(index)
 	});
+	// TG_CHANGE_END: domain-add-account-factory-usage
 	const auto account = _accounts.back().account.get();
 	account->setMtpMainDcId(mainDcId);
 	_local->startAdded(account, std::move(config));
 	watchSession(account);
 	_accountsChanges.fire({});
 
-	auto &settings = Core::App().settings();
-	if (_accounts.size() == 2 && !settings.mainMenuAccountsShown()) {
-		settings.setMainMenuAccountsShown(true);
-		Core::App().saveSettingsDelayed();
+	// TG_CHANGE_BEGIN: domain-lifecycle-main-menu-settings
+	if (_accounts.size() == 2
+		&& !_domainLifecycleCapabilities->mainMenuAccountsShown()) {
+		_domainLifecycleCapabilities->setMainMenuAccountsShown(true);
+		_domainLifecycleCapabilities->saveSettingsDelayed();
 	}
+	// TG_CHANGE_END: domain-lifecycle-main-menu-settings
 
 	return account;
 }
 
 void Domain::addActivated(MTP::Environment environment, bool newWindow) {
+	// TG_CHANGE_BEGIN: domain-lifecycle-window-selection
 	const auto added = [&](not_null<Main::Account*> account) {
 		if (newWindow) {
-			Core::App().ensureSeparateWindowFor(account);
-		} else if (const auto window = Core::App().separateWindowFor(
+			_domainLifecycleCapabilities->ensureSeparateWindowFor(account);
+		} else if (const auto window = _domainLifecycleCapabilities->separateWindowFor(
 				account)) {
 			window->activate();
 		} else {
 			activate(account);
 		}
 	};
+	// TG_CHANGE_END: domain-lifecycle-window-selection
 	if (accounts().size() < maxAccounts()) {
 		added(add(environment));
 	} else {
@@ -363,21 +426,24 @@ void Domain::watchSession(not_null<Account*> account) {
 		scheduleUpdateUnreadBadge();
 		closeAccountWindows(account);
 		if (!Core::Quitting()) {
-			crl::on_main(&Core::App(), [=] {
+			// TG_CHANGE_BEGIN: domain-lifecycle-on-main-remove-redundant
+			_domainLifecycleCapabilities->runOnMain(crl::guard(this, [=] {
 				removeRedundantAccounts();
-			});
+			}));
+			// TG_CHANGE_END: domain-lifecycle-on-main-remove-redundant
 		}
 	}, account->lifetime());
 }
 
 void Domain::closeAccountWindows(not_null<Main::Account*> account) {
+	// TG_CHANGE_BEGIN: domain-lifecycle-close-account-windows
 	auto another = (Main::Account*)nullptr;
 	for (auto i = _accounts.begin(); i != _accounts.end(); ++i) {
 		const auto other = not_null(i->account.get());
 		if (other == account) {
 			continue;
-		} else if (Core::App().separateWindowFor(other)) {
-			const auto that = Core::App().separateWindowFor(account);
+		} else if (_domainLifecycleCapabilities->separateWindowFor(other)) {
+			const auto that = _domainLifecycleCapabilities->separateWindowFor(account);
 			if (that) {
 				that->close();
 			}
@@ -389,6 +455,7 @@ void Domain::closeAccountWindows(not_null<Main::Account*> account) {
 	if (another) {
 		activate(another);
 	}
+	// TG_CHANGE_END: domain-lifecycle-close-account-windows
 }
 
 bool Domain::removePasscodeIfEmpty() {
@@ -398,15 +465,16 @@ bool Domain::removePasscodeIfEmpty() {
 	Local::reset();
 
 	// We completely logged out, remove the passcode if it was there.
-	if (Core::App().passcodeLocked()) {
-		Core::App().unlockPasscode();
+	// TG_CHANGE_BEGIN: domain-lifecycle-passcode-transitions
+	if (_domainLifecycleCapabilities->passcodeLocked()) {
+		_domainLifecycleCapabilities->unlockPasscode();
 	}
 	if (!_local->hasLocalPasscode()) {
 		return false;
 	}
 	_local->setPasscode(QByteArray());
-	Core::App().settings().setSystemUnlockEnabled(false);
-	Core::App().saveSettingsDelayed();
+	_domainLifecycleCapabilities->setSystemUnlockEnabled(false);
+	_domainLifecycleCapabilities->saveSettingsDelayed();
 	return true;
 }
 
@@ -415,7 +483,7 @@ void Domain::removeRedundantAccounts() {
 
 	const auto was = _accounts.size();
 	for (auto i = _accounts.begin(); i != _accounts.end();) {
-		if (Core::App().separateWindowFor(not_null(i->account.get()))
+		if (_domainLifecycleCapabilities->separateWindowFor(not_null(i->account.get()))
 			|| i->account->sessionExists()) {
 			++i;
 			continue;
@@ -423,6 +491,7 @@ void Domain::removeRedundantAccounts() {
 		checkForLastProductionConfig(i->account.get());
 		i = _accounts.erase(i);
 	}
+	// TG_CHANGE_END: domain-lifecycle-passcode-transitions
 
 	if (!removePasscodeIfEmpty() && _accounts.size() != was) {
 		scheduleWriteAccounts();
@@ -442,23 +511,29 @@ void Domain::checkForLastProductionConfig(
 			return;
 		}
 	}
-	Core::App().refreshFallbackProductionConfig(mtp->config());
+	// TG_CHANGE_BEGIN: domain-lifecycle-refresh-fallback-config
+	_domainLifecycleCapabilities->refreshFallbackProductionConfig(mtp->config());
+	// TG_CHANGE_END: domain-lifecycle-refresh-fallback-config
 }
 
 void Domain::maybeActivate(not_null<Main::Account*> account) {
-	if (Core::App().separateWindowFor(account)) {
+	// TG_CHANGE_BEGIN: domain-lifecycle-prevent-or-invoke
+	if (_domainLifecycleCapabilities->separateWindowFor(account)) {
 		activate(account);
 	} else {
-		Core::App().preventOrInvoke(crl::guard(account, [=] {
+		_domainLifecycleCapabilities->preventOrInvoke(crl::guard(account, [=] {
 			activate(account);
 		}));
 	}
+	// TG_CHANGE_END: domain-lifecycle-prevent-or-invoke
 }
 
 void Domain::activate(not_null<Main::Account*> account) {
-	if (const auto window = Core::App().separateWindowFor(account)) {
+	// TG_CHANGE_BEGIN: domain-lifecycle-activate-window
+	if (const auto window = _domainLifecycleCapabilities->separateWindowFor(account)) {
 		window->activate();
 	}
+	// TG_CHANGE_END: domain-lifecycle-activate-window
 	if (_active.current() == account.get()) {
 		return;
 	}
@@ -484,9 +559,11 @@ void Domain::activate(not_null<Main::Account*> account) {
 		if (wasAuthed) {
 			scheduleWriteAccounts();
 		} else {
-			crl::on_main(&Core::App(), [=] {
+			// TG_CHANGE_BEGIN: domain-lifecycle-on-main-remove-redundant-after-activate
+			_domainLifecycleCapabilities->runOnMain(crl::guard(this, [=] {
 				removeRedundantAccounts();
-			});
+			}));
+			// TG_CHANGE_END: domain-lifecycle-on-main-remove-redundant-after-activate
 		}
 	}
 }
@@ -496,10 +573,12 @@ void Domain::scheduleWriteAccounts() {
 		return;
 	}
 	_writeAccountsScheduled = true;
-	crl::on_main(&Core::App(), [=] {
+	// TG_CHANGE_BEGIN: domain-lifecycle-on-main-write-accounts
+	_domainLifecycleCapabilities->runOnMain(crl::guard(this, [=] {
 		_writeAccountsScheduled = false;
 		_local->writeAccounts();
-	});
+	}));
+	// TG_CHANGE_END: domain-lifecycle-on-main-write-accounts
 }
 
 int Domain::maxAccounts() const {

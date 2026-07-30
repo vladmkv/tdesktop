@@ -19,6 +19,13 @@ namespace MTP {
 enum class Environment : uchar;
 } // namespace MTP
 
+// TG_CHANGE_BEGIN: domain-capability-bundle-forward-declarations
+namespace TgCli::Capabilities {
+struct DomainCapabilityBundle;
+class DomainLifecycleCapabilities;
+class DomainAccountFactoryCapabilities;
+} // namespace TgCli::Capabilities
+// TG_CHANGE_END: domain-capability-bundle-forward-declarations
 namespace Main {
 
 class Account;
@@ -35,6 +42,11 @@ public:
 	static constexpr auto kPremiumMaxAccounts = 6;
 
 	explicit Domain(const QString &dataName);
+	// TG_CHANGE_BEGIN: domain-capability-constructor-overload
+	Domain(
+		const QString &dataName,
+		TgCli::Capabilities::DomainCapabilityBundle capabilityBundle);
+	// TG_CHANGE_END: domain-capability-constructor-overload
 	~Domain();
 
 	[[nodiscard]] bool started() const;
@@ -81,6 +93,9 @@ public:
 	void accountAddedInStorage(AccountWithIndex accountWithIndex);
 	void activateFromStorage(int index);
 	[[nodiscard]] int activeForStorage() const;
+	// TG_CHANGE_BEGIN: domain-account-factory-method
+	[[nodiscard]] std::unique_ptr<Main::Account> createAccountForStorage(int index);
+	// TG_CHANGE_END: domain-account-factory-method
 
 private:
 	void activateAfterStarting();
@@ -94,6 +109,10 @@ private:
 	void suggestExportIfNeeded();
 
 	const QString _dataName;
+	// TG_CHANGE_BEGIN: domain-capability-members
+	const std::unique_ptr<TgCli::Capabilities::DomainLifecycleCapabilities> _domainLifecycleCapabilities;
+	const std::unique_ptr<TgCli::Capabilities::DomainAccountFactoryCapabilities> _domainAccountFactoryCapabilities;
+	// TG_CHANGE_END: domain-capability-members
 	const std::unique_ptr<Storage::Domain> _local;
 
 	std::vector<AccountWithIndex> _accounts;

@@ -2,10 +2,13 @@
 
 #include <memory>
 
+#include "account_network_capabilities.h"
 #include "core/application.h"
 #include "core/core_settings.h"
 #include "main/main_account.h"
 #include "mtproto/mtproto_config.h"
+#include "session_service_capabilities.h"
+#include "storage_settings_capabilities.h"
 #include "window/notifications_manager.h"
 
 namespace TgCli::Capabilities {
@@ -21,16 +24,12 @@ public:
 		Core::App().notifications().createManager();
 	}
 
-	void runOnMain(std::function<void()> callback) override {
-		crl::on_main(&Core::App(), [callback = std::move(callback)]() mutable {
-			callback();
-		});
+	void runOnMain(FnMut<void()> &&callback) override {
+		crl::on_main(&Core::App(), std::move(callback));
 	}
 
-	void postponeCall(std::function<void()> callback) override {
-		Core::App().postponeCall([callback = std::move(callback)]() mutable {
-			callback();
-		});
+	void postponeCall(FnMut<void()> &&callback) override {
+		Core::App().postponeCall(std::move(callback));
 	}
 
 	[[nodiscard]] std::vector<uint64> accountsOrder() const override {
@@ -87,10 +86,19 @@ public:
 		Core::App().settings().setSystemUnlockEnabled(enabled);
 	}
 
-	void preventOrInvoke(std::function<void()> callback) override {
-		Core::App().preventOrInvoke([callback = std::move(callback)]() mutable {
-			callback();
-		});
+	void preventOrInvoke(Fn<void()> &&callback) override {
+		Core::App().preventOrInvoke(std::move(callback));
+	}
+};
+
+class DesktopDomainAccountFactoryCapabilities final : public DomainAccountFactoryCapabilities {
+public:
+	[[nodiscard]] AccountCapabilityBundle createAccountCapabilityBundle() override {
+		return {
+			.network = CreateDesktopAccountNetworkCapabilities(),
+			.storage = CreateDesktopStorageSettingsCapabilities(),
+			.session = CreateDesktopSessionServiceCapabilities(),
+		};
 	}
 };
 
@@ -98,6 +106,13 @@ public:
 
 std::unique_ptr<DomainLifecycleCapabilities> CreateDesktopDomainLifecycleCapabilities() {
 	return std::make_unique<DesktopDomainLifecycleCapabilities>();
+}
+
+DomainCapabilityBundle CreateDesktopDomainCapabilityBundle() {
+	return {
+		.lifecycle = CreateDesktopDomainLifecycleCapabilities(),
+		.accountFactory = std::make_unique<DesktopDomainAccountFactoryCapabilities>(),
+	};
 }
 
 } // namespace TgCli::Capabilities
