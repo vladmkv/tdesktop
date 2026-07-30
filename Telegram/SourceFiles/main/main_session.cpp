@@ -144,12 +144,12 @@ Session::Session(
 		|| _promoSuggestions->setupEmailState() == State::SetupNoSkip) {
 		if (_settings->setupEmailState() == State::Setup
 			|| _settings->setupEmailState() == State::SetupNoSkip) {
-			crl::on_main([=] {
+			// TG_CHANGE_BEGIN: session-service-setup-email-lock
+			crl::on_main(crl::guard(this, [=] {
 			// base::call_delayed(5000, [=] {
-				// TG_CHANGE_BEGIN: session-service-setup-email-lock
 				_sessionServiceCapabilities->lockBySetupEmail();
-				// TG_CHANGE_END: session-service-setup-email-lock
-			});
+			}));
+			// TG_CHANGE_END: session-service-setup-email-lock
 			const auto unlockLifetime = std::make_shared<rpl::lifetime>();
 			_promoSuggestions->setupEmailStateValue(
 			) | rpl::filter([](Data::SetupEmailState s) {

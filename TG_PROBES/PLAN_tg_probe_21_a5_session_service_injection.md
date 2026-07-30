@@ -228,3 +228,8 @@ Before marking this packet `[DONE]`, append:
 
 - Implementation commit hash:
 	- Recorded after commit creation.
+
+- Independent review finding and fix (A5):
+	- Finding: `main_session.cpp` deferred setup-email lock used `crl::on_main([=] { ... })` and captured Session state without lifetime protection.
+	- Fix: kept the existing `session-service-setup-email-lock` fence and switched to `crl::on_main(crl::guard(this, [=] { ... }))`, preserving the same deferred timing and capability call behavior.
+	- Validation: checker self-test PASS, checker base `12e8d4a956` PASS, tg_cli Debug build + `--help` PASS, single-attempt desktop `Telegram` Debug build PASS (`out/Debug/tg.exe`), `git diff --check` PASS.
