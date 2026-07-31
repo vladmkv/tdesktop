@@ -39,6 +39,11 @@ bool gNoStartUpdate = false;
 bool gStartToSettings = false;
 bool gDebugMode = false;
 bool gTestAgent = false;
+// TG_CHANGE_BEGIN: core-console-launch-state
+bool gConsoleMode = false;
+bool gConsoleExitRequested = false;
+QString gConsoleLogPath;
+// TG_CHANGE_END: core-console-launch-state
 
 uint32 gConnectionsInSession = 1;
 

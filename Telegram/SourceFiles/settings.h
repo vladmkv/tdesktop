@@ -83,6 +83,11 @@ DeclareSetting(bool, DebugMode);
 DeclareSetting(bool, TestAgent);
 DeclareReadSetting(bool, ManyInstance);
 DeclareSetting(bool, Quit);
+// TG_CHANGE_BEGIN: core-console-launch-state
+DeclareSetting(bool, ConsoleMode);
+DeclareSetting(bool, ConsoleExitRequested);
+DeclareSetting(QString, ConsoleLogPath);
+// TG_CHANGE_END: core-console-launch-state
 
 DeclareSetting(QByteArray, LocalSalt);
 DeclareSetting(int, ScreenScale);

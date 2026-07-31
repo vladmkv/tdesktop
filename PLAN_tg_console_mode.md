@@ -74,8 +74,7 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. A7 CLI bundle + synthetic Domain/Account/Session construction/runtime-closure packet (includes executable closure decision gate for `MTP::Instance`/`Core::App` coupling).
-2. A8 profile ownership and workdir-resolution packet.
+1. A8 profile ownership and workdir-resolution packet.
 3. A9 passcode, account selection, and status packet.
 4. A10 chats and paged-history packet.
 
@@ -83,8 +82,12 @@ Current readiness:
 - A0.1 through A5 are complete and validated.
 - A4 implementation commit: `530dec607a`.
 - A5 implementation commit: `16babf664f`; A5 review-fix commit: `884cb247de`.
-- A6 is complete and validated as desktop seam only (Domain lifecycle extraction + owner account-factory routing).
-- A7 is now the active next packet for CLI bundle/factory wiring plus synthetic construction/runtime closure before any profile work.
+- A6 is complete and validated as desktop seam only (Domain lifecycle extraction + owner account-factory routing); implementation commit: `d7daf02d01`; A6 review disposition: clean.
+- A7 packet 23 is blocked cleanly at Gate 1 after bounded expansions consumed (3/3); failed/uncommitted implementation wiring has been restored to `d7daf02d01` and baseline `tg_cli` remains functional.
+- A7.1 packet 24 is complete with Option C selected.
+- A7.2 packet 25 architecture decision is complete; follow-up implementor packet is locked.
+- A7.3 packet 26 is complete and validated with 8q resolved as Option B (hosted persistent empty-workdir mode skips Domain start and remains owner/listener only).
+- A8 is now open as the next implementor packet.
 
 ### First Runnable Read-Only Version (V0)
 V0 is reached after A10 and provides these one-shot commands over an existing desktop-authenticated profile:
@@ -184,6 +187,12 @@ V0 requirements:
 - 2026-07-30: Executable Probe 11 failed the selected-source/no-protected-edit architecture after three attempts; 153 unresolved externals spanned Core/Main/Data/Storage/Window/UI. Gate B failed for this architecture; Probes 12/13 blocked.
 - 2026-07-30: Designed fallback A using four capability interfaces (domain lifecycle, account network, session services, storage settings), additive overloads, and mandatory named TG_CHANGE fences with automated enforcement.
 - 2026-07-31: A6 desktop seam packet completed and validated; Domain lifecycle capability routing and owner account-factory account construction are in place, with CLI domain bundle/runtime closure intentionally deferred to A7.
+- 2026-07-31: A6 final implementation commit recorded as `d7daf02d01`; A6 review disposition is clean.
+- 2026-07-31: A7 implementor packet authored at `TG_PROBES/PLAN_tg_probe_23_a7_cli_bundle_synthetic_construction.md` and queued as active next execution packet.
+- 2026-07-31: A7 packet 23 resolved A7qq as Option A (stop after 3/3 bounded expansions). Failed/uncommitted A7 wiring was restored to `d7daf02d01`, tg_cli baseline was revalidated, and follow-on decision/probe work moved to packet 24 while keeping A8 closed.
+- 2026-07-31: A7.1 packet 24 executed as bounded decision/probe. Read-only dependency graph and per-file dependency inventory were captured first; Option A and Option B were disproven by isolated compile closure evidence; Option C selected. Temporary probe wiring was rolled back and baseline tg_cli build/help plus fence checker and diff checks passed. Next queue item moved to A7.2 architecture decision packet 25.
+- 2026-07-31: A7.3 packet 26 planning finalized as the sole ready implementor packet. Clarified TG-owned hosted sources under Telegram/tg_cli/hosted, Telegram-only hosted bundle wiring, strict synthetic empty-workdir-only validation, explicit H1 one-shot `-console-exit` gate before H2 persistent owner/single-instance mode, and mandatory desktop/tg_cli unchanged regressions.
+- 2026-07-31: A7.3 packet 26 implemented and validated end-to-end. Option B chosen for 8q with no `Storage::Domain` invariant edits: hosted persistent empty-workdir mode now keeps only owner/event-loop/single-instance behavior, emits deterministic `console-ready`, passes H1/H2 and disposable-workdir non-console regression, and preserves tg_cli/desktop build regressions.
 
 ## Stage Command Matrix
 

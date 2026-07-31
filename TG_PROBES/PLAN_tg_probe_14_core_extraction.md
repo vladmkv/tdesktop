@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 executable closure packet pending **high**
+Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 packet 23 blocked cleanly at 3/3 and restored to `d7daf02d01`; A7.1 packet 24, A7.2 packet 25, and A7.3 packet 26 completed; A8 is now the next open packet **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -176,7 +176,7 @@ Pass:
 
 ### A6: Main::Domain Desktop Seam Injection
 Implementor packet: PLAN_tg_probe_22_a6_domain_lifecycle_account_factory.md
-Status: [DONE] Completed on tg-cli with Domain lifecycle capability ownership + owner account-factory routing for all four account creation paths; desktop seam only.
+Status: [DONE] Completed on tg-cli with Domain lifecycle capability ownership + owner account-factory routing for all four account creation paths; desktop seam only. Implementation commit: `d7daf02d01`. Review disposition: clean.
 1. Add capability-bundle constructor overload; preserve `Domain(const QString&)`.
 2. Convert required lifecycle calls first.
 3. Convert optional presentation hooks one cluster at a time.
@@ -190,6 +190,8 @@ Pass:
 - Static checks confirm fresh per-account bundle creation and single ownership transfer.
 
 ### A7: CLI Bundle + Synthetic Construction/Runtime Closure
+Implementor packet: PLAN_tg_probe_23_a7_cli_bundle_synthetic_construction.md
+Status: [BLOCKED] Gate 1 stopped after bounded expansions consumed (3/3). A7qq resolved as Option A (stop and emit next packet). Failed/uncommitted A7 wiring restored to `d7daf02d01`; baseline tg_cli functional.
 1. Declare and implement `CreateCliDomainCapabilityBundle()` and CLI bundle/factory wiring.
 2. Move shared CLI fallback `MTP::Config(MTP::Environment::Production)` state into A7 and share it across CLI lifecycle + per-account network capabilities.
 3. Move CLI never-proxy producer behavior (`proxyChanges() -> rpl::never<ProxyChange>()`) and related no-op proxy hooks into A7.
@@ -204,7 +206,45 @@ Pass:
 Stop condition:
 - If `MTP::Instance` construction still requires `Core::App` coupling after bounded closure attempts, stop and produce a new executable closure decision packet before any A8 profile work.
 
+### A7.1: Minimal mtproto config target / source partition decision-probe
+Implementor packet: PLAN_tg_probe_24_a7_1_minimal_mtproto_config_target.md
+Status: [DONE] Completed as bounded probe packet. Read-only dependency graph + source inventory completed first; Option A and B disproven by isolated compile evidence; Option C selected (architecture decision required).
+1. Produce read-only dependency graph first.
+2. Capture exact source-level dependencies for `mtproto_config.cpp`, `mtproto_dc_options.cpp`, `mtproto_proxy_data.cpp`, and `mtproto_response.cpp`.
+3. Compare bounded options A/B/C and select only after probe evidence.
+
+Pass:
+- One proven bounded option with isolated compile/link evidence and no duplicate symbols.
+- No profile access and no UI/runtime broadening.
+
+Next:
+- Completed by packet 25 architecture decision. Do not reopen A7 bundle/runtime implementation outside packet 26.
+
+### A7.2: Backend architecture decision
+Implementor packet: PLAN_tg_probe_25_backend_architecture_decision.md
+Status: [DONE] Architecture decision completed; packet 26 locked as implementor follow-up.
+1. Select hosted console checkpoint implementation path from bounded options.
+2. Preserve desktop capability factory behavior; host-specific implementation remains TG-owned.
+
+Pass:
+- One selected hosted implementation path with explicit follow-up packet and no source implementation mixed into decision packet.
+
+### A7.3: Hosted console checkpoint implementation (gated)
+Implementor packet: PLAN_tg_probe_26_a7_3_hosted_console_mode_checkpoint.md
+Status: [DONE] Implemented and validated with Option B for 8q (hosted persistent empty-workdir mode skips Domain start, owner/listener only).
+1. Implement hosted status writer and hosted bundle in TG-owned files under Telegram/tg_cli/hosted, compiled into Telegram target only.
+2. Keep standalone tg_cli runtime behavior unchanged.
+3. Keep existing desktop capability factory behavior unchanged.
+4. Enforce synthetic empty-workdir-only validation where only disposable tdata (and explicit hosted status sink) may be created/mutated.
+5. Apply H1/H2 gate sequence: reversible one-shot `-console-exit` probe first, then persistent owner/single-instance mode.
+
+Pass:
+- Packet 26 pass criteria and validations all pass.
+- tg desktop normal startup regression passes.
+- tg_cli build/help unchanged checks pass.
+
 ### A8: Shared Profile Read Probe
+Status: [OPEN] A7.3 packet 26 passed all gated validations; A8 may start.
 1. Acquire tg-compatible profile ownership first.
 2. Open an authenticated copied test profile read-only where possible.
 3. Select one account and list one dialog page.
@@ -258,7 +298,14 @@ After each protected edit:
 - 2026-07-30: A6 pre-source linkage probe stopped per packet rule. Linking `tg_cli` with `tdesktop::td_mtproto` plus `tdesktop::td_scheme` failed (`cmake --build out --config Debug --target tg_cli`) with unresolved symbols requiring additional mtproto/core/logging closure (`MTP::details::AbstractConnection`, `MTP::Instance`, `Logs::*`, `tl::utf16`). No protected-source edits were made; packet 22 is marked blocked with CLARIFY question 2q.
 - 2026-07-30: Executed bounded A6 linkage-only follow-up (max 3 expansions) and resolved packet 22 CLARIFY 2q to stop A6 here. Expansion 1 (only `mtproto_config.cpp`) failed compile on `base/bytes.h` include chain; expansion 2 (`mtproto_dc_options.cpp` plus `desktop-app::lib_base`/`desktop-app::lib_tl`) failed compile on missing mtproto prelude types (`DcId`, `MTPDcOption`, `base::flat_map`, `rpl::event_stream`); expansion 3 (`/FI mtproto_pch.h`) failed compile on missing generated `scheme.h`. Restored `Telegram/tg_cli/CMakeLists.txt` to best-known state by removing disproved broad `tdesktop::td_mtproto`/`tdesktop::td_scheme` linkage and removing temporary source wiring.
 - 2026-07-31: Re-scoped packet 22 to unblock A6. Kept bounded linkage probe failures as recorded evidence, removed blocked/CLARIFY state, narrowed A6 to desktop Domain seam + owner account-factory routing, and explicitly moved CLI bundle/factory implementation, shared CLI fallback config state, never-proxy behavior, and tg_cli executable closure decisions to A7.
-- 2026-07-31: A6 completed via PLAN_tg_probe_22_a6_domain_lifecycle_account_factory.md. Added `DomainCapabilityBundle`/`DomainAccountFactoryCapabilities` and desktop bundle factory, corrected lifecycle callback types to `Fn`/`FnMut`, preserved `Domain(const QString&)` via delegating overload, replaced scoped `Core::App`/`crl::on_main` use in `main_domain.cpp` with capability calls, routed all Storage::Domain and Main::Domain add account construction paths through `createAccountForStorage`, and validated with fence checker self-test PASS, fence checker base `12e8d4a956` PASS, tg_cli build/help PASS, desktop Telegram Debug build PASS, desktop smoke run with safe workdir and no tg_cli profile open, and `git diff --check` PASS.
+- 2026-07-31: A6 completed via PLAN_tg_probe_22_a6_domain_lifecycle_account_factory.md in commit `d7daf02d01`. Added `DomainCapabilityBundle`/`DomainAccountFactoryCapabilities` and desktop bundle factory, corrected lifecycle callback types to `Fn`/`FnMut`, preserved `Domain(const QString&)` via delegating overload, replaced scoped `Core::App`/`crl::on_main` use in `main_domain.cpp` with capability calls, routed all Storage::Domain and Main::Domain add account construction paths through `createAccountForStorage`, validated with fence checker self-test PASS, fence checker base `12e8d4a956` PASS, tg_cli build/help PASS, desktop Telegram Debug build PASS, desktop smoke run with safe workdir and no tg_cli profile open, and `git diff --check` PASS; review disposition recorded clean.
+- 2026-07-31: A7 implementor packet authored as PLAN_tg_probe_23_a7_cli_bundle_synthetic_construction.md with bounded three-expansion linkage policy, synthetic workdir-only construction boundary, runtime class decision gate, and pre-Session MTP::Instance/Core::App dependency inventory gate.
+- 2026-07-31: A7 packet 23 resolved A7qq as Option A (stop after 3/3), marked blocked cleanly, and restored failed/uncommitted implementation wiring (`Telegram/tg_cli/CMakeLists.txt`, `account_network_capabilities.h`, `domain_lifecycle_capabilities.h`) to `d7daf02d01`; removed untracked partial `domain_lifecycle_capabilities_cli.cpp`; retained exact unresolved-symbol evidence.
+- 2026-07-31: Authored A7.1 decision/probe packet 24 to test minimal mtproto config target/source-partition options before any A8 profile work.
+- 2026-07-31: Executed A7.1 packet 24 as bounded probe set. Probe 0 dependency graph completed first; Option A (additive mtproto partition) and Option B (tiny config factory seam) both failed isolated compile closure; selected Option C and locked next step to architecture-decision packet 25. Restored temporary tg_cli probe wiring and revalidated baseline tg_cli build/help, fence checker PASS, and diff check clean for probe files.
+- 2026-07-31: A7.2 packet 25 completed architecture decision and locked A7.3 implementor scope to packet 26.
+- 2026-07-31: Packet 26 finalized as the sole ready implementor packet with explicit TG-owned hosted file placement under Telegram/tg_cli/hosted, Telegram-only hosted source wiring, strict synthetic empty-workdir mutation boundary, and H1 (`-console-exit`) to H2 (persistent owner/single-instance) stop gate.
+- 2026-07-31: Packet 26 completed and validated. 8q resolved as Option B: hosted persistent empty-workdir mode skips `Main::Domain` startup and retains only owner/event-loop/single-instance behavior; no `Storage::Domain` invariant changes were introduced. Fence checker, Telegram + tg_cli builds, tg_cli help, H1/H2 probes, and disposable-workdir non-console regression all passed.
 
 ## A0-A2 Review Disposition
 

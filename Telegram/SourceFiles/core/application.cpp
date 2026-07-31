@@ -95,6 +95,12 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/boxes/confirm_box.h"
 #include "core/cached_webview_availability.h"
 #include "test/test_agent.h"
+// TG_CHANGE_BEGIN: application-console-domain-bundle-select-a
+#include "../../tg_cli/capabilities/domain_lifecycle_capabilities.h"
+// TG_CHANGE_END: application-console-domain-bundle-select-a
+// TG_CHANGE_BEGIN: application-console-status-line-a
+#include "../../tg_cli/hosted/hosted_console_status_writer.h"
+// TG_CHANGE_END: application-console-status-line-a
 
 #include <QtCore/QStandardPaths>
 #include <QtCore/QMimeDatabase>
@@ -165,7 +171,15 @@ Application::Application()
 , _fallbackProductionConfig(
 	std::make_unique<MTP::Config>(MTP::Environment::Production))
 , _downloadManager(std::make_unique<Data::DownloadManager>())
-, _domain(std::make_unique<Main::Domain>(cDataFile()))
+// TG_CHANGE_BEGIN: application-console-domain-bundle-select-b
+, _domain([&] {
+	return cConsoleMode()
+		? std::make_unique<Main::Domain>(
+			cDataFile(),
+			TgCli::Capabilities::CreateHostedConsoleDomainCapabilityBundle())
+		: std::make_unique<Main::Domain>(cDataFile());
+}())
+// TG_CHANGE_END: application-console-domain-bundle-select-b
 , _exportManager(std::make_unique<Export::Manager>())
 , _calls(std::make_unique<Calls::Instance>())
 , _iv(std::make_unique<Iv::Instance>(
@@ -296,7 +310,34 @@ void Application::run() {
 
 	_translator = std::make_unique<Lang::Translator>();
 	QCoreApplication::instance()->installTranslator(_translator.get());
+	// TG_CHANGE_BEGIN: application-console-window-suppress-a
+	const auto hostedConsoleMode = cConsoleMode();
+	// TG_CHANGE_END: application-console-window-suppress-a
 
+	// TG_CHANGE_BEGIN: application-console-status-line-b
+	if (hostedConsoleMode) {
+		TgCli::Hosted::WriteHostedConsoleStatusLine(QStringLiteral("console-ready"));
+	}
+	// TG_CHANGE_END: application-console-status-line-b
+	// TG_CHANGE_BEGIN: application-console-window-suppress-c
+	if (hostedConsoleMode && !cConsoleExitRequested()) {
+		if (const auto app = qobject_cast<QGuiApplication*>(
+				QCoreApplication::instance())) {
+			app->setQuitOnLastWindowClosed(false);
+		}
+	}
+	// TG_CHANGE_END: application-console-window-suppress-c
+	// TG_CHANGE_BEGIN: application-console-optional-exit
+	if (hostedConsoleMode && cConsoleExitRequested()) {
+		Quit();
+		QCoreApplication::exit(0);
+	}
+	// TG_CHANGE_END: application-console-optional-exit
+	// TG_CHANGE_BEGIN: application-console-window-suppress-b
+	if (hostedConsoleMode) {
+		return;
+	}
+	// TG_CHANGE_END: application-console-window-suppress-b
 	style::StartManager(cScale());
 	Ui::Accessible::Init();
 	Ui::InitTextOptions();

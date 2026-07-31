@@ -71,5 +71,8 @@ struct DomainCapabilityBundle {
 // TG_CHANGE_BEGIN: domain-capability-bundle-factories
 [[nodiscard]] DomainCapabilityBundle CreateDesktopDomainCapabilityBundle();
 // TG_CHANGE_END: domain-capability-bundle-factories
+// TG_CHANGE_BEGIN: domain-hosted-console-bundle-factory
+[[nodiscard]] DomainCapabilityBundle CreateHostedConsoleDomainCapabilityBundle();
+// TG_CHANGE_END: domain-hosted-console-bundle-factory
 
 } // namespace TgCli::Capabilities

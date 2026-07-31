@@ -74,6 +74,18 @@ target_sources(Telegram PRIVATE
 )
 
 # TG_CHANGE_END: tg-cli-capability-desktop-sources
+# TG_CHANGE_BEGIN: telegram-cmake-hosted-console-capability-sources
+target_sources(Telegram PRIVATE
+    tg_cli/hosted/hosted_console_domain_capability_bundle.cpp
+)
+
+# TG_CHANGE_END: telegram-cmake-hosted-console-capability-sources
+# TG_CHANGE_BEGIN: telegram-cmake-hosted-console-status-writer-sources
+target_sources(Telegram PRIVATE
+    tg_cli/hosted/hosted_console_status_writer.cpp
+)
+
+# TG_CHANGE_END: telegram-cmake-hosted-console-status-writer-sources
 target_link_libraries(Telegram
 PRIVATE
     tdesktop::lib_fido2

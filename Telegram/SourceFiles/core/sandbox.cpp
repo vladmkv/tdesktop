@@ -22,6 +22,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "core/local_url_handlers.h"
 #include "core/update_checker.h"
 #include "core/deadlock_detector.h"
+// TG_CHANGE_BEGIN: sandbox-console-second-instance-command-include
+#include "../../tg_cli/hosted/hosted_console_status_writer.h"
+// TG_CHANGE_END: sandbox-console-second-instance-command-include
 #include "base/timer.h"
 #include "base/concurrent_timer.h"
 #include "base/invoke_queued.h"
@@ -354,11 +357,15 @@ void Sandbox::socketConnected() {
 	for (const auto &url : cRefStartUrls()) {
 		commands += u"OPEN:"_q + url.toString(QUrl::FullyEncoded) + ';';
 	}
+	// TG_CHANGE_BEGIN: sandbox-console-second-instance-command
 	if (cQuit()) {
 		commands += u"CMD:quit;"_q;
+	} else if (cRefStartUrls().isEmpty() && cConsoleMode()) {
+		commands += u"CMD:console;"_q;
 	} else if (cRefStartUrls().isEmpty()) {
 		commands += u"CMD:show;"_q;
 	}
+	// TG_CHANGE_END: sandbox-console-second-instance-command
 
 	DEBUG_LOG(("Sandbox Info: writing commands %1").arg(commands));
 	_localSocket.write(commands.toLatin1());
@@ -443,6 +450,33 @@ void Sandbox::singleInstanceChecked() {
 		LOG(("App Info: Detected another instance"));
 	}
 
+	// TG_CHANGE_BEGIN: sandbox-console-second-instance-command-c
+	if (cConsoleMode()) {
+		const auto failClosed = [&](const QString &reason) {
+			TgCli::Hosted::WriteHostedConsoleStatusLine(
+				QStringLiteral("console-status:") + reason);
+			QCoreApplication::exit(1);
+		};
+
+		refreshGlobalProxy();
+		if (!Logs::started() || !Logs::instanceChecked()) {
+			failClosed(QStringLiteral("startup-unavailable"));
+			return;
+		}
+
+		const auto result = CrashReports::Start();
+		v::match(result, [&](CrashReports::Status status) {
+			if (status == CrashReports::CantOpen) {
+				failClosed(QStringLiteral("crash-reports-unavailable"));
+			} else {
+				launchApplication();
+			}
+		}, [&](const QByteArray &) {
+			failClosed(QStringLiteral("crash-report-pending"));
+		});
+		return;
+	}
+	// TG_CHANGE_END: sandbox-console-second-instance-command-c
 	refreshGlobalProxy();
 	if (!Logs::started() || !Logs::instanceChecked()) {
 		new NotStartedWindow();
@@ -539,9 +573,11 @@ void Sandbox::readClients() {
 				i->second = i->second.mid(from);
 			}
 			const auto processId = QApplication::applicationPid();
-			const auto windowId = activationRequired
-				? execExternal("show")
-				: 0;
+			// TG_CHANGE_BEGIN: sandbox-console-second-instance-command-b
+			const auto windowId = (cConsoleMode() || !activationRequired)
+				? 0
+				: execExternal("show");
+			// TG_CHANGE_END: sandbox-console-second-instance-command-b
 			const auto response = u"RES:%1_%2;"_q.arg(processId).arg(windowId).toLatin1();
 			i->first->write(response.data(), response.size());
 		}
@@ -709,6 +745,11 @@ void Sandbox::closeApplication() {
 
 uint64 Sandbox::execExternal(const QString &cmd) {
 	DEBUG_LOG(("Sandbox Info: executing external command '%1'").arg(cmd));
+	// TG_CHANGE_BEGIN: sandbox-console-exec-external-suppress
+	if (cmd == "show" && cConsoleMode()) {
+		return 0;
+	}
+	// TG_CHANGE_END: sandbox-console-exec-external-suppress
 	if (cmd == "show") {
 		if (Core::IsAppLaunched() && Core::App().activePrimaryWindow()) {
 			const auto window = Core::App().activePrimaryWindow();

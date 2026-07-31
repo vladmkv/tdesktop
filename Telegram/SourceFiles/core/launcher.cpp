@@ -558,6 +558,11 @@ void Launcher::processArguments() {
 		{ "-startintray"    , KeyFormat::NoValues },
 		{ "-quit"           , KeyFormat::NoValues },
 		{ "-workdir"        , KeyFormat::OneValue },
+		// TG_CHANGE_BEGIN: launcher-console-argument-parse
+		{ "-console"        , KeyFormat::NoValues },
+		{ "-console-exit"   , KeyFormat::NoValues },
+		{ "-console-log"    , KeyFormat::OneValue },
+		// TG_CHANGE_END: launcher-console-argument-parse
 		{ "--"              , KeyFormat::AllLeftValues },
 		{ "-scale"          , KeyFormat::OneValue },
 	};
@@ -606,6 +611,11 @@ void Launcher::processArguments() {
 	gStartToSettings = parseResult.contains("-tosettings");
 	gStartInTray = parseResult.contains("-startintray");
 	gQuit = parseResult.contains("-quit");
+	// TG_CHANGE_BEGIN: launcher-console-flag-assign
+	gConsoleMode = parseResult.contains("-console");
+	gConsoleExitRequested = parseResult.contains("-console-exit");
+	gConsoleLogPath = parseResult.value("-console-log", {}).join(QString());
+	// TG_CHANGE_END: launcher-console-flag-assign
 	_customWorkingDir = parseResult.value("-workdir", {}).join(QString());
 	if (!_customWorkingDir.isEmpty()) {
 		_customWorkingDir = QDir(_customWorkingDir).absolutePath() + '/';
