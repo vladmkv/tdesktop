@@ -157,6 +157,7 @@ Inspected baseline sequence (`Application::run()`) is constrained as follows.
 ## Review Findings (Packet 26 Follow-up)
 1. Finding 1 (runtime safety policy gap): hosted `-console` accepted startup without explicit `-workdir` and had no pre-A8 marker gate to distinguish disposable hosted checkpoints from existing profile-like `tdata` trees.
 2. Finding 2 (status writer error propagation gap): hosted status writer did not report mkdir/open/write/flush failures, so startup could continue and potentially claim readiness after output sink failure.
+3. Finding 3 (alias/ownership race gap): hosted checkpoint guard accepted path aliases as distinct workdirs and had no pre-Logs canonical workdir lock retention, so junction/symlink/case aliases could race and diverge single-instance ownership before Sandbox local-server hashing.
 
 Fix scope:
 1. Keep A8 closed in this follow-up.
@@ -289,3 +290,10 @@ A8 was CLOSED by default. This packet now records pass criteria and validation e
 1. Windows GUI stdout invisibility: must rely on file sink for deterministic verification.
 2. Crash/prelaunch branches currently create windows; hosted mode may need explicit fail-closed no-UI branch.
 3. Existing single-instance protocol is show/quit oriented; console command semantics must remain backward-safe.
+
+## Follow-up Devlog (Review Fixes)
+- 2026-07-31: Packet 26 review-fix scope implemented for findings 1-3 only. Hosted `-console` guard now canonicalizes explicit workdir to physical identity before Sandbox hash inputs, acquires an initialization lock to serialize marker creation, and retains a runtime ownership lock in canonical workdir through process teardown.
+- 2026-07-31: Marker write path switched from truncate/write to atomic `QSaveFile` commit with distinct open/write/commit failure mapping and fail-closed launcher exit.
+- 2026-07-31: Added alias/race probe coverage to `Telegram/tg_cli/tools/test_hosted_console_checkpoint_packet26_review.ps1` using junction alias startup to verify single-owner behavior while preserving H1/H2, missing-workdir, fake-profile, status-writer, and default desktop regression checks.
+- 2026-07-31: Review harness hang repaired. Replaced all unbounded `Start-Process -Wait` usage with bounded process helpers (timeout/kill/diagnostics), added hosted readiness wait on `console-ready` status line before launching second instances in persistent-owner tests, and removed blind fixed-attempt loops.
+- 2026-07-31: Hardened hosted guard/secondary determinism with a short init-lock acquisition bound (`tryLock(3000ms)`) and a console secondary fail-closed response timeout path in `Sandbox`, then revalidated focused script pass plus fence self/full checks.

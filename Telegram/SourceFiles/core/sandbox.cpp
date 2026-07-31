@@ -25,6 +25,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // TG_CHANGE_BEGIN: sandbox-console-second-instance-command-include
 #include "../../tg_cli/hosted/hosted_console_status_writer.h"
 // TG_CHANGE_END: sandbox-console-second-instance-command-include
+// TG_CHANGE_BEGIN: sandbox-console-checkpoint-lock-include
+#include "../../tg_cli/hosted/hosted_console_checkpoint_guard.h"
+// TG_CHANGE_END: sandbox-console-checkpoint-lock-include
 #include "base/timer.h"
 #include "base/concurrent_timer.h"
 #include "base/invoke_queued.h"
@@ -54,6 +57,9 @@ base::options::toggle OptionDeadlockDetector({
 
 constexpr auto kCleanupIpcTimeout = 10 * crl::time(1000);
 constexpr auto kCleanupQuitTimeout = 30 * crl::time(1000);
+// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-const
+constexpr auto kConsoleSecondInstanceResponseTimeout = 10 * crl::time(1000);
+// TG_CHANGE_END: sandbox-console-second-instance-timeout-const
 
 } // namespace
 
@@ -64,7 +70,20 @@ bool Sandbox::SystemShuttingDown = false;
 
 Sandbox::Sandbox(int &argc, char **argv)
 : QApplication(argc, argv)
-, _mainThreadId(QThread::currentThreadId()) {
+// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-timer
+, _mainThreadId(QThread::currentThreadId())
+, _secondInstanceResponseTimeoutTimer([=] {
+	if (!_secondInstance || !cConsoleMode()) {
+		return;
+	}
+	if (_localSocketReadData.contains("RES:")) {
+		return;
+	}
+	LOG(("Console second instance response timeout, quitting fail-closed."));
+	_localSocket.abort();
+	QCoreApplication::exit(1);
+}) {
+// TG_CHANGE_END: sandbox-console-second-instance-timeout-timer
 #ifdef Q_OS_MAC
 	Platform::CreateGlobalMenu();
 #endif // Q_OS_MAC
@@ -175,6 +194,13 @@ int Sandbox::start() {
 
 	LOG(("Connecting local socket to %1...").arg(_localServerName));
 	_localSocket.connectToServer(_localServerName);
+	// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-preconnect
+	if (cConsoleMode()
+		&& !TgCli::Hosted::HostedConsoleCheckpointOwnsWorkdirLock()) {
+		_secondInstanceResponseTimeoutTimer.callOnce(
+			kConsoleSecondInstanceResponseTimeout);
+	}
+	// TG_CHANGE_END: sandbox-console-second-instance-timeout-preconnect
 
 	if (QuitOnStartRequested) {
 		closeApplication();
@@ -369,6 +395,12 @@ void Sandbox::socketConnected() {
 
 	DEBUG_LOG(("Sandbox Info: writing commands %1").arg(commands));
 	_localSocket.write(commands.toLatin1());
+	// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-start
+	if (cConsoleMode()) {
+		_secondInstanceResponseTimeoutTimer.callOnce(
+			kConsoleSecondInstanceResponseTimeout);
+	}
+	// TG_CHANGE_END: sandbox-console-second-instance-timeout-start
 }
 
 void Sandbox::socketWritten(qint64/* bytes*/) {
@@ -393,6 +425,9 @@ void Sandbox::socketReading() {
 	if (!m.hasMatch()) {
 		return;
 	}
+	// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-cancel-a
+	_secondInstanceResponseTimeoutTimer.cancel();
+	// TG_CHANGE_END: sandbox-console-second-instance-timeout-cancel-a
 	const auto processId = m.capturedView(1).toULongLong();
 	const auto windowId = m.capturedView(2).toULongLong();
 	if (windowId) {
@@ -409,13 +444,30 @@ void Sandbox::socketError(QLocalSocket::LocalSocketError e) {
 	if (Quitting()) return;
 
 	if (_secondInstance) {
+		// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-cancel-b
+		_secondInstanceResponseTimeoutTimer.cancel();
+		// TG_CHANGE_END: sandbox-console-second-instance-timeout-cancel-b
 		LOG(("Could not write show command, error %1, quitting...").arg(e));
 		return Quit();
 	}
 
 	if (e == QLocalSocket::ServerNotFoundError) {
+		// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-cancel-owner-a
+		_secondInstanceResponseTimeoutTimer.cancel();
+		// TG_CHANGE_END: sandbox-console-second-instance-timeout-cancel-owner-a
+		// TG_CHANGE_BEGIN: sandbox-console-checkpoint-lock-enforce
+		if (cConsoleMode()
+			&& !TgCli::Hosted::HostedConsoleCheckpointOwnsWorkdirLock()) {
+			LOG(("Hosted checkpoint runtime lock is not owned, aborting before listen."));
+			QCoreApplication::exit(1);
+			return;
+		}
+		// TG_CHANGE_END: sandbox-console-checkpoint-lock-enforce
 		LOG(("This is the only instance of Telegram, starting server and app..."));
 	} else {
+		// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-cancel-owner-b
+		_secondInstanceResponseTimeoutTimer.cancel();
+		// TG_CHANGE_END: sandbox-console-second-instance-timeout-cancel-owner-b
 		LOG(("Socket connect error %1, starting server and app...").arg(e));
 	}
 	_localSocket.close();
@@ -519,6 +571,9 @@ void Sandbox::singleInstanceChecked() {
 
 void Sandbox::socketDisconnected() {
 	if (_secondInstance) {
+		// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-cancel-c
+		_secondInstanceResponseTimeoutTimer.cancel();
+		// TG_CHANGE_END: sandbox-console-second-instance-timeout-cancel-c
 		DEBUG_LOG(("Sandbox Error: socket disconnected before command response received, quitting..."));
 		return Quit();
 	}

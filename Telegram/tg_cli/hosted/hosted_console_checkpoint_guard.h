@@ -8,17 +8,22 @@ enum class HostedConsoleCheckpointGuardFailure {
 	None = 0,
 	MissingExplicitWorkdir,
 	InvalidWorkdir,
+	CanonicalizeFailed,
 	ExistingProfileWithoutMarker,
+	ExistingProfileNotDisposable,
 	MarkerInvalid,
+	LockFailed,
 	MkdirFailed,
 	OpenFailed,
 	WriteFailed,
-	FlushFailed,
+	CommitFailed,
 };
 
 struct HostedConsoleCheckpointGuardResult {
 	bool ok = false;
 	HostedConsoleCheckpointGuardFailure failure = HostedConsoleCheckpointGuardFailure::None;
+	bool ownsWorkdirLock = false;
+	QString canonicalWorkdirPath;
 	QString detail;
 };
 
@@ -27,5 +32,6 @@ struct HostedConsoleCheckpointGuardResult {
 	const QString &workdirPath);
 
 [[nodiscard]] QString HostedConsoleCheckpointMarkerPath(const QString &workdirPath);
+[[nodiscard]] bool HostedConsoleCheckpointOwnsWorkdirLock();
 
 } // namespace TgCli::Hosted

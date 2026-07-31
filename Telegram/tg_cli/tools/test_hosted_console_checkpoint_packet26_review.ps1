@@ -17,24 +17,133 @@ if ([string]::IsNullOrWhiteSpace($TempRoot)) {
 
 New-Item -ItemType Directory -Path $TempRoot -Force | Out-Null
 
-function Invoke-Tg {
+function Start-TgProcess {
     param(
         [string[]]$CliArgs,
-        [int]$ExpectedExit
+        [string]$Context
     )
 
-    $process = Start-Process -FilePath $BinaryPath -ArgumentList $CliArgs -PassThru -Wait
-    $code = $process.ExitCode
-    if ($code -ne $ExpectedExit) {
-        throw "Unexpected exit code $code, expected $ExpectedExit, args: $($CliArgs -join ' ')"
+    $process = Start-Process -FilePath $BinaryPath -ArgumentList $CliArgs -PassThru
+    if ($null -eq $process) {
+        throw "Failed to start tg process: $Context"
+    }
+    return $process
+}
+
+function Stop-TgProcessIfRunning {
+    param([System.Diagnostics.Process]$Process)
+
+    if ($null -eq $Process) {
+        return
+    }
+    try {
+        $Process.Refresh()
+        if (-not $Process.HasExited) {
+            Stop-Process -Id $Process.Id -Force -ErrorAction Stop
+        }
+    } catch {
     }
 }
 
-function Invoke-TgExitCode {
-    param([string[]]$CliArgs)
+function Get-HostedWorkdirDiagnostics {
+    param([string]$Workdir)
 
-    $process = Start-Process -FilePath $BinaryPath -ArgumentList $CliArgs -PassThru -Wait
-    return $process.ExitCode
+    if ([string]::IsNullOrWhiteSpace($Workdir)) {
+        return "workdir=<none>"
+    }
+
+    $tdata = Join-Path $Workdir "tdata"
+    $marker = Join-Path $tdata "tg_hosted_checkpoint.owner"
+    $runtimeLock = Join-Path $Workdir "tg_hosted_checkpoint.runtime.lock"
+    $initLock = Join-Path $Workdir "tg_hosted_checkpoint.init.lock"
+    $statusLog = Join-Path $tdata "console_bootstrap.log"
+
+    $lines = @()
+    $lines += "workdir=$Workdir"
+    $lines += "tdata_exists=$([bool](Test-Path -LiteralPath $tdata))"
+    $lines += "marker_exists=$([bool](Test-Path -LiteralPath $marker))"
+    $lines += "runtime_lock_exists=$([bool](Test-Path -LiteralPath $runtimeLock))"
+    $lines += "init_lock_exists=$([bool](Test-Path -LiteralPath $initLock))"
+    $lines += "status_log_exists=$([bool](Test-Path -LiteralPath $statusLog))"
+
+    if (Test-Path -LiteralPath $statusLog) {
+        $tail = Get-Content -LiteralPath $statusLog -Tail 20 -ErrorAction SilentlyContinue
+        if ($null -ne $tail -and $tail.Count -gt 0) {
+            $lines += "status_log_tail="
+            $lines += ($tail | ForEach-Object { "  $_" })
+        }
+    }
+
+    return ($lines -join [Environment]::NewLine)
+}
+
+function Wait-TgExitCode {
+    param(
+        [System.Diagnostics.Process]$Process,
+        [int]$TimeoutSeconds,
+        [string]$Context,
+        [string]$Workdir = ""
+    )
+
+    try {
+        Wait-Process -InputObject $Process -Timeout $TimeoutSeconds -ErrorAction Stop
+    } catch {
+        Stop-TgProcessIfRunning -Process $Process
+        $diag = Get-HostedWorkdirDiagnostics -Workdir $Workdir
+        throw "Timed out after ${TimeoutSeconds}s while waiting for process exit ($Context).`n$diag"
+    }
+    $Process.Refresh()
+    return $Process.ExitCode
+}
+
+function Invoke-TgExpectedExit {
+    param(
+        [string[]]$CliArgs,
+        [int[]]$ExpectedExit,
+        [int]$TimeoutSeconds,
+        [string]$Context,
+        [string]$Workdir = ""
+    )
+
+    $process = Start-TgProcess -CliArgs $CliArgs -Context $Context
+    $code = Wait-TgExitCode -Process $process -TimeoutSeconds $TimeoutSeconds -Context $Context -Workdir $Workdir
+    if ($ExpectedExit -notcontains $code) {
+        $diag = Get-HostedWorkdirDiagnostics -Workdir $Workdir
+        throw "Unexpected exit code $code (expected $($ExpectedExit -join ', ')) in $Context, args: $($CliArgs -join ' ')`n$diag"
+    }
+    return $code
+}
+
+function Wait-HostedConsoleReady {
+    param(
+        [System.Diagnostics.Process]$OwnerProcess,
+        [string]$Workdir,
+        [int]$TimeoutSeconds,
+        [string]$RequiredLine = "console-ready"
+    )
+
+    $statusLog = Join-Path (Join-Path $Workdir "tdata") "console_bootstrap.log"
+    $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
+    while ([DateTime]::UtcNow -lt $deadline) {
+        $OwnerProcess.Refresh()
+        if ($OwnerProcess.HasExited) {
+            $diag = Get-HostedWorkdirDiagnostics -Workdir $Workdir
+            throw "Hosted owner exited before readiness line ($RequiredLine).`n$diag"
+        }
+
+        if (Test-Path -LiteralPath $statusLog) {
+            $content = Get-Content -LiteralPath $statusLog -ErrorAction SilentlyContinue
+            if ($null -ne $content -and ($content | Where-Object { $_ -eq $RequiredLine })) {
+                return $statusLog
+            }
+        }
+
+        [System.Threading.Thread]::Sleep(200)
+    }
+
+    Stop-TgProcessIfRunning -Process $OwnerProcess
+    $diag = Get-HostedWorkdirDiagnostics -Workdir $Workdir
+    throw "Timed out after ${TimeoutSeconds}s waiting for hosted readiness line '$RequiredLine'.`n$diag"
 }
 
 function New-DisposableWorkdir {
@@ -45,12 +154,34 @@ function New-DisposableWorkdir {
     return $path
 }
 
+function New-JunctionAlias {
+    param(
+        [string]$Name,
+        [string]$TargetPath
+    )
+
+    $aliasPath = Join-Path $TempRoot $Name
+    if (Test-Path -LiteralPath $aliasPath) {
+        Remove-Item -LiteralPath $aliasPath -Force -Recurse
+    }
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $aliasPath) -Force
+    try {
+        $null = New-Item -ItemType Junction -Path $aliasPath -Target $TargetPath -ErrorAction Stop
+    } catch {
+        return ""
+    }
+    if (-not (Test-Path -LiteralPath $aliasPath)) {
+        return ""
+    }
+    return $aliasPath
+}
+
 $markerRelative = "tdata\tg_hosted_checkpoint.owner"
 $defaultMarkerPath = Join-Path (Split-Path -Parent $BinaryPath) $markerRelative
 $defaultMarkerExistedBefore = Test-Path -LiteralPath $defaultMarkerPath
 
 try {
-    Invoke-Tg -CliArgs @("-console", "-console-exit") -ExpectedExit 1
+    Invoke-TgExpectedExit -CliArgs @("-console", "-console-exit") -ExpectedExit @(1) -TimeoutSeconds 45 -Context "console-without-explicit-workdir"
     $defaultMarkerExistedAfter = Test-Path -LiteralPath $defaultMarkerPath
     if ((-not $defaultMarkerExistedBefore) -and $defaultMarkerExistedAfter) {
         throw "Console without explicit -workdir touched default profile marker: $defaultMarkerPath"
@@ -60,46 +191,52 @@ try {
     $fakeTdata = Join-Path $fakeDesktop "tdata"
     New-Item -ItemType Directory -Path $fakeTdata -Force | Out-Null
     Set-Content -Path (Join-Path $fakeTdata "D877F783D5D3EF8C") -Value "fake" -NoNewline
-    Invoke-Tg -CliArgs @("-console", "-console-exit", "-workdir", $fakeDesktop) -ExpectedExit 1
+    Invoke-TgExpectedExit -CliArgs @("-console", "-console-exit", "-workdir", $fakeDesktop) -ExpectedExit @(1) -TimeoutSeconds 45 -Context "fake-desktop-profile-rejected" -Workdir $fakeDesktop
 
     $sharedWorkdir = New-DisposableWorkdir -Name "shared_hosted"
-    $first = Start-Process -FilePath $BinaryPath -ArgumentList @("-console", "-workdir", $sharedWorkdir) -PassThru
-    $secondPassed = $false
-    for ($attempt = 0; $attempt -lt 10; $attempt++) {
-        if ((Invoke-TgExitCode -CliArgs @("-console", "-console-exit", "-workdir", $sharedWorkdir)) -eq 0) {
-            $secondPassed = $true
-            break
-        }
+    $first = Start-TgProcess -CliArgs @("-console", "-workdir", $sharedWorkdir) -Context "shared-workdir-owner"
+    Wait-HostedConsoleReady -OwnerProcess $first -Workdir $sharedWorkdir -TimeoutSeconds 60 | Out-Null
+    Invoke-TgExpectedExit -CliArgs @("-console", "-console-exit", "-workdir", $sharedWorkdir) -ExpectedExit @(0) -TimeoutSeconds 45 -Context "shared-workdir-secondary" -Workdir $sharedWorkdir
+    Invoke-TgExpectedExit -CliArgs @("-quit", "-workdir", $sharedWorkdir) -ExpectedExit @(0) -TimeoutSeconds 45 -Context "shared-workdir-quit-owner" -Workdir $sharedWorkdir
+    try {
+        Wait-TgExitCode -Process $first -TimeoutSeconds 30 -Context "shared-workdir-owner-exit" -Workdir $sharedWorkdir | Out-Null
+    } catch {
+        Stop-TgProcessIfRunning -Process $first
+        throw
     }
-    if (-not $secondPassed) {
-        throw "Second hosted same-workdir instance failed to complete successfully"
-    }
-
-    Invoke-Tg -CliArgs @("-quit", "-workdir", $sharedWorkdir) -ExpectedExit 0
-    try { Wait-Process -Id $first.Id -Timeout 20 -ErrorAction Stop } catch {}
 
     $invalidLogWorkdir = New-DisposableWorkdir -Name "invalid_console_log"
     $invalidLogPath = Join-Path $invalidLogWorkdir "tdata"
     New-Item -ItemType Directory -Path $invalidLogPath -Force | Out-Null
-    Invoke-Tg -CliArgs @("-console", "-console-exit", "-workdir", $invalidLogWorkdir, "-console-log", $invalidLogPath) -ExpectedExit 1
+    Invoke-TgExpectedExit -CliArgs @("-console", "-console-exit", "-workdir", $invalidLogWorkdir, "-console-log", $invalidLogPath) -ExpectedExit @(1) -TimeoutSeconds 45 -Context "invalid-console-log-path" -Workdir $invalidLogWorkdir
 
     $h1Workdir = New-DisposableWorkdir -Name "h1_one_shot"
-    Invoke-Tg -CliArgs @("-console", "-console-exit", "-workdir", $h1Workdir) -ExpectedExit 0
+    Invoke-TgExpectedExit -CliArgs @("-console", "-console-exit", "-workdir", $h1Workdir) -ExpectedExit @(0) -TimeoutSeconds 45 -Context "h1-one-shot" -Workdir $h1Workdir
 
     $h2Workdir = New-DisposableWorkdir -Name "h2_persistent"
-    $h2First = Start-Process -FilePath $BinaryPath -ArgumentList @("-console", "-workdir", $h2Workdir) -PassThru
-    $h2SecondPassed = $false
-    for ($attempt = 0; $attempt -lt 10; $attempt++) {
-        if ((Invoke-TgExitCode -CliArgs @("-console", "-console-exit", "-workdir", $h2Workdir)) -eq 0) {
-            $h2SecondPassed = $true
-            break
-        }
+    $h2First = Start-TgProcess -CliArgs @("-console", "-workdir", $h2Workdir) -Context "h2-owner"
+    Wait-HostedConsoleReady -OwnerProcess $h2First -Workdir $h2Workdir -TimeoutSeconds 60 | Out-Null
+    Invoke-TgExpectedExit -CliArgs @("-console", "-console-exit", "-workdir", $h2Workdir) -ExpectedExit @(0) -TimeoutSeconds 45 -Context "h2-secondary" -Workdir $h2Workdir
+    Invoke-TgExpectedExit -CliArgs @("-quit", "-workdir", $h2Workdir) -ExpectedExit @(0) -TimeoutSeconds 45 -Context "h2-quit-owner" -Workdir $h2Workdir
+    try {
+        Wait-TgExitCode -Process $h2First -TimeoutSeconds 30 -Context "h2-owner-exit" -Workdir $h2Workdir | Out-Null
+    } catch {
+        Stop-TgProcessIfRunning -Process $h2First
+        throw
     }
-    if (-not $h2SecondPassed) {
-        throw "H2 second instance did not exit cleanly"
+
+    $aliasTarget = New-DisposableWorkdir -Name "alias_target"
+    $aliasPath = New-JunctionAlias -Name "alias_view" -TargetPath $aliasTarget
+    if ([string]::IsNullOrWhiteSpace($aliasPath)) {
+        throw "Failed to create junction alias for alias-ownership probe"
     }
-    Invoke-Tg -CliArgs @("-quit", "-workdir", $h2Workdir) -ExpectedExit 0
-    try { Wait-Process -Id $h2First.Id -Timeout 20 -ErrorAction Stop } catch {}
+    $aliasOwner = Start-TgProcess -CliArgs @("-console", "-workdir", $aliasPath) -Context "alias-owner"
+    Wait-HostedConsoleReady -OwnerProcess $aliasOwner -Workdir $aliasTarget -TimeoutSeconds 60 | Out-Null
+    Invoke-TgExpectedExit -CliArgs @("-quit", "-workdir", $aliasTarget) -ExpectedExit @(0) -TimeoutSeconds 45 -Context "alias-secondary-quit-handshake" -Workdir $aliasTarget
+    $aliasOwner.Refresh()
+    if ($aliasOwner.HasExited) {
+        throw "Alias owner exited unexpectedly during alias ownership probe"
+    }
 
     Write-Output "HOSTED_CHECKPOINT_PACKET26_REVIEW_TESTS=PASS"
 }

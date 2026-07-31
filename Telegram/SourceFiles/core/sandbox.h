@@ -13,6 +13,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
 #include <QtCore/QAbstractNativeEventFilter>
+// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-include
+#include "base/timer.h"
+// TG_CHANGE_END: sandbox-console-second-instance-timeout-include
 
 class QLockFile;
 
@@ -122,6 +125,9 @@ private:
 	QLocalSocket _localSocket;
 	LocalClients _localClients;
 	std::unique_ptr<QLockFile> _lockFile;
+	// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-member
+	base::Timer _secondInstanceResponseTimeoutTimer;
+	// TG_CHANGE_END: sandbox-console-second-instance-timeout-member
 	bool _secondInstance = false;
 	bool _started = false;
 	static bool QuitOnStartRequested;

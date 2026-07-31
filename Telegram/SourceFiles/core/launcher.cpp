@@ -397,6 +397,9 @@ int Launcher::exec() {
 				guard.detail.toUtf8().constData());
 			return 1;
 		}
+		if (!guard.canonicalWorkdirPath.isEmpty()) {
+			_customWorkingDir = guard.canonicalWorkdirPath;
+		}
 	}
 	// TG_CHANGE_END: launcher-console-checkpoint-guard-enforce
 
