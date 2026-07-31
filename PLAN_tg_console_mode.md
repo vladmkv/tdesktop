@@ -74,7 +74,8 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. A8 profile ownership and workdir-resolution packet.
+1. New architecture decision packet after A8.0 FAIL (ownership identity migration).
+2. A8 profile diagnostics bootstrap packet (packet 27), only after architecture decision and explicit A8 reopen.
 3. A9 passcode, account selection, and status packet.
 4. A10 chats and paged-history packet.
 
@@ -87,7 +88,9 @@ Current readiness:
 - A7.1 packet 24 is complete with Option C selected.
 - A7.2 packet 25 architecture decision is complete; follow-up implementor packet is locked.
 - A7.3 packet 26 is complete and validated with 8q resolved as Option B (hosted persistent empty-workdir mode skips Domain start and remains owner/listener only).
-- A8 is now open as the next implementor packet.
+- A8 packet 27 was revised to implementation-safe diagnostics-only scope and is blocked pending A8.0 ownership-identity migration decision from packet 28.
+- A8.0 packet 28 was executed and failed within max 3 attempts (A->B->C); escalation to architecture decision is required.
+- A8 remains blocked and A9 remains blocked until post-A8.0 architecture decision resolves ownership migration.
 
 ### First Runnable Read-Only Version (V0)
 V0 is reached after A10 and provides these one-shot commands over an existing desktop-authenticated profile:
@@ -193,6 +196,7 @@ V0 requirements:
 - 2026-07-31: A7.1 packet 24 executed as bounded decision/probe. Read-only dependency graph and per-file dependency inventory were captured first; Option A and Option B were disproven by isolated compile closure evidence; Option C selected. Temporary probe wiring was rolled back and baseline tg_cli build/help plus fence checker and diff checks passed. Next queue item moved to A7.2 architecture decision packet 25.
 - 2026-07-31: A7.3 packet 26 planning finalized as the sole ready implementor packet. Clarified TG-owned hosted sources under Telegram/tg_cli/hosted, Telegram-only hosted bundle wiring, strict synthetic empty-workdir-only validation, explicit H1 one-shot `-console-exit` gate before H2 persistent owner/single-instance mode, and mandatory desktop/tg_cli unchanged regressions.
 - 2026-07-31: A7.3 packet 26 implemented and validated end-to-end. Option B chosen for 8q with no `Storage::Domain` invariant edits: hosted persistent empty-workdir mode now keeps only owner/event-loop/single-instance behavior, emits deterministic `console-ready`, passes H1/H2 and disposable-workdir non-console regression, and preserves tg_cli/desktop build regressions.
+- 2026-07-31: A8 packet 27 was revised from completed packet-26 review findings into a diagnostics-only implementation-safe packet and gated by a new A8.0 ownership-identity migration probe. Queue now advances through A8.0 first; A9 remains closed.
 
 ## Stage Command Matrix
 

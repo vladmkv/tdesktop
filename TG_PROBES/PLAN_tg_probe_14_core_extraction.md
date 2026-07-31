@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 packet 23 blocked cleanly at 3/3 and restored to `d7daf02d01`; A7.1 packet 24, A7.2 packet 25, and A7.3 packet 26 completed; A8 is now the next open packet **high**
+Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 packet 23 blocked cleanly at 3/3 and restored to `d7daf02d01`; A7.1 packet 24, A7.2 packet 25, and A7.3 packet 26 completed; A8 is revised and blocked on ownership-identity migration decision; A8.0 packet 28 is the sole ready next packet and A9 remains blocked **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -243,14 +243,30 @@ Pass:
 - tg desktop normal startup regression passes.
 - tg_cli build/help unchanged checks pass.
 
-### A8: Shared Profile Read Probe
-Status: [OPEN] A7.3 packet 26 passed all gated validations; A8 may start.
-1. Acquire tg-compatible profile ownership first.
-2. Open an authenticated copied test profile read-only where possible.
-3. Select one account and list one dialog page.
+### A8.0: Ownership Identity Migration Probe (Pre-A8 Gate)
+Implementor packet: PLAN_tg_probe_28_a8_0_ownership_identity_migration.md
+Status: [DONE] FAIL. Bounded three-attempt probe (A->B->C) executed; no option met required matrix assertions.
+1. Inspect explicit-workdir canonicalization flow used by desktop and hosted console before Sandbox hash identity.
+2. Propose smallest source-compatible global explicit-workdir canonicalization shared by desktop and console.
+3. If compatibility risk is non-trivial, keep A8 blocked and define migration strategy/tests first.
+4. Validate mixed-mode canonical/alias ownership behavior across desktop+console combinations.
 
 Pass:
-- Correct account/dialog data, no concurrent tg access, no unintended writes.
+- One-owner behavior is deterministic for canonical/alias/mixed-mode paths without desktop regression.
+
+Result:
+- FAIL. Keep A8 blocked; escalate to a new architecture decision packet.
+
+### A8: Shared Profile Diagnostics Bootstrap
+Status: [BLOCKED] A8.0 packet 28 failed; awaiting follow-up architecture decision packet.
+1. Execute packet 27 diagnostics-only bootstrap (`ready` / `passcode-required` classification) after A8.0 pass.
+2. Keep prompt/account chooser/status UX deferred to A9.
+
+Pass:
+- Deterministic copied-profile classification, no unintended writes, packet-26 behavior unchanged.
+
+### A9: Passcode, Account Selection, and Status
+Status: [BLOCKED] Not runnable until A8.0 PASS and A8 PASS.
 
 ## Stop Conditions
 - A capability becomes a generic Core::Application mirror or mixes unrelated responsibilities.
@@ -309,6 +325,8 @@ After each protected edit:
 - 2026-07-31: Packet 26 review follow-up identified two independent defects in commit `c11e14d898` and fixed them without opening A8: (1) enforced fail-closed hosted startup policy requiring explicit `-workdir` plus hosted checkpoint marker gating for non-empty `tdata`; (2) changed hosted status writer API to return mkdir/open/write/flush failures and propagate nonzero exit from hosted startup/sandbox status paths on failure. Added disposable-path runtime negative checks in `Telegram/tg_cli/tools/test_hosted_console_checkpoint_packet26_review.ps1` and revalidated Telegram/tg_cli builds, fence checker, and diff check.
 - 2026-07-31: Packet 26 review-fix follow-up on commit `98b709f8fd` closed the third defect and hardened ownership protocol without opening A8: hosted guard now requires canonical physical workdir identity, serializes marker initialization with a short-lived init lock, retains a canonical workdir runtime lock through process teardown, atomically commits marker writes via `QSaveFile`, updates effective custom workdir to canonical path before Logs/Sandbox hashing, and blocks non-owner ServerNotFound fallback so alias races cannot create a second owner.
 - 2026-07-31: Packet 26 review-fix continuation hardened deterministic startup/test behavior: hosted review harness now uses bounded process timeout/kill diagnostics, persistent owner tests gate secondary launch on explicit `console-ready` status, init lock acquisition is bounded (`tryLock(3000ms)`), and console secondary path has a fail-closed response timeout. Focused hosted script and fence self/full checks pass.
+- 2026-07-31: Revised A8 packet 27 into implementation-safe diagnostics-only scope from packet-26 completed review findings: removed prompt/account-selection claims, mandated no pre-ownership mutators for `-console-profile`, required explicit external `-console-log`, required Sandbox secondary busy-owner pre-Application with exit code 20, added no-mutation Storage diagnostics taxonomy, required Application ready emission only after diagnostics Domain start, added recursive tree hash/metadata sentinels for zero-write enforcement, and introduced A8.0 ownership-identity migration probe as pre-A8 gate.
+- 2026-07-31: Executed A8.0 packet 28 bounded probe with max three attempts (A, B, C) using old/new mixed-version matrix and disposable workdirs only. All three attempts failed required assertions; packet outcome is FAIL, A8 and A9 remain blocked, and next step is a new architecture decision packet.
 
 ## A0-A2 Review Disposition
 
