@@ -313,10 +313,15 @@ void Application::run() {
 	// TG_CHANGE_BEGIN: application-console-window-suppress-a
 	const auto hostedConsoleMode = cConsoleMode();
 	// TG_CHANGE_END: application-console-window-suppress-a
-
 	// TG_CHANGE_BEGIN: application-console-status-line-b
 	if (hostedConsoleMode) {
-		TgCli::Hosted::WriteHostedConsoleStatusLine(QStringLiteral("console-ready"));
+		const auto status = TgCli::Hosted::WriteHostedConsoleStatusLine(
+			QStringLiteral("console-ready"));
+		if (!status.ok) {
+			Quit();
+			QCoreApplication::exit(1);
+			return;
+		}
 	}
 	// TG_CHANGE_END: application-console-status-line-b
 	// TG_CHANGE_BEGIN: application-console-window-suppress-c

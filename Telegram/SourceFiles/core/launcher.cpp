@@ -19,10 +19,17 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "core/version.h"
 #include "base/concurrent_timer.h"
 #include "base/options.h"
+// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-include
+#include "settings.h"
+#include "../../tg_cli/hosted/hosted_console_checkpoint_guard.h"
+// TG_CHANGE_END: launcher-console-checkpoint-guard-include
 
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QLibraryInfo>
+// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-include-cstdio
+#include <cstdio>
+// TG_CHANGE_END: launcher-console-checkpoint-guard-include-cstdio
 
 namespace Core {
 namespace {
@@ -378,6 +385,20 @@ void Launcher::initHighDpi() {
 
 int Launcher::exec() {
 	init();
+	// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-enforce
+	if (cConsoleMode()) {
+		const auto guard = TgCli::Hosted::EnforceHostedConsoleCheckpointGuard(
+			customWorkingDir(),
+			customWorkingDirPath());
+		if (!guard.ok) {
+			fprintf(
+				stderr,
+				"FATAL: hosted console checkpoint rejected: %s\n",
+				guard.detail.toUtf8().constData());
+			return 1;
+		}
+	}
+	// TG_CHANGE_END: launcher-console-checkpoint-guard-enforce
 
 	if (cLaunchMode() == LaunchModeFixPrevious) {
 		return psFixPrevious();
@@ -491,6 +512,11 @@ QString Launcher::initialWorkingDir() const {
 bool Launcher::customWorkingDir() const {
 	return !_customWorkingDir.isEmpty();
 }
+// TG_CHANGE_BEGIN: launcher-console-workdir-path-accessor
+QString Launcher::customWorkingDirPath() const {
+	return _customWorkingDir;
+}
+// TG_CHANGE_END: launcher-console-workdir-path-accessor
 
 void Launcher::prepareSettings() {
 	auto path = base::Platform::CurrentExecutablePath(_argc, _argv);

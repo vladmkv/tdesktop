@@ -32,6 +32,9 @@ public:
 	const QStringList &arguments() const;
 	QString initialWorkingDir() const;
 	bool customWorkingDir() const;
+	// TG_CHANGE_BEGIN: launcher-console-workdir-path-accessor
+	QString customWorkingDirPath() const;
+	// TG_CHANGE_END: launcher-console-workdir-path-accessor
 
 	uint64 installationTag() const;
 	QByteArray instanceHash() const;

@@ -150,9 +150,20 @@ Inspected baseline sequence (`Application::run()`) is constrained as follows.
 
 ### 3. Console status output helper
 1. New small TG-owned utility under `Telegram/tg_cli/hosted/` compiled into `Telegram` only:
-   - `void WriteHostedConsoleStatusLine(const QString &line);`
+   - `HostedConsoleStatusWriteResult WriteHostedConsoleStatusLine(const QString &line);`
 2. Writes to selected file sink and mirrors to stdout if attached.
 3. Do not add new implementation files under `Telegram/SourceFiles/core` for hosted status output.
+
+## Review Findings (Packet 26 Follow-up)
+1. Finding 1 (runtime safety policy gap): hosted `-console` accepted startup without explicit `-workdir` and had no pre-A8 marker gate to distinguish disposable hosted checkpoints from existing profile-like `tdata` trees.
+2. Finding 2 (status writer error propagation gap): hosted status writer did not report mkdir/open/write/flush failures, so startup could continue and potentially claim readiness after output sink failure.
+
+Fix scope:
+1. Keep A8 closed in this follow-up.
+2. Add narrow pre-Logs hosted checkpoint guard in launcher path for `-console` only.
+3. Add marker policy: allow only explicit `-workdir` with either empty/new disposable checkpoint directory or an existing valid hosted marker created by prior hosted ownership in that same workdir.
+4. Upgrade status writer API to return failure details and fail closed with nonzero exit from both hosted startup and hosted sandbox status writes.
+5. Keep desktop non-console behavior unchanged.
 
 ## Fence Plan (IDs)
 All protected-source edits must use these fence IDs at minimum cohesive scope.
@@ -267,6 +278,12 @@ A8 was CLOSED by default. This packet now records pass criteria and validation e
    - Hosted startup log contains no window creation milestones.
 4. Non-console regression:
    - normal `tg.exe -workdir <synthetic>`, followed by second `-quit` handshake -> both exits 0; owner did not exit early.
+5. Packet-26 review negative/runtime checks:
+   - `-console` without `-workdir` is rejected (nonzero) and does not create hosted marker in default profile location.
+   - pre-existing fake desktop-like `tdata` without marker is rejected (nonzero).
+   - first and second hosted instances on the same explicit workdir pass through marker-based ownership flow.
+   - unwritable/invalid `-console-log` returns nonzero and does not report console-ready.
+   - scripted disposable-path probe: `Telegram/tg_cli/tools/test_hosted_console_checkpoint_packet26_review.ps1`.
 
 ## Known Blockers / Risks To Track During Implementation
 1. Windows GUI stdout invisibility: must rely on file sink for deterministic verification.

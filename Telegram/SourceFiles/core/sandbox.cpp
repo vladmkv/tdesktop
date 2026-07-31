@@ -453,8 +453,13 @@ void Sandbox::singleInstanceChecked() {
 	// TG_CHANGE_BEGIN: sandbox-console-second-instance-command-c
 	if (cConsoleMode()) {
 		const auto failClosed = [&](const QString &reason) {
-			TgCli::Hosted::WriteHostedConsoleStatusLine(
+			const auto status = TgCli::Hosted::WriteHostedConsoleStatusLine(
 				QStringLiteral("console-status:") + reason);
+			if (!status.ok) {
+				LOG(("Hosted status write failed (%1): %2"
+					).arg(int(status.failure)
+					).arg(status.path));
+			}
 			QCoreApplication::exit(1);
 		};
 

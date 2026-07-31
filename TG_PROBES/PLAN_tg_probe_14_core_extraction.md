@@ -306,6 +306,7 @@ After each protected edit:
 - 2026-07-31: A7.2 packet 25 completed architecture decision and locked A7.3 implementor scope to packet 26.
 - 2026-07-31: Packet 26 finalized as the sole ready implementor packet with explicit TG-owned hosted file placement under Telegram/tg_cli/hosted, Telegram-only hosted source wiring, strict synthetic empty-workdir mutation boundary, and H1 (`-console-exit`) to H2 (persistent owner/single-instance) stop gate.
 - 2026-07-31: Packet 26 completed and validated. 8q resolved as Option B: hosted persistent empty-workdir mode skips `Main::Domain` startup and retains only owner/event-loop/single-instance behavior; no `Storage::Domain` invariant changes were introduced. Fence checker, Telegram + tg_cli builds, tg_cli help, H1/H2 probes, and disposable-workdir non-console regression all passed.
+- 2026-07-31: Packet 26 review follow-up identified two independent defects in commit `c11e14d898` and fixed them without opening A8: (1) enforced fail-closed hosted startup policy requiring explicit `-workdir` plus hosted checkpoint marker gating for non-empty `tdata`; (2) changed hosted status writer API to return mkdir/open/write/flush failures and propagate nonzero exit from hosted startup/sandbox status paths on failure. Added disposable-path runtime negative checks in `Telegram/tg_cli/tools/test_hosted_console_checkpoint_packet26_review.ps1` and revalidated Telegram/tg_cli builds, fence checker, and diff check.
 
 ## A0-A2 Review Disposition
 
