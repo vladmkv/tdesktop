@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 packet 23 blocked cleanly at 3/3 and restored to `d7daf02d01`; A7.1 packet 24, A7.2 packet 25, and A7.3 packet 26 completed; A8 is revised and blocked on ownership-identity migration decision; A8.0 packet 28 is the sole ready next packet and A9 remains blocked **high**
+Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 packet 23 blocked cleanly at 3/3 and restored to `d7daf02d01`; A7.1 packet 24, A7.2 packet 25, and A7.3 packet 26 completed; A8.0 live-profile ownership-identity migration FAILED (packet 28) and remains unsolved; scope pivoted to a dedicated dev profile (`%TEMP%\tg-dev-profile`) for development, bypassing A8.0 rather than solving it; A8 (profile status) is DONE against the dev profile (commit `ba65a3d41b`); A9/A10 (account enumeration, chats) not started **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -257,16 +257,19 @@ Pass:
 Result:
 - FAIL. Keep A8 blocked; escalate to a new architecture decision packet.
 
-### A8: Shared Profile Diagnostics Bootstrap
-Status: [BLOCKED] A8.0 packet 28 failed; awaiting follow-up architecture decision packet.
-1. Execute packet 27 diagnostics-only bootstrap (`ready` / `passcode-required` classification) after A8.0 pass.
-2. Keep prompt/account chooser/status UX deferred to A9.
+### A8: Profile Diagnostics Bootstrap (Dev Profile)
+Status: [DONE] Implemented and validated against a dedicated dev profile instead of the live/shared desktop profile. Commit `ba65a3d41b`.
+1. `tg.exe -console-profile-snapshot -workdir <profile> -console-log <path>` reports `snapshot-storage-status:ready/passcode-required/passcode-required-legacy/profile-corrupt/profile-not-found` via `Domain::classifySnapshotStorage()`, a pure read of the key/map files with no `startFromScratch`/`writeAccounts`/Domain-Account-MTP-Session/network activation.
+2. Guard rejects: missing `-workdir`, missing `-console-log`, `-console-log` inside the profile directory, and non-existent workdir; all before any storage is touched.
+3. Scope decision: live desktop-profile sharing remains blocked by the unsolved A8.0 ownership-identity/alias problem. Rather than solving it, development uses a separate dev profile (a second device session, logged in once, kept outside the repo). Live-profile sharing is deferred indefinitely, not abandoned.
+4. The packet-29 snapshot-copy approach (copy live profile to a disposable snapshot, marker/manifest trust, robocopy) was implemented, reviewed (3 high/5 medium defects: pre-risk-window integrity check, cleanup skipped on failure paths leaving auth keys on disk, forgeable marker trust, alias-ambiguous owner identity, impure read path), and abandoned as unnecessary once the dev-profile approach was adopted. All snapshot-copy-specific files were deleted; the classifier and owner-probe helper were kept and reused directly against the dev profile.
+5. Fixed three real runtime defects found only by testing against real profile data: console-mode launcher gates were dead code (evaluated before argument parsing ran); the fail-closed abort path hung instead of terminating (called `exit()` before any event loop existed); profile-status mode was tripping `-console` checkpoint-lock enforcement not meant for it.
 
 Pass:
-- Deterministic copied-profile classification, no unintended writes, packet-26 behavior unchanged.
+- Deterministic profile classification, `tdata` proven byte-identical before/after (recomputed digest, not compared against itself), packet-26 hosted-console behavior unchanged.
 
-### A9: Passcode, Account Selection, and Status
-Status: [BLOCKED] Not runnable until A8.0 PASS and A8 PASS.
+### A9: Account Enumeration and Status
+Status: [TODO] Not started. Next step: enumerate account index/user id from the dev profile's decrypted info stream (already decrypted once for classification) without opening a live session.
 
 ## Stop Conditions
 - A capability becomes a generic Core::Application mirror or mixes unrelated responsibilities.
@@ -327,6 +330,11 @@ After each protected edit:
 - 2026-07-31: Packet 26 review-fix continuation hardened deterministic startup/test behavior: hosted review harness now uses bounded process timeout/kill diagnostics, persistent owner tests gate secondary launch on explicit `console-ready` status, init lock acquisition is bounded (`tryLock(3000ms)`), and console secondary path has a fail-closed response timeout. Focused hosted script and fence self/full checks pass.
 - 2026-07-31: Revised A8 packet 27 into implementation-safe diagnostics-only scope from packet-26 completed review findings: removed prompt/account-selection claims, mandated no pre-ownership mutators for `-console-profile`, required explicit external `-console-log`, required Sandbox secondary busy-owner pre-Application with exit code 20, added no-mutation Storage diagnostics taxonomy, required Application ready emission only after diagnostics Domain start, added recursive tree hash/metadata sentinels for zero-write enforcement, and introduced A8.0 ownership-identity migration probe as pre-A8 gate.
 - 2026-07-31: Executed A8.0 packet 28 bounded probe with max three attempts (A, B, C) using old/new mixed-version matrix and disposable workdirs only. All three attempts failed required assertions; packet outcome is FAIL, A8 and A9 remain blocked, and next step is a new architecture decision packet.
+- 2026-07-31: Authored A8.1 packet 29 isolated snapshot diagnostics demo plan. Queue is updated so packet 29 is sole ready next packet, live-profile A8 remains blocked, and A9 remains blocked for live profile while snapshot-status milestone may proceed in isolation.
+- 2026-08-01: Packet 29 implementation resumed after disk cleanup; one-shot `cmake --build out --config Debug --target Telegram` succeeded and produced updated `out/Debug/tg.exe`, resolving the temporary no-space blocker. Gate G1 remains blocked semantically because owner-probe runtime evidence reports `owner-ambiguous` for idle disposable source workdirs, causing packet-29 synthetic gate failure before snapshot copy/classification.
+- 2026-08-02: Independent review of the uncommitted packet-29 worktree found 3 high and 5 medium defects; committed the two independently-complete artifacts (`run_hosted_console_demo.ps1`, packet-27 plan) separately after re-passing the packet-26 regression, and left the snapshot-copy implementation uncommitted pending a scope decision.
+- 2026-08-02: Scope decision: stop pursuing live desktop-profile sharing (A8.0 remains unsolved for alias/junction identity). Adopted a dedicated dev profile at `%TEMP%\tg-dev-profile` (outside the repo, logged in once as a second device session) for all further development. This bypasses A8.0 rather than solving it; live-profile sharing is deferred indefinitely.
+- 2026-08-02: A8 completed against the dev profile (commit `ba65a3d41b`). Verified `snapshot-storage-status:ready` for the authenticated dev profile, `profile-not-found` for an empty directory, `tdata` byte-identical before/after (post-run digest recomputed, not compared against a pre-run copy of itself), all four argument guards rejecting before any storage access, and the packet-26 hosted-console regression still passing. Found and fixed three real defects only visible when testing against real data: every console-mode launcher gate was dead code (read before `Launcher::init()`/`processArguments()` populated them); the fail-closed abort called `QCoreApplication::exit()` before any event loop existed and hung instead of terminating; profile-status mode was self-blocking on `-console` checkpoint-lock enforcement. Deleted the now-unnecessary packet-29 snapshot-copy machinery (marker/manifest guard, robocopy tool, dedicated tests); kept the reusable read-only classifier and owner-probe helper.
 
 ## A0-A2 Review Disposition
 

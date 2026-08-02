@@ -74,23 +74,19 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. New architecture decision packet after A8.0 FAIL (ownership identity migration).
-2. A8 profile diagnostics bootstrap packet (packet 27), only after architecture decision and explicit A8 reopen.
-3. A9 passcode, account selection, and status packet.
-4. A10 chats and paged-history packet.
+1. A9: account enumeration on the dev profile (list account index/user id from storage without opening a live desktop-shared profile).
+2. A10: chats and paged-history packet.
+3. Live-profile ownership architecture (canonical/alias identity) remains a separate, still-unsolved track, required only if/when sharing the desktop's own profile becomes a goal again.
 
 Current readiness:
-- A0.1 through A5 are complete and validated.
-- A4 implementation commit: `530dec607a`.
-- A5 implementation commit: `16babf664f`; A5 review-fix commit: `884cb247de`.
-- A6 is complete and validated as desktop seam only (Domain lifecycle extraction + owner account-factory routing); implementation commit: `d7daf02d01`; A6 review disposition: clean.
-- A7 packet 23 is blocked cleanly at Gate 1 after bounded expansions consumed (3/3); failed/uncommitted implementation wiring has been restored to `d7daf02d01` and baseline `tg_cli` remains functional.
-- A7.1 packet 24 is complete with Option C selected.
-- A7.2 packet 25 architecture decision is complete; follow-up implementor packet is locked.
-- A7.3 packet 26 is complete and validated with 8q resolved as Option B (hosted persistent empty-workdir mode skips Domain start and remains owner/listener only).
-- A8 packet 27 was revised to implementation-safe diagnostics-only scope and is blocked pending A8.0 ownership-identity migration decision from packet 28.
-- A8.0 packet 28 was executed and failed within max 3 attempts (A->B->C); escalation to architecture decision is required.
-- A8 remains blocked and A9 remains blocked until post-A8.0 architecture decision resolves ownership migration.
+- A0.1 through A6 are complete and validated (see individual implementation/review commits below).
+- A7 standalone `tg_cli` backend construction was abandoned after repeated bounded-closure failures (packet 23/24); Option C (hosted `tg -console` mode inside the existing linked runtime) was selected instead (packet 25) and implemented (packet 26).
+- A8.0 live-profile ownership-identity migration (canonical path vs. alias/junction) failed after 3 bounded attempts (packet 28) and remains unsolved.
+- Scope decision (2026-08-02): rather than solving live-profile sharing, development now uses a dedicated, isolated dev profile (`%TEMP%\tg-dev-profile`, outside the repo) logged into once as a second device session. This sidesteps A8.0 entirely for development purposes; live-profile sharing is deferred indefinitely and no longer blocks progress.
+- The packet-29 snapshot-copy approach (copy the live profile to a disposable directory, marker/manifest trust, robocopy) was implemented, found to have 3 high/5 medium defects on review (credential-cleanup-on-failure bug, forgeable marker trust, integrity check computed before the risk window, impure read path), and was abandoned in favor of the dev-profile approach above. All packet-29 snapshot-copy files were deleted; only its reusable read-only classifier survived (see below).
+- A8 (profile status) is DONE against the dev profile: `tg.exe -console-profile-snapshot -workdir <profile> -console-log <path>` prints `snapshot-storage-status:ready|passcode-required|passcode-required-legacy|profile-corrupt|profile-not-found`, proven not to mutate `tdata`, with fail-closed argument guards. Commit `ba65a3d41b`.
+- During A8 implementation, found and fixed three real runtime defects, not just packet-29 scope-splitting: (1) every console-mode launcher gate was dead code because flags were read before `Launcher::init()`/`processArguments()` ran; (2) the fail-closed abort path called `QCoreApplication::exit()` before any event loop existed and hung forever instead of terminating; (3) profile-status mode tripped checkpoint-lock enforcement meant only for `-console` checkpoint mode. All three are fixed and verified end to end (real `ready`, empty-dir `profile-not-found`, all four guards reject, `tdata` byte-identical before/after, packet-26 regression still passes).
+- A9 (account enumeration) and A10 (chats/history) are not started.
 
 ### First Runnable Read-Only Version (V0)
 V0 is reached after A10 and provides these one-shot commands over an existing desktop-authenticated profile:
@@ -197,6 +193,11 @@ V0 requirements:
 - 2026-07-31: A7.3 packet 26 planning finalized as the sole ready implementor packet. Clarified TG-owned hosted sources under Telegram/tg_cli/hosted, Telegram-only hosted bundle wiring, strict synthetic empty-workdir-only validation, explicit H1 one-shot `-console-exit` gate before H2 persistent owner/single-instance mode, and mandatory desktop/tg_cli unchanged regressions.
 - 2026-07-31: A7.3 packet 26 implemented and validated end-to-end. Option B chosen for 8q with no `Storage::Domain` invariant edits: hosted persistent empty-workdir mode now keeps only owner/event-loop/single-instance behavior, emits deterministic `console-ready`, passes H1/H2 and disposable-workdir non-console regression, and preserves tg_cli/desktop build regressions.
 - 2026-07-31: A8 packet 27 was revised from completed packet-26 review findings into a diagnostics-only implementation-safe packet and gated by a new A8.0 ownership-identity migration probe. Queue now advances through A8.0 first; A9 remains closed.
+- 2026-07-31: After A8.0 FAIL, packet 29 (`PLAN_tg_probe_29_a8_1_isolated_profile_snapshot_demo.md`) was authored as the sole ready next implementor packet for isolated snapshot-only diagnostics. Live-profile A8/A9 tracks remain blocked pending ownership architecture resolution.
+- 2026-08-01: Packet 29 implementation resumed. One required Debug Telegram build completed successfully after cleanup, resolving the temporary no-space blocker. Runtime Gate G1 is still semantically blocked because owner probe reports `owner-ambiguous` for idle disposable source workdirs, and packet-29 synthetic gate stops before copy/classification.
+- 2026-08-02: Independent review of the uncommitted packet-29 worktree found 3 high and 5 medium defects (source-integrity digest computed before the risk window; cleanup skipped on every failure exit path, leaving copied auth keys on disk; snapshot marker/manifest trust forgeable by self-consistent metadata; owner identity still alias/junction-ambiguous; classifier ran after `startLocalStorage()`/proxy init, violating the pure-read-path requirement). Two independently-complete artifacts (`run_hosted_console_demo.ps1`, packet-27 plan) were committed on their own (`ea23e4f15a`, `12d9c3a8ea`) after re-passing the packet-26 regression.
+- 2026-08-02: Decision made to stop pursuing live desktop-profile sharing for development. Logged into a dedicated dev profile at `%TEMP%\tg-dev-profile` (outside the repo) as a second device session, sidestepping the unresolved A8.0 ownership-identity problem entirely rather than solving it.
+- 2026-08-02: Implemented and validated profile status against the real dev profile (commit `ba65a3d41b`). `tg.exe -console-profile-snapshot -workdir <profile> -console-log <path>` reports `snapshot-storage-status:ready` for the authenticated dev profile and `profile-not-found` for an empty directory, with `tdata` proven byte-identical before/after. Found and fixed three real defects surfaced only by testing against real data: (1) console-mode launcher gates were dead code, evaluated before `processArguments()` populated the flags they read; (2) the fail-closed abort called `QCoreApplication::exit()` before any event loop existed and hung instead of terminating; (3) profile-status mode was tripping `-console` checkpoint-lock enforcement not meant for it. Deleted the now-dead packet-29 snapshot-copy machinery (marker/manifest guard, robocopy tool, its tests) since the dev-profile approach removed the need for it; kept only the reusable read-only storage classifier (`Domain::classifySnapshotStorage`) and owner-probe helper.
 
 ## Stage Command Matrix
 
