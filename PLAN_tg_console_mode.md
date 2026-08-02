@@ -38,7 +38,7 @@ Companion note: NOTE_tg_console_mode.md
 4. Smoke-run both executables and capture exit behavior.
 
 ## Tasks
-1. [TODO] Stage 0: Baseline freeze + branch contract (**high**)
+1. [DONE] Stage 0: Baseline freeze + branch contract. Branch `tg-cli`, base `12e8d4a956`, fence policy, and repeatable desktop validation were established.
 - Create feature branch from known-good tg desktop commit.
 - Record protected-file policy (no edits in existing libs/core).
 - Acceptance test:
@@ -54,7 +54,7 @@ Companion note: NOTE_tg_console_mode.md
 	- tg desktop still builds and runs.
 	- No changes outside tg_cli-owned files and CMake wiring.
 
-3. [TODO] Stage 2: Desktop-source reuse feasibility spike (**high**)
+3. [DONE] Stage 2: Desktop-source reuse feasibility spike. Result: FAIL for unchanged selected-source reuse; fallback-A capability seams and hosted runtime were selected and implemented.
 - Execute granular plans:
 	- TG_PROBES/PLAN_tg_probe_11_executable_closure.md
 	- TG_PROBES/PLAN_tg_probe_12_executable_qt_runtime.md
@@ -74,11 +74,21 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. A9: hosted dev-profile startup + existing account enumeration (`Main::Domain::start()` then `Main::Domain::accounts()`); no new account parser or account model.
-2. A10.0: read-only API proof packet for existing session readiness, desktop-order dialog iteration, and `HistoryMessagesViewer` timeout/error semantics. No feature implementation until all three proofs pass.
-3. A10.1: chats command using existing `ApiWrap::requestDialogs()`, `Data::Session::chatsListLoadedEvents()`, and `Dialogs::MainList::indexed()->all()`.
-4. A10.2: paged read command using existing `Data::HistoryMessagesViewer()` and already-ingested `HistoryItem`/media models; no duplicate MTProto history request.
-5. Live-profile ownership architecture (canonical/alias identity) remains a separate, still-unsolved track, required only if/when sharing the desktop's own profile becomes a goal again.
+1. A9: hosted dev-profile startup + existing account enumeration (`Main::Domain::start()` then `Main::Domain::accounts()`); no new account parser or account model. **high**
+	- Description: cross from storage-only status into the existing Telegram Domain/Account/Session startup path and expose the account list already maintained by `Main::Domain`.
+	- Definition of Done: dedicated dev profile starts with no windows; existing `accounts()` returns the authenticated account; deterministic text/JSON reports storage index and existing session identity; no duplicate parser/model; two runs match; desktop, packet-26, builds, fences, and diff checks pass.
+2. A10.0: read-only API proof packet for existing session readiness, desktop-order dialog iteration, and `HistoryMessagesViewer` timeout/error semantics. **high**
+	- Description: resolve the three remaining API choices with bounded executable/read-only evidence before writing chat/history feature code.
+	- Definition of Done: exact session-ready signal and timeout are recorded; one existing dialog-list iteration path is proven to match desktop ordering; history viewer cancellation/error policy is selected; no feature implementation or duplicate request/model code is added; proof results are committed to the plan.
+3. A10.1: chats command using existing Telegram dialog loading and list models. **high**
+	- Description: request dialogs through `ApiWrap`, wait through `Data::Session`, iterate the A10.0-selected `Dialogs::MainList`, and format rows only.
+	- Definition of Done: one command lists the first N real dev-profile chats with stable typed IDs, title/type/unread/pinned/date; order matches desktop; bounded timeout/cancel works; no windows, read receipts, downloads, custom sorting, or duplicate model; regressions/builds/fences pass.
+4. A10.2: paged read command using `Data::HistoryMessagesViewer()` and existing message/media models. **high**
+	- Description: resolve a stable chat ID to the existing `History`, consume bounded viewer pages, and format existing `HistoryItem` text and metadata without implementing MTProto history requests.
+	- Definition of Done: one command reads deterministic bounded pages from a private chat and a channel/supergroup; pagination anchor works; media metadata causes no download; no read receipt; timeout/cancel/error exits cleanly; no `Window::Controller`; regressions/builds/fences pass.
+5. Live-profile ownership architecture (canonical/alias identity). **future**
+	- Description: design a backward-compatible ownership identity so old/new binaries and equivalent path spellings cannot concurrently own one physical desktop profile.
+	- Definition of Done: old-old, old-new, new-old, and new-new canonical/alias/case/junction matrix has exactly one owner per cell; no deadlock or pre-ownership profile write; ambiguous states fail closed; desktop startup compatibility is proven. Until then this track remains deferred and the dev profile is mandatory.
 
 Current readiness:
 - A0.1 through A6 are complete and validated (see individual implementation/review commits below).
@@ -91,6 +101,12 @@ Current readiness:
 - A9 (account enumeration) and A10 (chats/history) are not started.
 
 ### A9 Refined Packet: Reuse Existing Account List
+
+Description:
+- Start the existing hosted Telegram runtime against the dedicated dev profile and expose Telegram's already-populated account list. This is orchestration/output work, not account-list business logic.
+
+Definition of Done:
+- The A9 validation and stop-condition sections below are satisfied; the implementation contains no second account parser/model and is committed as one focused packet.
 
 Decision:
 - Do **not** implement another account-list parser. Telegram already has `Main::Domain::accounts()`, `orderedAccounts()`, and `accountsAuthedCount()`.
@@ -120,6 +136,12 @@ A9 stop conditions:
 - Implementation duplicates account storage parsing or account model logic.
 
 ### A10 Refined Packet: Reuse Existing Chat And History Models
+
+Description:
+- Build `chats` and `read` as thin TG-owned orchestration/formatting adapters over the existing Telegram session, dialog list, history viewer, update ingestion, and media models.
+
+Definition of Done:
+- A10.0 proofs are committed first; A10.1 then lists real chats; A10.2 then reads bounded history pages; all A10 validation and stop conditions below pass without duplicate MTProto/model code.
 
 Locked reuse rules:
 - Do not implement MTProto dialog/history requests in TG-owned code.
@@ -182,7 +204,9 @@ V0 requirements:
 - Human-readable output is required; `--json` remains experimental.
 - Send, edit, delete, watch, and native CLI authentication are not part of V0.
 
-4. [TODO] Stage 3: Safe shared-profile bootstrap (**high**)
+4. [TODO] Stage 3: Safe profile bootstrap (**high**)
+- Description: establish a repeatable authenticated profile workflow. Current implementation uses a dedicated dev profile; live desktop-profile sharing remains a deferred ownership track.
+- Definition of Done: profile status and accounts commands handle ready/passcode/missing/corrupt states deterministically; dev-profile ownership rule is documented and enforced; no accidental start-from-scratch on invalid input; desktop and console regressions pass.
 - Define deterministic workflow: authenticate in tg desktop once, then fully close it.
 - Resolve desktop default workdir with --workdir override.
 - Add profile-in-use detection and refuse unsafe concurrent access.
@@ -195,6 +219,8 @@ V0 requirements:
 	- tg and tg_cli cannot mutate the shared profile concurrently.
 
 5. [TODO] Stage 4: Read-only REPL and one-shot commands (**high**)
+- Description: expose status, accounts, chats, and paged read through shared command handlers, reusing Telegram's models and network requests.
+- Definition of Done: A9, A10.0, A10.1, and A10.2 pass; REPL and one-shot output are equivalent; stable IDs work; timeouts/errors do not crash; no read receipt or media download unless explicitly enabled.
 - Implement status, accounts, chats, read, more, and settings commands.
 - Support private chats and channels/supergroups.
 - Show media metadata without transfer.
@@ -205,6 +231,8 @@ V0 requirements:
 	- Empty, permission, timeout, and network errors do not crash.
 
 6. [TODO] Stage 5: Text sending (**high**)
+- Description: add a thin send command over Telegram's existing `ApiWrap`/`Data::Histories` send path after read-only behavior is stable.
+- Definition of Done: private and permitted channel/supergroup sends receive server acknowledgment and appear in desktop; stable peer selectors are reused; permission/invalid-peer/network outcomes are distinct; no duplicate send protocol/model logic; full read-only regression passes.
 - Implement send command for private chats and channels/supergroups where permitted.
 - Define stable peer selector syntax for REPL and scripts.
 - Add sent/fail/retry-needed feedback.
@@ -213,6 +241,8 @@ V0 requirements:
 	- Permission, invalid-peer, and network failures are handled without crash.
 
 7. [TODO] Stage 6: Edit/delete own messages (**medium**)
+- Description: expose existing edit and revoke/delete operations with Telegram's ownership, rights, and time-window checks.
+- Definition of Done: own text can be edited; delete-for-everyone works only when allowed; REPL confirmation and one-shot `--yes` are enforced; decline/missing confirmation makes no mutation; permission/time/network errors are distinct; Stage 3–5 regression passes.
 - Implement edit for own text messages only.
 - Implement delete-for-everyone where Telegram permits it.
 - Prompt before delete in REPL; require --yes in one-shot mode.
@@ -222,6 +252,8 @@ V0 requirements:
 	- Permission, time-window, and network failures are distinct.
 
 8. [TODO] Stage 7: Incremental UI dependency stripping (**medium**)
+- Description: reduce hosted console compile/runtime UI dependencies one verified cluster at a time after useful commands work; preserve QtCore/QtNetwork as accepted substrate.
+- Definition of Done: before/after dependency graph is recorded for each removal; status/chats/read/send/edit/delete matrix remains green; no broad upstream rewrite or duplicated backend logic; remaining QtGui/QtWidgets/lib_ui dependencies are explicitly justified.
 - Capture baseline source/link/runtime dependency graph.
 - Remove one desktop-only dependency cluster per iteration.
 - Keep QtCore/QtNetwork as accepted runtime substrate.
@@ -233,6 +265,8 @@ V0 requirements:
 	- Final remaining lib_ui/QtGui/QtWidgets dependencies are documented.
 
 9. [TODO] Stage 8: Optional native CLI auth (replace bootstrap dependency) (**medium**)
+- Description: provide terminal phone/code/2FA login so a fresh CLI profile can be created without launching the desktop UI, while retaining the dev-profile bootstrap fallback.
+- Definition of Done: fresh isolated profile authenticates end-to-end with secure no-echo secrets and bounded retries; session persists and status/chats/read/send work after restart; existing profile path remains compatible; credentials never appear in arguments, environment, logs, or committed files.
 - Add interactive phone/code/2FA flow in terminal.
 - Keep Stage 3 desktop-profile bootstrap as fallback mode.
 - Acceptance test:
@@ -240,6 +274,8 @@ V0 requirements:
 	- Existing desktop-profile bootstrap path still works as fallback.
 
 10. [TODO] Stage 9: Reliability hardening and release readiness (**medium**)
+- Description: stabilize command contracts, reconnect/timeout behavior, diagnostics, builds, and operator documentation for repeatable use.
+- Definition of Done: versioned JSON schema and exit-code table are frozen; full smoke matrix passes twice from a clean shell; reconnect/cancel behavior is deterministic; build/run instructions reproduce both desktop and console modes; no known high-severity review findings remain.
 - Add help, structured logs, exit codes, reconnect behavior.
 - Freeze/version the --json output schema.
 - Finalize repeatable build/run instructions for both flavors.
@@ -248,6 +284,8 @@ V0 requirements:
 	- Operator runbook is complete and reproducible.
 
 11. [TODO] Stage 10: No-Qt feasibility decision (separate future track) (**future**)
+- Description: reassess replacing Qt only after the CLI product is stable, using measured remaining dependencies rather than making no-Qt a delivery prerequisite.
+- Definition of Done: an RFC inventories event loop/network/thread/timer/storage impacts, compares cost/benefit and alternatives, and records a go/no-go decision; no implementation is mixed into the primary CLI delivery without separate approval.
 - Evaluate replacing Qt runtime substrate only after stable tg_cli exists.
 - Produce an RFC if pursued; do not mix with primary tg_cli delivery.
 
