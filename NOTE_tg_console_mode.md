@@ -374,3 +374,97 @@ Static probe plans and consolidated outcomes are stored under TG_PROBES/. See TG
 - This effort is not "no-Qt" initially.
 - Initial success is a minimal text-mode client using existing internals with reduced UI dependencies.
 - Protected-file policy is part of scope: prefer new tg_cli files and target wiring over edits to existing libs/core.
+
+## Architecture And Packet Report (2026-08-02)
+
+This section supersedes the original no-intrusion assumption where later executable probes disproved it. Detailed commands, fence IDs, and validation evidence remain in the individual packet files under `TG_PROBES/`.
+
+### Executive Answer: Facade Or Rewrite?
+
+This is a facade and hosted-runtime adaptation, not a rewrite of Telegram Desktop.
+
+The initial design was a parallel `tg_cli` executable that compiled selected Telegram sources without changing them. Packet 11 proved that design did not have a bounded link closure: after three controlled expansions it still had 153 unresolved symbols across Core, Main, Data, Storage, Window, and UI. We therefore approved minimal protected edits rather than reimplementing MTProto, account/session state, storage formats, updates, histories, permissions, or message operations.
+
+The approved protected edits create four dependency-injection seams:
+1. `AccountNetworkCapabilities` isolates fallback configuration and proxy services.
+2. `StorageSettingsCapabilities` isolates theme and application-settings services used by storage.
+3. `SessionServiceCapabilities` isolates setup-email, download-manager, and optional-window services.
+4. `DomainLifecycleCapabilities` plus the account factory isolates application lifecycle and per-account capability selection.
+
+Telegram's existing implementations remain the backend. Existing desktop constructors and call sites are preserved through additive overloads, and desktop capability implementations forward to the original behavior. CLI/hosted implementations replace presentation-only operations with no-op/null behavior. All modifications to existing upstream files are enclosed by named `TG_CHANGE` fences and checked automatically.
+
+The standalone QtCore-only `tg_cli` target still exists as a shell/staging target, but it cannot yet host the full Telegram account/session graph. The first working backend checkpoint therefore uses `tg -console`: a hosted console mode inside the already-linked Telegram runtime with window, tray, and media presentation suppressed. This is temporary architecture for reaching a useful CLI safely; dependency stripping and a possible separate full CLI executable remain later work.
+
+### Quantified Change Footprint
+
+Committed branch comparison:
+- Base: `12e8d4a956b0e73c1f738112870a32ea079fa05f`.
+- Measured head: `e10d91b0791ce0be7d1911995c1598c4e921e71e`.
+- Documentation and plans: 4,445 added lines.
+- TG-owned tests and tools: 1,131 added lines.
+- TG-owned runtime code: 1,084 added lines.
+- Existing upstream files: 609 added lines and 71 deleted lines.
+
+Therefore, the apparent 7,000+ line branch size is mostly planning, probe evidence, fence enforcement, and tests. The committed production edit surface in existing upstream files is about 680 changed lines, including fence markers and compatibility overloads. No `lib_*` implementation was modified.
+
+Current uncommitted A8.1 work is separate from those committed metrics:
+- Tracked worktree: 259 additions and 12 deletions across 9 files.
+- Untracked plans, TG-owned runtime helpers, demo scripts, and tests: approximately 1,551 lines across 12 files.
+- These changes are in-progress snapshot diagnostics and are not part of the committed architecture baseline yet.
+
+### Packet History: What And Why
+
+1. **Packet 01 - source closure:** mapped the Main/Data/History source set to test whether unchanged selected-source reuse could be bounded; static result was conditional.
+2. **Packet 02 - Qt runtime:** examined `QCoreApplication` versus GUI application requirements because a real console target should avoid UI runtime where possible; executable proof remained open.
+3. **Packet 03 - profile ownership:** traced desktop single-instance behavior because concurrent access to `tdata` is unsafe; identified a fail-closed local-server ownership direction.
+4. **Packet 04 - passcode:** found the non-UI local-passcode storage path because bootstrap must unlock profiles without GUI widgets; runtime no-write behavior remained to prove.
+5. **Packet 05 - account selection:** located early account metadata because the CLI should start only one selected account; conditional pass.
+6. **Packet 06 - history API:** located non-window chat-list and paged-history APIs because read-only commands are the first useful product milestone; conditional on session construction.
+7. **Packet 07 - send API:** located non-UI text-send requests because sending follows read-only stability; conditional on the session graph.
+8. **Packet 08 - chat IDs:** selected stable typed IDs (`user<id>`, `chat<id>`, `channel<id>`) so scripts can target peers consistently; passed.
+9. **Packet 09 - edit/delete:** located non-UI mutation and permission paths because later commands must preserve Telegram authority rules; conditional pass.
+10. **Packet 10 - dependency floor:** defined staged UI dependency removal because stripping everything before working behavior would be high risk; conditional roadmap produced.
+11. **Packet 11 - executable closure:** compiled the selected source graph to test the no-intrusion hypothesis; failed after three bounded expansions with 153 unresolved symbols.
+12. **Packet 12 - executable Qt runtime:** was blocked because Packet 11 never produced a constructible runtime whose application class could be measured.
+13. **Packet 13 - account construction:** was blocked because Packet 11 never produced a bounded account/session graph.
+14. **Packet 14 - fallback-A extraction:** became the parent plan for four narrow capability seams because no-edit selected-source reuse failed; A3-A7 execution is tracked beneath it.
+15. **Packet 15 - low-level MTProto alternative:** recorded a possible independent backend because protected edits might have been rejected; remains an unselected high-cost fallback.
+16. **Packet 16 - TDLib alternative:** recorded the fastest independent CLI backend option, but it cannot reuse Telegram Desktop `tdata` authentication; remains unselected.
+17. **Packet 17 / A3 - account network seam:** injected fallback-config and proxy services into `Main::Account` while preserving desktop constructors; completed and validated.
+18. **Packet 18 / A0.1 - fence enforcement:** fixed deletion/mixed-hunk checks and retrofitted branch fences because protected edits require enforceable merge discipline; completed and validated.
+19. **Packet 19 / A2.1 - capability baseline:** corrected interface dependencies and completed desktop validation because injection could not proceed on an unverified baseline; completed.
+20. **Packet 20 / A4 - storage settings seam:** passed settings/theme behavior from `Main::Account` into `Storage::Account` and added CLI no-op behavior; completed and validated.
+21. **Packet 21 / A5 - session services seam:** made `Main::Account` own reusable session services and let recreated sessions borrow them; completed, validated, and lifetime-reviewed.
+22. **Packet 22 / A6 - domain/account factory seam:** injected domain lifecycle behavior and routed all account creation through a fresh capability-bundle factory; completed and validated for desktop behavior.
+23. **Packet 23 / A7 - standalone CLI bundle:** attempted to construct the CLI Domain graph, but bounded linkage again reached broad MTProto/Core dependencies; stopped after 3/3 attempts and rolled back.
+24. **Packet 24 / A7.1 - minimal config target:** tested narrower MTProto-config partitions because Packet 23 failed; isolated compile probes disproved both bounded partition options.
+25. **Packet 25 / A7.2 - backend decision:** compared TDLib, low-level MTProto, and hosted Telegram runtime; selected hosted runtime because it preserves desktop auth/storage and reaches a demo sooner.
+26. **Packet 26 / A7.3 - hosted console checkpoint:** added `tg -console`, deterministic status output, no-window startup, and fail-closed disposable-workdir ownership; completed, reviewed, hardened, and validated.
+27. **Packet 27 / A8 - live profile bootstrap plan:** designed diagnostics-only live-profile startup, but remains uncommitted and blocked because ownership identity must be safe before profile access.
+28. **Packet 28 / A8.0 - ownership migration:** tested canonical/alias and mixed-version ownership identities because different path spellings can create dual owners; failed all three bounded migration options, so live-profile A8/A9 remain blocked.
+29. **Packet 29 / A8.1 - isolated snapshot demo:** moved the next demo to a disposable copied profile because live ownership is unresolved; owner-probe semantics now distinguish absent/busy/ambiguous, while snapshot copy/classification gates remain in progress and uncommitted.
+
+### How The Current Product Differs From Original Telegram Desktop
+
+| Area | Original desktop | Current TG branch |
+|---|---|---|
+| Backend protocol and models | Telegram Desktop MTProto, Main, Data, History | Same implementations; not rewritten |
+| Storage and authentication | Desktop `tdata` readers/writers | Same formats and storage code behind added safety/capability seams |
+| Desktop UI | Always follows desktop startup/window paths | Unchanged by default; `-console` selects a no-window hosted path |
+| Dependency access | Main/Storage call global `Core::App()` and theme/window services directly | Four narrow injectable capability interfaces at audited call sites |
+| Account construction | Direct constructors in Domain/Storage | Owner factory creates fresh desktop or hosted capability bundles |
+| Standalone CLI | None | Minimal QtCore-only `tg_cli` shell exists, but full backend is not linked into it |
+| Working console backend | None | `tg -console` uses the full existing runtime without presentation windows |
+| Profile safety | Desktop single-instance behavior | Additional fail-closed checkpoint/snapshot guards and ownership probes |
+| Commands | GUI actions | User-facing `status/chats/read/send` are not implemented yet |
+
+### Development Model From Here
+
+The intended development surface is now clear:
+1. Keep Telegram protocol, storage, account/session, data, history, and permission logic in original code.
+2. Keep protected edits limited to narrow lifecycle/service seams and safety gates.
+3. Add CLI orchestration, output DTOs, commands, snapshot tooling, and tests under `Telegram/tg_cli/`.
+4. Use hosted `tg -console` until a separately linked backend becomes economically justified.
+5. Strip UI dependencies only after `status`, `chats`, `read`, and `send` work reliably.
+
+This means future CLI feature development should mostly occur in TG-owned files. Additional protected edits are acceptable only when a concrete original-code global or lifecycle assumption cannot be adapted through an existing seam. The project is not completely rewriting the app; it is exposing a controlled facade over the existing app and building a CLI application layer on top of that facade.
