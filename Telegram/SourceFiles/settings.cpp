@@ -43,6 +43,9 @@ bool gTestAgent = false;
 bool gConsoleMode = false;
 bool gConsoleExitRequested = false;
 QString gConsoleLogPath;
+bool gConsoleOwnerProbeMode = false;
+bool gConsoleProfileSnapshotMode = false;
+QString gConsoleProfileSnapshotManifestPath;
 // TG_CHANGE_END: core-console-launch-state
 
 uint32 gConnectionsInSession = 1;

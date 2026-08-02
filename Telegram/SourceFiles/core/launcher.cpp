@@ -22,6 +22,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-include
 #include "settings.h"
 #include "../../tg_cli/hosted/hosted_console_checkpoint_guard.h"
+#include "../../tg_cli/hosted/hosted_console_owner_probe.h"
 // TG_CHANGE_END: launcher-console-checkpoint-guard-include
 
 #include <QtCore/QLoggingCategory>
@@ -384,9 +385,91 @@ void Launcher::initHighDpi() {
 }
 
 int Launcher::exec() {
+	// TG_CHANGE_BEGIN: launcher-console-profile-snapshot-gates
+	// Arguments must be parsed before any console gate is evaluated.
 	init();
-	// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-enforce
-	if (cConsoleMode()) {
+	if (cConsoleOwnerProbeMode()) {
+		if (!customWorkingDir()) {
+			printf("owner-probe-status:owner-ambiguous\n");
+			return 1;
+		}
+		auto timeoutMs = 1000;
+		auto timeoutParsed = false;
+		const auto timeoutOverride = qEnvironmentVariableIntValue(
+			"TG_CLI_OWNER_PROBE_TIMEOUT_MS",
+			&timeoutParsed);
+		if (timeoutParsed && timeoutOverride >= 0) {
+			timeoutMs = timeoutOverride;
+		}
+		const auto probe = TgCli::Hosted::ProbeHostedConsoleOwnerForWorkdir(
+			customWorkingDirPath(),
+			timeoutMs);
+		printf(
+			"owner-probe-status:%s\n",
+			TgCli::Hosted::HostedConsoleOwnerProbeStatusToken(
+				probe.status).toUtf8().constData());
+		printf(
+			"owner-probe-workdir-absolute:%s\n",
+			probe.absoluteWorkdirPath.toUtf8().constData());
+		printf(
+			"owner-probe-local-server:%s\n",
+			probe.localServerName.toUtf8().constData());
+		printf(
+			"owner-probe-timeout-ms:%d\n",
+			probe.timeoutMs);
+		printf(
+			"owner-probe-elapsed-ms:%d\n",
+			probe.elapsedMs);
+		printf(
+			"owner-probe-socket-state:%s\n",
+			probe.socketStateToken.toUtf8().constData());
+		printf(
+			"owner-probe-socket-error:%s\n",
+			probe.socketErrorToken.toUtf8().constData());
+		printf(
+			"owner-probe-socket-error-string:%s\n",
+			probe.socketErrorString.toUtf8().constData());
+		printf(
+			"owner-probe-detail:%s\n",
+			probe.detail.toUtf8().constData());
+		return (probe.status == TgCli::Hosted::HostedConsoleOwnerProbeStatus::OwnerAmbiguous)
+			? 1
+			: 0;
+	}
+
+	if (cConsoleProfileSnapshotMode()) {
+		if (!customWorkingDir()) {
+			fprintf(
+				stderr,
+				"FATAL: profile status mode requires explicit -workdir\n");
+			return 1;
+		}
+		if (cConsoleLogPath().isEmpty()) {
+			fprintf(
+				stderr,
+				"FATAL: profile status mode requires explicit -console-log\n");
+			return 1;
+		}
+		const auto workdir = QDir(customWorkingDirPath()).canonicalPath();
+		if (workdir.isEmpty()) {
+			fprintf(
+				stderr,
+				"FATAL: profile status workdir does not exist: %s\n",
+				customWorkingDirPath().toUtf8().constData());
+			return 1;
+		}
+		const auto logPath = QDir(cConsoleLogPath()).absolutePath();
+		if (logPath.startsWith(workdir + '/', Qt::CaseInsensitive)) {
+			fprintf(
+				stderr,
+				"FATAL: -console-log must be outside the profile workdir\n");
+			return 1;
+		}
+		_customWorkingDir = workdir + '/';
+		gConsoleLogPath = logPath;
+	}
+
+	if (cConsoleMode() && !cConsoleProfileSnapshotMode()) {
 		const auto guard = TgCli::Hosted::EnforceHostedConsoleCheckpointGuard(
 			customWorkingDir(),
 			customWorkingDirPath());
@@ -401,7 +484,7 @@ int Launcher::exec() {
 			_customWorkingDir = guard.canonicalWorkdirPath;
 		}
 	}
-	// TG_CHANGE_END: launcher-console-checkpoint-guard-enforce
+	// TG_CHANGE_END: launcher-console-profile-snapshot-gates
 
 	if (cLaunchMode() == LaunchModeFixPrevious) {
 		return psFixPrevious();
@@ -589,8 +672,11 @@ void Launcher::processArguments() {
 		{ "-workdir"        , KeyFormat::OneValue },
 		// TG_CHANGE_BEGIN: launcher-console-argument-parse
 		{ "-console"        , KeyFormat::NoValues },
+		{ "-console-owner-probe" , KeyFormat::NoValues },
+		{ "-console-profile-snapshot" , KeyFormat::NoValues },
 		{ "-console-exit"   , KeyFormat::NoValues },
 		{ "-console-log"    , KeyFormat::OneValue },
+		{ "-console-profile-snapshot-manifest" , KeyFormat::OneValue },
 		// TG_CHANGE_END: launcher-console-argument-parse
 		{ "--"              , KeyFormat::AllLeftValues },
 		{ "-scale"          , KeyFormat::OneValue },
@@ -641,9 +727,16 @@ void Launcher::processArguments() {
 	gStartInTray = parseResult.contains("-startintray");
 	gQuit = parseResult.contains("-quit");
 	// TG_CHANGE_BEGIN: launcher-console-flag-assign
-	gConsoleMode = parseResult.contains("-console");
+	gConsoleOwnerProbeMode = parseResult.contains("-console-owner-probe");
+	gConsoleProfileSnapshotMode = parseResult.contains(
+		"-console-profile-snapshot");
+	gConsoleMode = parseResult.contains("-console")
+		|| gConsoleProfileSnapshotMode;
 	gConsoleExitRequested = parseResult.contains("-console-exit");
 	gConsoleLogPath = parseResult.value("-console-log", {}).join(QString());
+	gConsoleProfileSnapshotManifestPath = parseResult.value(
+		"-console-profile-snapshot-manifest",
+		{}).join(QString());
 	// TG_CHANGE_END: launcher-console-flag-assign
 	_customWorkingDir = parseResult.value("-workdir", {}).join(QString());
 	if (!_customWorkingDir.isEmpty()) {

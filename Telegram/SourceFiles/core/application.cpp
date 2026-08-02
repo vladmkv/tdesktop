@@ -101,6 +101,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // TG_CHANGE_BEGIN: application-console-status-line-a
 #include "../../tg_cli/hosted/hosted_console_status_writer.h"
 // TG_CHANGE_END: application-console-status-line-a
+// TG_CHANGE_BEGIN: application-console-profile-snapshot-storage-read-include
+#include "../../tg_cli/hosted/hosted_console_profile_snapshot_diagnostics.h"
+#include <cstdlib>
+// TG_CHANGE_END: application-console-profile-snapshot-storage-read-include
 
 #include <QtCore/QStandardPaths>
 #include <QtCore/QMimeDatabase>
@@ -278,6 +282,17 @@ Application::~Application() {
 }
 
 void Application::run() {
+	// TG_CHANGE_BEGIN: application-console-profile-snapshot-storage-read-branch
+	if (cConsoleProfileSnapshotMode()) {
+		const auto statusLine
+			= TgCli::Hosted::HostedConsoleProfileSnapshotStatusLine(*_domain);
+		const auto status = TgCli::Hosted::WriteHostedConsoleStatusLine(
+			statusLine);
+		// Classification is complete and read-only. Exit immediately instead
+		// of tearing down a deliberately half-initialized Application.
+		std::_Exit(status.ok ? 0 : 1);
+	}
+	// TG_CHANGE_END: application-console-profile-snapshot-storage-read-branch
 	// Depends on OpenSSL on macOS, so on ThirdParty::start().
 	// Depends on notifications settings.
 	_notifications = std::make_unique<Window::Notifications::System>();

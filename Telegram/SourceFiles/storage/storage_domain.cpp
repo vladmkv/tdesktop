@@ -7,7 +7,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "storage/storage_domain.h"
 
+// TG_CHANGE_BEGIN: storage-domain-snapshot-storage-read-includes
+#include "core/utils.h"
 #include "core/version.h"
+#include "storage/storage_encryption.h"
+// TG_CHANGE_END: storage-domain-snapshot-storage-read-includes
 #include "storage/details/storage_file_utilities.h"
 #include "storage/serialize_common.h"
 #include "mtproto/mtproto_config.h"
@@ -30,7 +34,98 @@ using namespace details;
 	return "key_" + dataName;
 }
 
+// TG_CHANGE_BEGIN: storage-domain-snapshot-storage-read-classification
+[[nodiscard]] quint64 ComputeDataNameKey(const QString &dataName) {
+	const auto testAddition = QString();
+	const auto dataNameUtf8 = (dataName + testAddition).toUtf8();
+	quint64 dataNameHash[2] = { 0 };
+	hashMd5(dataNameUtf8.constData(), dataNameUtf8.size(), dataNameHash);
+	return dataNameHash[0];
+}
+
+[[nodiscard]] QString LegacyBasePath(const QString &dataName) {
+	return BaseGlobalPath() + ToFilePart(ComputeDataNameKey(dataName)) + QChar('/');
+}
+
+[[nodiscard]] SnapshotStorageStatus ClassifyModernSnapshotStorage(
+		const QString &dataName) {
+	FileReadDescriptor keyData;
+	if (!ReadFile(keyData, ComputeKeyName(dataName), BaseGlobalPath())) {
+		return SnapshotStorageStatus::ProfileNotFound;
+	}
+
+	QByteArray salt, keyEncrypted, infoEncrypted;
+	keyData.stream >> salt >> keyEncrypted >> infoEncrypted;
+	if (!CheckStreamStatus(keyData.stream) || salt.size() != LocalEncryptSaltSize) {
+		return SnapshotStorageStatus::ProfileCorrupt;
+	}
+
+	const auto passcodeKey = CreateLocalKey(QByteArray(), salt);
+	EncryptedDescriptor keyInnerData;
+	if (!DecryptLocal(keyInnerData, keyEncrypted, passcodeKey)) {
+		return SnapshotStorageStatus::PasscodeRequired;
+	}
+	const auto key = Serialize::read<MTP::AuthKey::Data>(keyInnerData.stream);
+	if (keyInnerData.stream.status() != QDataStream::Ok || !keyInnerData.stream.atEnd()) {
+		return SnapshotStorageStatus::ProfileCorrupt;
+	}
+
+	const auto localKey = std::make_shared<MTP::AuthKey>(key);
+	EncryptedDescriptor info;
+	if (!DecryptLocal(info, infoEncrypted, localKey)) {
+		return SnapshotStorageStatus::ProfileCorrupt;
+	}
+
+	auto count = qint32();
+	info.stream >> count;
+	if (count <= 0 || count > Main::Domain::kPremiumMaxAccounts) {
+		return SnapshotStorageStatus::ProfileCorrupt;
+	}
+
+	auto tried = base::flat_set<int>();
+	for (auto i = 0; i != count; ++i) {
+		auto index = qint32();
+		info.stream >> index;
+		if (index < 0
+			|| index >= Main::Domain::kPremiumMaxAccounts
+			|| !tried.emplace(index).second) {
+			return SnapshotStorageStatus::ProfileCorrupt;
+		}
+	}
+
+	return SnapshotStorageStatus::Ready;
+}
+
+[[nodiscard]] SnapshotStorageStatus ClassifyLegacySnapshotStorage(
+		const QString &dataName) {
+	FileReadDescriptor mapData;
+	if (!ReadFile(mapData, u"map"_q, LegacyBasePath(dataName))) {
+		return SnapshotStorageStatus::ProfileNotFound;
+	}
+
+	QByteArray legacySalt, legacyKeyEncrypted, mapEncrypted;
+	mapData.stream >> legacySalt >> legacyKeyEncrypted >> mapEncrypted;
+	if (!CheckStreamStatus(mapData.stream)
+		|| legacySalt.size() != LocalEncryptSaltSize) {
+		return SnapshotStorageStatus::ProfileCorrupt;
+	}
+
+	const auto legacyPasscodeKey = CreateLegacyLocalKey(
+		QByteArray(),
+		legacySalt);
+	EncryptedDescriptor keyData;
+	if (!DecryptLocal(keyData, legacyKeyEncrypted, legacyPasscodeKey)) {
+		return SnapshotStorageStatus::PasscodeRequiredLegacy;
+	}
+	const auto key = Serialize::read<MTP::AuthKey::Data>(keyData.stream);
+	if (keyData.stream.status() != QDataStream::Ok || !keyData.stream.atEnd()) {
+		return SnapshotStorageStatus::ProfileCorrupt;
+	}
+
+	return SnapshotStorageStatus::Ready;
+}
 } // namespace
+// TG_CHANGE_END: storage-domain-snapshot-storage-read-classification
 
 Domain::Domain(not_null<Main::Domain*> owner, const QString &dataName)
 : _owner(owner)
@@ -69,6 +164,14 @@ void Domain::startAdded(
 
 	account->prepareToStartAdded(_localKey);
 	account->start(std::move(config));
+}
+
+SnapshotStorageStatus Domain::classifySnapshotStorage() const {
+	const auto modernStatus = ClassifyModernSnapshotStorage(_dataName);
+	if (modernStatus != SnapshotStorageStatus::ProfileNotFound) {
+		return modernStatus;
+	}
+	return ClassifyLegacySnapshotStorage(_dataName);
 }
 
 void Domain::startWithSingleAccount(

@@ -60,6 +60,9 @@ constexpr auto kCleanupQuitTimeout = 30 * crl::time(1000);
 // TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-const
 constexpr auto kConsoleSecondInstanceResponseTimeout = 10 * crl::time(1000);
 // TG_CHANGE_END: sandbox-console-second-instance-timeout-const
+// TG_CHANGE_BEGIN: sandbox-console-fail-closed-flag
+bool ConsoleFailClosedRequested = false;
+// TG_CHANGE_END: sandbox-console-fail-closed-flag
 
 } // namespace
 
@@ -196,6 +199,7 @@ int Sandbox::start() {
 	_localSocket.connectToServer(_localServerName);
 	// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-preconnect
 	if (cConsoleMode()
+		&& !cConsoleProfileSnapshotMode()
 		&& !TgCli::Hosted::HostedConsoleCheckpointOwnsWorkdirLock()) {
 		_secondInstanceResponseTimeoutTimer.callOnce(
 			kConsoleSecondInstanceResponseTimeout);
@@ -206,6 +210,12 @@ int Sandbox::start() {
 		closeApplication();
 		return 0;
 	}
+	// TG_CHANGE_BEGIN: sandbox-console-fail-closed-abort
+	if (ConsoleFailClosedRequested) {
+		closeApplication();
+		return 1;
+	}
+	// TG_CHANGE_END: sandbox-console-fail-closed-abort
 	_started = true;
 	return exec();
 }
@@ -457,8 +467,10 @@ void Sandbox::socketError(QLocalSocket::LocalSocketError e) {
 		// TG_CHANGE_END: sandbox-console-second-instance-timeout-cancel-owner-a
 		// TG_CHANGE_BEGIN: sandbox-console-checkpoint-lock-enforce
 		if (cConsoleMode()
+			&& !cConsoleProfileSnapshotMode()
 			&& !TgCli::Hosted::HostedConsoleCheckpointOwnsWorkdirLock()) {
 			LOG(("Hosted checkpoint runtime lock is not owned, aborting before listen."));
+			ConsoleFailClosedRequested = true;
 			QCoreApplication::exit(1);
 			return;
 		}

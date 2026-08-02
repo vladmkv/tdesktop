@@ -87,6 +87,9 @@ DeclareSetting(bool, Quit);
 DeclareSetting(bool, ConsoleMode);
 DeclareSetting(bool, ConsoleExitRequested);
 DeclareSetting(QString, ConsoleLogPath);
+DeclareSetting(bool, ConsoleOwnerProbeMode);
+DeclareSetting(bool, ConsoleProfileSnapshotMode);
+DeclareSetting(QString, ConsoleProfileSnapshotManifestPath);
 // TG_CHANGE_END: core-console-launch-state
 
 DeclareSetting(QByteArray, LocalSalt);

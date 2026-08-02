@@ -26,6 +26,15 @@ enum class StartResult : uchar {
 	IncorrectPasscodeLegacy,
 };
 
+// TG_CHANGE_BEGIN: storage-domain-snapshot-storage-read-api-enum
+enum class SnapshotStorageStatus : uchar {
+	Ready,
+	PasscodeRequired,
+	PasscodeRequiredLegacy,
+	ProfileCorrupt,
+	ProfileNotFound,
+};
+// TG_CHANGE_END: storage-domain-snapshot-storage-read-api-enum
 class Domain final {
 public:
 	Domain(not_null<Main::Domain*> owner, const QString &dataName);
@@ -35,6 +44,9 @@ public:
 	void startAdded(
 		not_null<Main::Account*> account,
 		std::unique_ptr<MTP::Config> config);
+	// TG_CHANGE_BEGIN: storage-domain-snapshot-storage-read-api-method
+	[[nodiscard]] SnapshotStorageStatus classifySnapshotStorage() const;
+	// TG_CHANGE_END: storage-domain-snapshot-storage-read-api-method
 	void writeAccounts();
 	void startFromScratch();
 
