@@ -268,8 +268,22 @@ Status: [DONE] Implemented and validated against a dedicated dev profile instead
 Pass:
 - Deterministic profile classification, `tdata` proven byte-identical before/after (recomputed digest, not compared against itself), packet-26 hosted-console behavior unchanged.
 
-### A9: Account Enumeration and Status
-Status: [TODO] Not started. Next step: enumerate account index/user id from the dev profile's decrypted info stream (already decrypted once for classification) without opening a live session.
+### A9: Hosted Dev-Profile Startup And Existing Account Enumeration
+Status: [TODO] Refined in `PLAN_tg_console_mode.md`; implementation not started.
+1. Reuse `Main::Domain::start()` and the already-populated `Main::Domain::accounts()` / `orderedAccounts()` APIs. Do not add another storage parser or account model.
+2. Run only against the dedicated dev profile; normal startup writes/network/session activity are accepted there and must not be represented as live-profile-safe or pure-read behavior.
+3. Add TG-owned orchestration/output only: start, bounded readiness, existing account fields, deterministic text/JSON, and no-window lifecycle.
+4. A10 starts only after A9 proves hosted Domain/Account/Session startup without windows.
+
+Pass:
+- Existing account list exposes the authenticated dev account with stable identity/order; no duplicate parser/model; desktop and packet-26 regressions pass.
+
+### A10: Existing Chat List And History Viewer Reuse
+Status: [TODO] Refined in `PLAN_tg_console_mode.md`; implementation blocked on A10.0 proofs.
+1. A10.0 proves existing session readiness, desktop dialog ordering, and `HistoryMessagesViewer` error/timeout semantics.
+2. A10.1 reuses `ApiWrap::requestDialogs`, `Data::Session::chatsListLoadedEvents`, and an existing `Dialogs::MainList` iteration path.
+3. A10.2 reuses `Data::HistoryMessagesViewer` and existing `HistoryItem`/media models with no read receipts or downloads.
+4. No TG-owned MTProto request implementation, chat/message model, or `Window::Controller` construction.
 
 ## Stop Conditions
 - A capability becomes a generic Core::Application mirror or mixes unrelated responsibilities.

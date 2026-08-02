@@ -74,9 +74,11 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. A9: account enumeration on the dev profile (list account index/user id from storage without opening a live desktop-shared profile).
-2. A10: chats and paged-history packet.
-3. Live-profile ownership architecture (canonical/alias identity) remains a separate, still-unsolved track, required only if/when sharing the desktop's own profile becomes a goal again.
+1. A9: hosted dev-profile startup + existing account enumeration (`Main::Domain::start()` then `Main::Domain::accounts()`); no new account parser or account model.
+2. A10.0: read-only API proof packet for existing session readiness, desktop-order dialog iteration, and `HistoryMessagesViewer` timeout/error semantics. No feature implementation until all three proofs pass.
+3. A10.1: chats command using existing `ApiWrap::requestDialogs()`, `Data::Session::chatsListLoadedEvents()`, and `Dialogs::MainList::indexed()->all()`.
+4. A10.2: paged read command using existing `Data::HistoryMessagesViewer()` and already-ingested `HistoryItem`/media models; no duplicate MTProto history request.
+5. Live-profile ownership architecture (canonical/alias identity) remains a separate, still-unsolved track, required only if/when sharing the desktop's own profile becomes a goal again.
 
 Current readiness:
 - A0.1 through A6 are complete and validated (see individual implementation/review commits below).
@@ -87,6 +89,82 @@ Current readiness:
 - A8 (profile status) is DONE against the dev profile: `tg.exe -console-profile-snapshot -workdir <profile> -console-log <path>` prints `snapshot-storage-status:ready|passcode-required|passcode-required-legacy|profile-corrupt|profile-not-found`, proven not to mutate `tdata`, with fail-closed argument guards. Commit `ba65a3d41b`.
 - During A8 implementation, found and fixed three real runtime defects, not just packet-29 scope-splitting: (1) every console-mode launcher gate was dead code because flags were read before `Launcher::init()`/`processArguments()` ran; (2) the fail-closed abort path called `QCoreApplication::exit()` before any event loop existed and hung forever instead of terminating; (3) profile-status mode tripped checkpoint-lock enforcement meant only for `-console` checkpoint mode. All three are fixed and verified end to end (real `ready`, empty-dir `profile-not-found`, all four guards reject, `tdata` byte-identical before/after, packet-26 regression still passes).
 - A9 (account enumeration) and A10 (chats/history) are not started.
+
+### A9 Refined Packet: Reuse Existing Account List
+
+Decision:
+- Do **not** implement another account-list parser. Telegram already has `Main::Domain::accounts()`, `orderedAccounts()`, and `accountsAuthedCount()`.
+- Those APIs are runtime APIs: they are populated by `Storage::Domain::startModern()` through `Main::Domain::accountAddedInStorage()`. Therefore A9 must start the existing Domain/Account graph rather than duplicate its storage format.
+- Normal startup may write upgrades/settings and starts MTP/session services. That is acceptable only because A9 targets the dedicated dev profile, not the desktop's live profile. A9 must not claim pure-read or live-profile safety.
+
+Exact implementation scope:
+1. Add one hosted `accounts` mode/command under `tg.exe -console`, reusing the existing hosted capability bundle.
+2. Run the existing `Application::startDomain()` / `Main::Domain::start(QByteArray())` path with empty passcode.
+3. Handle existing `Storage::StartResult`: success, passcode-required, passcode-required-legacy. Never call reset/forgotten-passcode or create a fresh account.
+4. On success, read `Main::Domain::accounts()` and emit one deterministic record per entry: storage index, session existence, `Session::userId()`, `Session::uniqueId()`, test/production DC flag, and self-user display name/username if already available.
+5. No new account DTO inside Main/Storage. A TG-owned formatter may copy fields into output JSON/text only.
+6. Select one account by existing storage index for A10; default to existing active account. Do not invent a second ordering algorithm.
+
+A9 validation:
+- Dedicated dev profile only; desktop process closed.
+- Output contains the authenticated dev account and matches the desktop account identity.
+- Two runs produce the same account identity/order.
+- No windows/tray/media presentation.
+- Existing desktop startup and packet-26 demo remain unchanged.
+- Build `Telegram` and `tg_cli`; fence checker and `git diff --check` pass.
+
+A9 stop conditions:
+- Existing `Domain::accounts()` cannot be populated without a window/controller.
+- Hosted no-op capabilities prevent successful session creation.
+- Startup falls into `startFromScratch()` or creates a new account/profile.
+- Implementation duplicates account storage parsing or account model logic.
+
+### A10 Refined Packet: Reuse Existing Chat And History Models
+
+Locked reuse rules:
+- Do not implement MTProto dialog/history requests in TG-owned code.
+- Do not create parallel chat/message models.
+- Do not require `Window::Controller`; the audited list/read APIs are model/session APIs.
+- First demo never marks messages read and never downloads media.
+
+A10.0 proof packet (must complete before feature code):
+1. **Session-ready proof:** after A9 startup, prove the minimum existing readiness signal: active `Main::Session` plus updates bootstrap completion that triggers `ApiWrap::requestDialogs()`. Record the exact producer/callback and timeout behavior.
+2. **Dialog-order proof:** prove which existing list matches desktop-visible ordering (pinned + indexed semantics versus `Dialogs::MainList::indexed()->all()` alone). Select one existing iteration path; do not merge/order rows in TG code.
+3. **History-error proof:** trace `Data::HistoryMessagesViewer()` through `ApiWrap::requestHistory()`. Decide explicitly whether V0 accepts timeout/no-progress as its error contract or needs one small additive error callback seam. No implementation until this is decided.
+
+A10.1 chats implementation after A10.0 passes:
+1. Reuse `ApiWrap::requestDialogs(nullptr)` to start load.
+2. Reuse `Data::Session::chatsListLoaded()` / `chatsListLoadedEvents()` for completion and `chatsListChanges()` for updates.
+3. Iterate the selected existing `Dialogs::MainList` path and format first `N` rows only.
+4. Stable IDs remain `user<id>`, `chat<id>`, `channel<id>` using existing `PeerId` type helpers.
+5. Output fields: stable chat id, title, peer type/id, unread count, pinned state, last-message date. Formatting only; no duplicate model.
+
+A10.2 paged read implementation after chats passes:
+1. Resolve selected stable chat id to existing loaded `PeerData`/`History` through `Data::Session`.
+2. Reuse `Data::HistoryMessagesViewer(history, around, before, after)` for paging and automatic request/model ingestion.
+3. Format existing `HistoryItem` text and existing media metadata only. Never call load/download/save methods.
+4. Default no-mark-read: never call `readInbox`, `readInboxTill`, or `sendPendingReadInbox`.
+5. Bounded session/dialog/page timeouts and explicit cancellation/detach on exit.
+
+A10 validation:
+- List at least one real chat from the dedicated dev profile and compare identity/title/order with desktop.
+- Read one bounded page twice with deterministic message ids/order.
+- Private chat and channel/supergroup coverage.
+- Media metadata shown without creating downloaded media files.
+- No read receipt sent in the first demo.
+- Timeout/network failure exits cleanly without windows or crash.
+
+A10 stop conditions:
+- Any selected list/read path requires `Window::Controller` construction.
+- TG-owned code must duplicate MTProto request or Telegram chat/message model behavior.
+- Existing history viewer cannot expose bounded progress/cancellation without an unbounded wait.
+- First demo causes read receipts or media downloads.
+
+### Deferred Live-Profile Ownership
+
+Current identity is MD5 of `QDir(cWorkingDir()).absolutePath()`: it is path-string identity, not physical-directory identity. Identical spelling works; junction/symlink/case aliases can hash differently and permit two owners of one physical profile. Packet 28 tested three migration designs (global canonical identity, dual legacy+canonical identities, strict canonical mode plus profile-root lock); all failed the required old/new mixed-version matrix.
+
+The dedicated dev profile sidesteps this because only the development build uses it; it does not fix production shared-profile ownership. Reopen only with a new migration design that passes old-old, old-new, new-old, new-new across canonical/alias/case/junction spellings with exactly one owner, no deadlock, no pre-ownership writes, and bounded fail-closed ambiguity. A profile-root lock alone is insufficient because older Telegram binaries do not participate in it.
 
 ### First Runnable Read-Only Version (V0)
 V0 is reached after A10 and provides these one-shot commands over an existing desktop-authenticated profile:
