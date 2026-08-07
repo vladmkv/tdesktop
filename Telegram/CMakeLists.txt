@@ -83,6 +83,8 @@ target_sources(Telegram PRIVATE
 # TG_CHANGE_BEGIN: telegram-cmake-hosted-console-status-writer-sources
 target_sources(Telegram PRIVATE
     tg_cli/hosted/hosted_console_checkpoint_guard.cpp
+    tg_cli/hosted/hosted_console_accounts_format.cpp
+    tg_cli/hosted/hosted_console_accounts_mode.cpp
     tg_cli/hosted/hosted_console_owner_probe.cpp
     tg_cli/hosted/hosted_console_profile_snapshot_diagnostics.cpp
     tg_cli/hosted/hosted_console_status_writer.cpp

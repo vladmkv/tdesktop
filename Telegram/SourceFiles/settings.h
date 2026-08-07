@@ -91,6 +91,11 @@ DeclareSetting(bool, ConsoleOwnerProbeMode);
 DeclareSetting(bool, ConsoleProfileSnapshotMode);
 DeclareSetting(QString, ConsoleProfileSnapshotManifestPath);
 // TG_CHANGE_END: core-console-launch-state
+// TG_CHANGE_BEGIN: core-console-accounts-launch-state
+DeclareSetting(bool, ConsoleAccountsMode);
+DeclareSetting(QString, ConsoleAccountIndex);
+DeclareSetting(QString, ConsoleFormat);
+// TG_CHANGE_END: core-console-accounts-launch-state
 
 DeclareSetting(QByteArray, LocalSalt);
 DeclareSetting(int, ScreenScale);

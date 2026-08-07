@@ -39,6 +39,7 @@ public:
 	[[nodiscard]] virtual bool mainMenuAccountsShown() const = 0;
 	virtual void setMainMenuAccountsShown(bool shown) = 0;
 	virtual void saveSettingsDelayed(crl::time delay = 0) = 0;
+	[[nodiscard]] virtual bool keepAccountWithoutSession(Main::Account *account) const = 0;
 	[[nodiscard]] virtual Window::Controller *separateWindowFor(Main::Account *account) const = 0;
 	virtual Window::Controller *ensureSeparateWindowFor(Main::Account *account) = 0;
 	[[nodiscard]] virtual bool passcodeLocked() const = 0;

@@ -483,7 +483,8 @@ void Domain::removeRedundantAccounts() {
 
 	const auto was = _accounts.size();
 	for (auto i = _accounts.begin(); i != _accounts.end();) {
-		if (_domainLifecycleCapabilities->separateWindowFor(not_null(i->account.get()))
+		if (_domainLifecycleCapabilities->keepAccountWithoutSession(i->account.get())
+			|| _domainLifecycleCapabilities->separateWindowFor(not_null(i->account.get()))
 			|| i->account->sessionExists()) {
 			++i;
 			continue;

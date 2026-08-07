@@ -388,6 +388,13 @@ int Launcher::exec() {
 	// TG_CHANGE_BEGIN: launcher-console-profile-snapshot-gates
 	// Arguments must be parsed before any console gate is evaluated.
 	init();
+	if (cConsoleAccountsMode()
+		&& (cConsoleOwnerProbeMode() || cConsoleProfileSnapshotMode())) {
+		fprintf(
+			stderr,
+			"FATAL: -console-accounts cannot be combined with another console probe mode\n");
+		return 1;
+	}
 	if (cConsoleOwnerProbeMode()) {
 		if (!customWorkingDir()) {
 			printf("owner-probe-status:owner-ambiguous\n");
@@ -468,8 +475,64 @@ int Launcher::exec() {
 		_customWorkingDir = workdir + '/';
 		gConsoleLogPath = logPath;
 	}
+	// TG_CHANGE_END: launcher-console-profile-snapshot-gates
+	// TG_CHANGE_BEGIN: launcher-console-accounts-gates
+	if (cConsoleAccountsMode()) {
+		if (cConsoleProfileSnapshotMode()) {
+			fprintf(
+				stderr,
+				"FATAL: -console-accounts cannot be combined with -console-profile-snapshot\n");
+			return 1;
+		}
+		if (cConsoleOwnerProbeMode()) {
+			fprintf(
+				stderr,
+				"FATAL: -console-accounts cannot be combined with -console-owner-probe\n");
+			return 1;
+		}
+		if (!customWorkingDir()) {
+			fprintf(
+				stderr,
+				"FATAL: accounts mode requires explicit -workdir\n");
+			return 1;
+		}
+		const auto workdir = QDir(customWorkingDirPath()).canonicalPath();
+		if (workdir.isEmpty()) {
+			fprintf(
+				stderr,
+				"FATAL: accounts mode workdir does not exist: %s\n",
+				customWorkingDirPath().toUtf8().constData());
+			return 1;
+		}
+		if (cConsoleLogPath().isEmpty()) {
+			fprintf(
+				stderr,
+				"FATAL: accounts mode requires explicit -console-log\n");
+			return 1;
+		}
+		const auto logPath = QDir(cConsoleLogPath()).absolutePath();
+		if (logPath.startsWith(workdir + '/', Qt::CaseInsensitive)) {
+			fprintf(
+				stderr,
+				"FATAL: -console-log must be outside the profile workdir\n");
+			return 1;
+		}
+		_customWorkingDir = workdir + '/';
+		gConsoleLogPath = logPath;
+		const auto format = cConsoleFormat().trimmed().toLower();
+		if (!format.isEmpty()
+			&& format != QStringLiteral("text")
+			&& format != QStringLiteral("json")) {
+			fprintf(
+				stderr,
+				"FATAL: accounts mode supports only -console-format text|json\n");
+			return 1;
+		}
+	}
 
-	if (cConsoleMode() && !cConsoleProfileSnapshotMode()) {
+	// TG_CHANGE_END: launcher-console-accounts-gates
+	// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-enforce
+	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode()) {
 		const auto guard = TgCli::Hosted::EnforceHostedConsoleCheckpointGuard(
 			customWorkingDir(),
 			customWorkingDirPath());
@@ -484,8 +547,8 @@ int Launcher::exec() {
 			_customWorkingDir = guard.canonicalWorkdirPath;
 		}
 	}
-	// TG_CHANGE_END: launcher-console-profile-snapshot-gates
 
+	// TG_CHANGE_END: launcher-console-checkpoint-guard-enforce
 	if (cLaunchMode() == LaunchModeFixPrevious) {
 		return psFixPrevious();
 	}
@@ -672,6 +735,9 @@ void Launcher::processArguments() {
 		{ "-workdir"        , KeyFormat::OneValue },
 		// TG_CHANGE_BEGIN: launcher-console-argument-parse
 		{ "-console"        , KeyFormat::NoValues },
+		{ "-console-accounts" , KeyFormat::NoValues },
+		{ "-console-account-index" , KeyFormat::OneValue },
+		{ "-console-format" , KeyFormat::OneValue },
 		{ "-console-owner-probe" , KeyFormat::NoValues },
 		{ "-console-profile-snapshot" , KeyFormat::NoValues },
 		{ "-console-exit"   , KeyFormat::NoValues },
@@ -730,10 +796,16 @@ void Launcher::processArguments() {
 	gConsoleOwnerProbeMode = parseResult.contains("-console-owner-probe");
 	gConsoleProfileSnapshotMode = parseResult.contains(
 		"-console-profile-snapshot");
+	gConsoleAccountsMode = parseResult.contains("-console-accounts");
 	gConsoleMode = parseResult.contains("-console")
-		|| gConsoleProfileSnapshotMode;
+		|| gConsoleProfileSnapshotMode
+		|| gConsoleAccountsMode;
 	gConsoleExitRequested = parseResult.contains("-console-exit");
 	gConsoleLogPath = parseResult.value("-console-log", {}).join(QString());
+	gConsoleAccountIndex = parseResult.value(
+		"-console-account-index",
+		{}).join(QString());
+	gConsoleFormat = parseResult.value("-console-format", {}).join(QString());
 	gConsoleProfileSnapshotManifestPath = parseResult.value(
 		"-console-profile-snapshot-manifest",
 		{}).join(QString());

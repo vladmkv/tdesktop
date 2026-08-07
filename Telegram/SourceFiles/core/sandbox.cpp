@@ -200,6 +200,7 @@ int Sandbox::start() {
 	// TG_CHANGE_BEGIN: sandbox-console-second-instance-timeout-preconnect
 	if (cConsoleMode()
 		&& !cConsoleProfileSnapshotMode()
+		&& !cConsoleAccountsMode()
 		&& !TgCli::Hosted::HostedConsoleCheckpointOwnsWorkdirLock()) {
 		_secondInstanceResponseTimeoutTimer.callOnce(
 			kConsoleSecondInstanceResponseTimeout);
@@ -468,6 +469,7 @@ void Sandbox::socketError(QLocalSocket::LocalSocketError e) {
 		// TG_CHANGE_BEGIN: sandbox-console-checkpoint-lock-enforce
 		if (cConsoleMode()
 			&& !cConsoleProfileSnapshotMode()
+			&& !cConsoleAccountsMode()
 			&& !TgCli::Hosted::HostedConsoleCheckpointOwnsWorkdirLock()) {
 			LOG(("Hosted checkpoint runtime lock is not owned, aborting before listen."));
 			ConsoleFailClosedRequested = true;

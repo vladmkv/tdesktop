@@ -44,9 +44,7 @@ public:
 	}
 
 	void runOnMain(FnMut<void()> &&callback) override {
-		if (callback) {
-			callback();
-		}
+		crl::on_main(&Core::App(), std::move(callback));
 	}
 
 	void postponeCall(FnMut<void()> &&callback) override {
@@ -79,6 +77,10 @@ public:
 			return;
 		}
 		Core::App().saveSettingsDelayed();
+	}
+
+	[[nodiscard]] bool keepAccountWithoutSession(Main::Account *) const override {
+		return true;
 	}
 
 	[[nodiscard]] Window::Controller *separateWindowFor(Main::Account *) const override {

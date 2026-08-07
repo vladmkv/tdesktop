@@ -47,6 +47,11 @@ bool gConsoleOwnerProbeMode = false;
 bool gConsoleProfileSnapshotMode = false;
 QString gConsoleProfileSnapshotManifestPath;
 // TG_CHANGE_END: core-console-launch-state
+// TG_CHANGE_BEGIN: core-console-accounts-launch-state
+bool gConsoleAccountsMode = false;
+QString gConsoleAccountIndex;
+QString gConsoleFormat;
+// TG_CHANGE_END: core-console-accounts-launch-state
 
 uint32 gConnectionsInSession = 1;
 

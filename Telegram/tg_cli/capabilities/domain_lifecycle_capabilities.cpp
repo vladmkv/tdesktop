@@ -60,6 +60,10 @@ public:
 		Core::App().saveSettingsDelayed();
 	}
 
+	[[nodiscard]] bool keepAccountWithoutSession(Main::Account *) const override {
+		return false;
+	}
+
 	[[nodiscard]] Window::Controller *separateWindowFor(Main::Account *account) const override {
 		if (!account) {
 			return nullptr;

@@ -105,6 +105,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "../../tg_cli/hosted/hosted_console_profile_snapshot_diagnostics.h"
 #include <cstdlib>
 // TG_CHANGE_END: application-console-profile-snapshot-storage-read-include
+// TG_CHANGE_BEGIN: application-console-accounts-include
+#include "../../tg_cli/hosted/hosted_console_accounts_mode.h"
+// TG_CHANGE_END: application-console-accounts-include
 
 #include <QtCore/QStandardPaths>
 #include <QtCore/QMimeDatabase>
@@ -297,7 +300,27 @@ void Application::run() {
 	// Depends on notifications settings.
 	_notifications = std::make_unique<Window::Notifications::System>();
 
+	// TG_CHANGE_BEGIN: application-console-accounts-branch
+	if (cConsoleAccountsMode()
+		&& (_domain->local().classifySnapshotStorage()
+			!= Storage::SnapshotStorageStatus::Ready)) {
+		const auto exitCode = TgCli::Hosted::RunHostedConsoleAccountsMode(*this);
+		crl::on_main(this, [=] {
+			Quit();
+			QCoreApplication::exit(exitCode);
+		});
+		return;
+	}
 	startLocalStorage();
+	if (cConsoleAccountsMode()) {
+		const auto exitCode = TgCli::Hosted::RunHostedConsoleAccountsMode(*this);
+		crl::on_main(this, [=] {
+			Quit();
+			QCoreApplication::exit(exitCode);
+		});
+		return;
+	}
+	// TG_CHANGE_END: application-console-accounts-branch
 
 	style::SetCustomFont(settings().customFontFamily());
 	style::internal::StartFonts();

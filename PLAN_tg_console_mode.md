@@ -74,7 +74,7 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. A9: hosted dev-profile startup + existing account enumeration (`Main::Domain::start()` then `Main::Domain::accounts()`); no new account parser or account model. **high**
+1. A9: hosted dev-profile startup + existing account enumeration (`Main::Domain::start()` then `Main::Domain::accounts()`); no new account parser or account model. Packet 30 implementation/validation complete and user-accepted; local commit is part of this packet closeout. **high**
 	- Description: cross from storage-only status into the existing Telegram Domain/Account/Session startup path and expose the account list already maintained by `Main::Domain`.
 	- Definition of Done: dedicated dev profile starts with no windows; existing `accounts()` returns the authenticated account; deterministic text/JSON reports storage index and existing session identity; no duplicate parser/model; two runs match; desktop, packet-26, builds, fences, and diff checks pass.
 2. A10.0: read-only API proof packet for existing session readiness, desktop-order dialog iteration, and `HistoryMessagesViewer` timeout/error semantics. **high**
@@ -86,7 +86,13 @@ Execute in this exact order; do not combine commits:
 4. A10.2: paged read command using `Data::HistoryMessagesViewer()` and existing message/media models. **high**
 	- Description: resolve a stable chat ID to the existing `History`, consume bounded viewer pages, and format existing `HistoryItem` text and metadata without implementing MTProto history requests.
 	- Definition of Done: one command reads deterministic bounded pages from a private chat and a channel/supergroup; pagination anchor works; media metadata causes no download; no read receipt; timeout/cancel/error exits cleanly; no `Window::Controller`; regressions/builds/fences pass.
-5. Live-profile ownership architecture (canonical/alias identity). **future**
+5. A10.3a: shared command handlers for `accounts`, `chats`, `read`, `more`, `help`, and `quit`. **high**
+	- Description: extract one command-dispatch layer used identically by one-shot invocation and the later interactive loop; handlers orchestrate A9/A10 adapters and contain no Telegram backend logic.
+	- Definition of Done: commands have one parser/result contract, deterministic text plus experimental JSON where applicable, stable IDs and account selection flow through unchanged, and automated tests prove one-shot handlers produce the same results as direct A9/A10 calls.
+6. A10.3b: interactive REPL loop over the shared handlers. **high**
+	- Description: keep the hosted Telegram process/session alive, read terminal commands repeatedly, dispatch through A10.3a, print results, and exit cleanly on `quit`/EOF/Ctrl+C.
+	- Definition of Done: a user can run `accounts`, `chats`, `read <chat-id> [limit]`, `more`, `help`, and `quit` in one process; malformed commands do not terminate the loop; per-command timeout/cancel works; terminal UTF-8 is correct; no windows/read receipts/downloads; one-shot/REPL parity, regressions, builds, fences, and clean teardown pass.
+7. Live-profile ownership architecture (canonical/alias identity). **future**
 	- Description: design a backward-compatible ownership identity so old/new binaries and equivalent path spellings cannot concurrently own one physical desktop profile.
 	- Definition of Done: old-old, old-new, new-old, and new-new canonical/alias/case/junction matrix has exactly one owner per cell; no deadlock or pre-ownership profile write; ambiguous states fail closed; desktop startup compatibility is proven. Until then this track remains deferred and the dev profile is mandatory.
 
@@ -94,11 +100,12 @@ Current readiness:
 - A0.1 through A6 are complete and validated (see individual implementation/review commits below).
 - A7 standalone `tg_cli` backend construction was abandoned after repeated bounded-closure failures (packet 23/24); Option C (hosted `tg -console` mode inside the existing linked runtime) was selected instead (packet 25) and implemented (packet 26).
 - A8.0 live-profile ownership-identity migration (canonical path vs. alias/junction) failed after 3 bounded attempts (packet 28) and remains unsolved.
-- Scope decision (2026-08-02): rather than solving live-profile sharing, development now uses a dedicated, isolated dev profile (`%TEMP%\tg-dev-profile`, outside the repo) logged into once as a second device session. This sidesteps A8.0 entirely for development purposes; live-profile sharing is deferred indefinitely and no longer blocks progress.
+- Scope decision (2026-08-02, path made persistent 2026-08-07): rather than solving live-profile sharing, development uses a dedicated isolated dev profile in the workspace sibling directory `../tg-dev-profile` (outside the Git repository), logged into once as a second device session. This sidesteps A8.0 entirely for development purposes; live-profile sharing is deferred indefinitely and no longer blocks progress.
 - The packet-29 snapshot-copy approach (copy the live profile to a disposable directory, marker/manifest trust, robocopy) was implemented, found to have 3 high/5 medium defects on review (credential-cleanup-on-failure bug, forgeable marker trust, integrity check computed before the risk window, impure read path), and was abandoned in favor of the dev-profile approach above. All packet-29 snapshot-copy files were deleted; only its reusable read-only classifier survived (see below).
 - A8 (profile status) is DONE against the dev profile: `tg.exe -console-profile-snapshot -workdir <profile> -console-log <path>` prints `snapshot-storage-status:ready|passcode-required|passcode-required-legacy|profile-corrupt|profile-not-found`, proven not to mutate `tdata`, with fail-closed argument guards. Commit `ba65a3d41b`.
 - During A8 implementation, found and fixed three real runtime defects, not just packet-29 scope-splitting: (1) every console-mode launcher gate was dead code because flags were read before `Launcher::init()`/`processArguments()` ran; (2) the fail-closed abort path called `QCoreApplication::exit()` before any event loop existed and hung forever instead of terminating; (3) profile-status mode tripped checkpoint-lock enforcement meant only for `-console` checkpoint mode. All three are fixed and verified end to end (real `ready`, empty-dir `profile-not-found`, all four guards reject, `tdata` byte-identical before/after, packet-26 regression still passes).
-- A9 (account enumeration) and A10 (chats/history) are not started.
+- A9 packet 30 implementation and full Definition-of-Done validation are complete and user-accepted after running `run_hosted_console_accounts_demo.ps1` against the persistent dev profile. A10 has not started.
+- A10 (chats/history) is not started.
 
 ### A9 Refined Packet: Reuse Existing Account List
 
@@ -141,7 +148,7 @@ Description:
 - Build `chats` and `read` as thin TG-owned orchestration/formatting adapters over the existing Telegram session, dialog list, history viewer, update ingestion, and media models.
 
 Definition of Done:
-- A10.0 proofs are committed first; A10.1 then lists real chats; A10.2 then reads bounded history pages; all A10 validation and stop conditions below pass without duplicate MTProto/model code.
+- A10.0 proofs are committed first; A10.1 then lists real chats; A10.2 reads bounded history pages; A10.3a unifies command handlers; A10.3b adds the interactive REPL; all A10 validation and stop conditions below pass without duplicate MTProto/model code.
 
 Locked reuse rules:
 - Do not implement MTProto dialog/history requests in TG-owned code.
@@ -168,6 +175,19 @@ A10.2 paged read implementation after chats passes:
 4. Default no-mark-read: never call `readInbox`, `readInboxTill`, or `sendPendingReadInbox`.
 5. Bounded session/dialog/page timeouts and explicit cancellation/detach on exit.
 
+A10.3a shared command handlers after read passes:
+1. Define one TG-owned parser/dispatcher for `accounts`, `chats`, `read`, `more`, `help`, and `quit`.
+2. Handlers call A9/A10 adapters only; they never call MTProto/storage/model internals directly.
+3. One-shot and future REPL invocation use the same request/result objects and formatter.
+4. Preserve selected storage index and per-chat pagination cursor in explicit command context.
+
+A10.3b interactive REPL after handlers pass:
+1. Start the hosted Domain/Session once and keep it alive until `quit`/EOF/Ctrl+C.
+2. Read UTF-8 terminal lines, parse with A10.3a, dispatch asynchronously, and return to the prompt after success or recoverable error.
+3. `more` continues the last successful `read` cursor; a new `read` replaces it.
+4. Serialize commands: no overlapping account/dialog/history mutations in the first REPL version.
+5. Clean exit cancels outstanding work, destroys command lifetimes, and tears down Domain/Session without a crash or leaked process.
+
 A10 validation:
 - List at least one real chat from the dedicated dev profile and compare identity/title/order with desktop.
 - Read one bounded page twice with deterministic message ids/order.
@@ -175,6 +195,8 @@ A10 validation:
 - Media metadata shown without creating downloaded media files.
 - No read receipt sent in the first demo.
 - Timeout/network failure exits cleanly without windows or crash.
+- One-shot and REPL commands produce equivalent account/chat/message records.
+- A single interactive process executes `accounts -> chats -> read -> more -> help -> quit` successfully.
 
 A10 stop conditions:
 - Any selected list/read path requires `Window::Controller` construction.
@@ -189,11 +211,21 @@ Current identity is MD5 of `QDir(cWorkingDir()).absolutePath()`: it is path-stri
 The dedicated dev profile sidesteps this because only the development build uses it; it does not fix production shared-profile ownership. Reopen only with a new migration design that passes old-old, old-new, new-old, new-new across canonical/alias/case/junction spellings with exactly one owner, no deadlock, no pre-ownership writes, and bounded fail-closed ambiguity. A profile-root lock alone is insufficient because older Telegram binaries do not participate in it.
 
 ### First Runnable Read-Only Version (V0)
-V0 is reached after A10 and provides these one-shot commands over an existing desktop-authenticated profile:
-- `tg_cli --workdir <path> status`
-- `tg_cli --workdir <path> accounts`
-- `tg_cli --workdir <path> --account <index> chats --limit <count>`
-- `tg_cli --workdir <path> --account <index> read <chat-id> --limit <count>`
+V0 is reached after A10.3b and uses the hosted `tg.exe` backend (the separate `tg_cli.exe` remains a skeleton until a later packaging split). It provides both one-shot commands and an interactive prompt:
+- `tg.exe -console-command accounts -workdir <dev-profile>`
+- `tg.exe -console-command chats --limit <count> -workdir <dev-profile>`
+- `tg.exe -console-command read <chat-id> --limit <count> -workdir <dev-profile>`
+- `tg.exe -console-repl -workdir <dev-profile>`
+
+Interactive V0:
+```text
+tg> accounts
+tg> chats
+tg> read user123 20
+tg> more
+tg> help
+tg> quit
+```
 
 V0 requirements:
 - tg desktop must be closed; tg_cli acquires and retains tg-compatible exclusive profile ownership before any tdata read.
@@ -220,7 +252,7 @@ V0 requirements:
 
 5. [TODO] Stage 4: Read-only REPL and one-shot commands (**high**)
 - Description: expose status, accounts, chats, and paged read through shared command handlers, reusing Telegram's models and network requests.
-- Definition of Done: A9, A10.0, A10.1, and A10.2 pass; REPL and one-shot output are equivalent; stable IDs work; timeouts/errors do not crash; no read receipt or media download unless explicitly enabled.
+- Definition of Done: A9, A10.0, A10.1, A10.2, A10.3a, and A10.3b pass; one process supports the documented interactive loop; REPL and one-shot output are equivalent; stable IDs work; timeouts/errors do not crash; no read receipt or media download unless explicitly enabled.
 - Implement status, accounts, chats, read, more, and settings commands.
 - Support private chats and channels/supergroups.
 - Show media metadata without transfer.

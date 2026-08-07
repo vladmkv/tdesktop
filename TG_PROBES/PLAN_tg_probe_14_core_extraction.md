@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 packet 23 blocked cleanly at 3/3 and restored to `d7daf02d01`; A7.1 packet 24, A7.2 packet 25, and A7.3 packet 26 completed; A8.0 live-profile ownership-identity migration FAILED (packet 28) and remains unsolved; scope pivoted to a dedicated dev profile (`%TEMP%\tg-dev-profile`) for development, bypassing A8.0 rather than solving it; A8 (profile status) is DONE against the dev profile (commit `ba65a3d41b`); A9/A10 (account enumeration, chats) not started **high**
+Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 packet 23 blocked cleanly at 3/3 and restored to `d7daf02d01`; A7.1 packet 24, A7.2 packet 25, and A7.3 packet 26 completed; A8.0 live-profile ownership-identity migration FAILED (packet 28) and remains unsolved; scope pivoted to a dedicated workspace-level dev profile (`../tg-dev-profile`, outside the Git repo) for development, bypassing A8.0 rather than solving it; A8 (profile status) is DONE against the dev profile (commit `ba65a3d41b`); A9 packet 30 implementation/validation complete and awaiting user acceptance before commit; A10 not started **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -269,7 +269,7 @@ Pass:
 - Deterministic profile classification, `tdata` proven byte-identical before/after (recomputed digest, not compared against itself), packet-26 hosted-console behavior unchanged.
 
 ### A9: Hosted Dev-Profile Startup And Existing Account Enumeration
-Status: [TODO] Refined in `PLAN_tg_console_mode.md`; implementation not started.
+Status: [DONE] Packet 30 implementation/validation complete and user-accepted; local commit closes A9.
 Description: start the existing hosted Domain/Account/Session graph on the dedicated dev profile and expose `Main::Domain::accounts()` through TG-owned formatting only.
 1. Reuse `Main::Domain::start()` and the already-populated `Main::Domain::accounts()` / `orderedAccounts()` APIs. Do not add another storage parser or account model.
 2. Run only against the dedicated dev profile; normal startup writes/network/session activity are accepted there and must not be represented as live-profile-safe or pure-read behavior.
@@ -282,16 +282,20 @@ Pass:
 Definition of Done:
 - A focused A9 commit emits deterministic text/JSON for the real dev account using only existing Domain/Account/Session identity APIs; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
 
+Roadmap pointer:
+- Active implementor packet: `PLAN_tg_probe_30_a9_existing_account_enumeration.md`; implementation/validation complete, awaiting user acceptance before local commit.
+
 ### A10: Existing Chat List And History Viewer Reuse
 Status: [TODO] Refined in `PLAN_tg_console_mode.md`; implementation blocked on A10.0 proofs.
 Description: build chats and paged read as thin adapters over existing Telegram dialog/history request, ingestion, list, item, and media models.
 1. A10.0 proves existing session readiness, desktop dialog ordering, and `HistoryMessagesViewer` error/timeout semantics.
 2. A10.1 reuses `ApiWrap::requestDialogs`, `Data::Session::chatsListLoadedEvents`, and an existing `Dialogs::MainList` iteration path.
 3. A10.2 reuses `Data::HistoryMessagesViewer` and existing `HistoryItem`/media models with no read receipts or downloads.
-4. No TG-owned MTProto request implementation, chat/message model, or `Window::Controller` construction.
+4. A10.3a adds shared command handlers; A10.3b adds the interactive REPL over those handlers.
+5. No TG-owned MTProto request implementation, chat/message model, or `Window::Controller` construction.
 
 Definition of Done:
-- A10.0 commits the three API decisions; A10.1 lists ordered real chats; A10.2 reads bounded deterministic history pages without read receipts/downloads; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
+- A10.0 commits the three API decisions; A10.1 lists ordered real chats; A10.2 reads bounded deterministic history pages without read receipts/downloads; A10.3a provides shared handlers; A10.3b provides the interactive loop; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
 
 ## Stop Conditions
 - A capability becomes a generic Core::Application mirror or mixes unrelated responsibilities.
