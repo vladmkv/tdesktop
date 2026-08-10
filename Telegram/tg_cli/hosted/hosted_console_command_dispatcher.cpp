@@ -172,7 +172,13 @@ HostedConsoleCommandResult RunHostedConsoleCommand(
 		(void)written;
 		return { .exitCode = 1 };
 	}
-	const auto &request = *parsed.request;
+	return RunHostedConsoleCommand(application, context, *parsed.request);
+}
+
+HostedConsoleCommandResult RunHostedConsoleCommand(
+		Core::Application &application,
+		HostedConsoleCommandContext &context,
+		const HostedConsoleCommandRequest &request) {
 	if ((request.command == HostedConsoleCommand::Accounts
 		|| request.command == HostedConsoleCommand::Chats
 		|| request.command == HostedConsoleCommand::Read)
@@ -186,18 +192,33 @@ HostedConsoleCommandResult RunHostedConsoleCommand(
 		return { .exitCode = RunHostedConsoleAccountsMode(application) };
 	case HostedConsoleCommand::Chats:
 		return { .exitCode = RunHostedConsoleChatsMode(application) };
-	case HostedConsoleCommand::Read:
-		context.previousRead = HostedConsoleReadCursorContext{
-			.chatId = request.chatId,
-			.cursor = request.cursor,
-		};
-		return { .exitCode = RunHostedConsoleReadMode(application) };
+	case HostedConsoleCommand::Read: {
+		const auto result = RunHostedConsoleReadMode(application);
+		if (result.exitCode == 0) {
+			context.previousRead = HostedConsoleReadCursorContext{
+				.chatId = request.chatId,
+				.cursor = result.nextCursor,
+				.limit = request.limit,
+			};
+		}
+		return { .exitCode = result.exitCode };
+	}
 	case HostedConsoleCommand::More: {
-		const auto moreWritten = WriteLine(context.previousRead
-			? QStringLiteral("command-more:continuation-unavailable")
-			: QStringLiteral("command-more:no-previous-read"));
-		(void)moreWritten;
-		return { .exitCode = context.previousRead ? 1 : 0 };
+		if (!context.previousRead || context.previousRead->cursor.isEmpty()) {
+			const auto moreWritten = WriteLine(
+				context.previousRead
+				? QStringLiteral("command-more:no-successor-read")
+				: QStringLiteral("command-more:no-previous-read"));
+			(void)moreWritten;
+			return {};
+		}
+		auto next = HostedConsoleCommandRequest{
+			.command = HostedConsoleCommand::Read,
+			.limit = context.previousRead->limit,
+			.chatId = context.previousRead->chatId,
+			.cursor = context.previousRead->cursor,
+		};
+		return RunHostedConsoleCommand(application, context, next);
 	}
 	case HostedConsoleCommand::Help: {
 		const auto helpWritten = WriteLine(QStringLiteral(

@@ -50,6 +50,7 @@ HostedConsoleStatusWriteResult WriteHostedConsoleStatusLine(QStringView line) {
 	}
 
 	auto stream = QTextStream(stdout, QIODevice::WriteOnly);
+	stream.setCodec("UTF-8");
 	stream << line << Qt::endl;
 	result.ok = true;
 	return result;

@@ -37,6 +37,7 @@ struct HostedConsoleCommandParseResult {
 struct HostedConsoleReadCursorContext {
 	QString chatId;
 	QString cursor;
+	int limit = 0;
 };
 
 struct HostedConsoleCommandContext {
@@ -56,5 +57,9 @@ struct HostedConsoleCommandResult {
 [[nodiscard]] HostedConsoleCommandResult RunHostedConsoleCommand(
 	Core::Application &application,
 	HostedConsoleCommandContext &context);
+[[nodiscard]] HostedConsoleCommandResult RunHostedConsoleCommand(
+	Core::Application &application,
+	HostedConsoleCommandContext &context,
+	const HostedConsoleCommandRequest &request);
 
 } // namespace TgCli::Hosted

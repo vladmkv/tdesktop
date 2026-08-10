@@ -229,7 +229,9 @@ int RunHostedConsoleChatsMode(Core::Application &application) {
 	if (!WriteLine(QStringLiteral("chats-mode:started"))) {
 		return 1;
 	}
-	const auto startResult = application.domain().start(QByteArray());
+	const auto startResult = application.domain().started()
+		? Storage::StartResult::Success
+		: application.domain().start(QByteArray());
 	if (startResult != Storage::StartResult::Success) {
 		if (!WriteLine(QStringLiteral("chats-error:startup"))) {
 			return 1;

@@ -389,7 +389,8 @@ int Launcher::exec() {
 	// TG_CHANGE_BEGIN: launcher-console-gates-init-order
 	// Arguments must be parsed before any console gate is evaluated.
 	init();
-	if ((cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode())
+	if ((cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()
+		|| cConsoleReplMode())
 		&& (cConsoleOwnerProbeMode() || cConsoleProfileSnapshotMode())) {
 		fprintf(
 			stderr,
@@ -482,6 +483,7 @@ int Launcher::exec() {
 	// TG_CHANGE_END: launcher-console-profile-snapshot-gates-validate
 	// TG_CHANGE_BEGIN: launcher-console-accounts-gates
 	if (cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()
+		|| cConsoleReplMode()
 		|| cConsoleCommandMode()) {
 		if (cConsoleProfileSnapshotMode()) {
 			fprintf(
@@ -551,7 +553,7 @@ int Launcher::exec() {
 
 	// TG_CHANGE_END: launcher-console-accounts-gates
 	// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-enforce
-	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode() && !cConsoleReadMode() && !cConsoleCommandMode()) {
+	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode() && !cConsoleReadMode() && !cConsoleReplMode() && !cConsoleCommandMode()) {
 		const auto guard = TgCli::Hosted::EnforceHostedConsoleCheckpointGuard(
 			customWorkingDir(),
 			customWorkingDirPath());
@@ -761,6 +763,7 @@ void Launcher::processArguments() {
 		{ "-console-read-limit" , KeyFormat::OneValue },
 		{ "-console-read-cursor" , KeyFormat::OneValue },
 		{ "-console-command" , KeyFormat::OneValue },
+		{ "-console-repl" , KeyFormat::NoValues },
 		{ "-console-account-index" , KeyFormat::OneValue },
 		{ "-console-format" , KeyFormat::OneValue },
 		{ "-console-owner-probe" , KeyFormat::NoValues },
@@ -840,6 +843,7 @@ void Launcher::processArguments() {
 		{}).join(QString());
 	gConsoleCommandMode = parseResult.contains("-console-command");
 	gConsoleCommandArguments = parseResult.value("-console-command", {});
+	gConsoleReplMode = parseResult.contains("-console-repl");
 	if (gConsoleCommandMode) {
 		gConsoleCommandArguments += parseResult.value("--", {});
 	}
@@ -858,6 +862,7 @@ void Launcher::processArguments() {
 		|| gConsoleAccountsMode
 		|| gConsoleChatsMode
 		|| gConsoleReadMode
+		|| gConsoleReplMode
 		|| gConsoleCommandMode;
 	gConsoleExitRequested = parseResult.contains("-console-exit");
 	gConsoleLogPath = parseResult.value("-console-log", {}).join(QString());

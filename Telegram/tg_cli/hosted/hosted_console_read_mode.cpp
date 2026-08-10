@@ -335,17 +335,19 @@ namespace {
 
 } // namespace
 
-int RunHostedConsoleReadMode(Core::Application &application) {
+HostedConsoleReadModeResult RunHostedConsoleReadMode(Core::Application &application) {
 	if (!WriteLine(QStringLiteral("read-mode:started"))) {
-		return 1;
+		return { .exitCode = 1 };
 	}
-	const auto startResult = application.domain().start(QByteArray());
+	const auto startResult = application.domain().started()
+		? Storage::StartResult::Success
+		: application.domain().start(QByteArray());
 	if (startResult != Storage::StartResult::Success) {
 		const auto errorWritten = WriteLine(QStringLiteral("read-error:startup"));
 		const auto doneWritten = WriteLine(QStringLiteral("read-mode:done"));
 		(void)errorWritten;
 		(void)doneWritten;
-		return 1;
+		return { .exitCode = 1 };
 	}
 	const auto account = SelectedAccount(application.domain());
 	if (account == nullptr) {
@@ -354,7 +356,7 @@ int RunHostedConsoleReadMode(Core::Application &application) {
 		const auto doneWritten = WriteLine(QStringLiteral("read-mode:done"));
 		(void)errorWritten;
 		(void)doneWritten;
-		return 1;
+		return { .exitCode = 1 };
 	}
 	const auto session = WaitForSession(*account);
 	if (session == nullptr) {
@@ -363,7 +365,7 @@ int RunHostedConsoleReadMode(Core::Application &application) {
 		const auto doneWritten = WriteLine(QStringLiteral("read-mode:done"));
 		(void)errorWritten;
 		(void)doneWritten;
-		return 1;
+		return { .exitCode = 1 };
 	}
 	if (!WaitForDialogs(*session)) {
 		const auto errorWritten = WriteLine(
@@ -371,7 +373,7 @@ int RunHostedConsoleReadMode(Core::Application &application) {
 		const auto doneWritten = WriteLine(QStringLiteral("read-mode:done"));
 		(void)errorWritten;
 		(void)doneWritten;
-		return 1;
+		return { .exitCode = 1 };
 	}
 	const auto stableId = cConsoleReadPeerId().trimmed();
 	const auto peerId = ParseStablePeerId(stableId);
@@ -381,7 +383,7 @@ int RunHostedConsoleReadMode(Core::Application &application) {
 		const auto doneWritten = WriteLine(QStringLiteral("read-mode:done"));
 		(void)errorWritten;
 		(void)doneWritten;
-		return 1;
+		return { .exitCode = 1 };
 	}
 	const auto around = ParseReadCursor(
 		cConsoleReadCursor().trimmed(),
@@ -392,7 +394,7 @@ int RunHostedConsoleReadMode(Core::Application &application) {
 		const auto doneWritten = WriteLine(QStringLiteral("read-mode:done"));
 		(void)errorWritten;
 		(void)doneWritten;
-		return 1;
+		return { .exitCode = 1 };
 	}
 	const auto output = WaitForPage(*session, history, stableId, *around);
 	if (!output) {
@@ -401,15 +403,17 @@ int RunHostedConsoleReadMode(Core::Application &application) {
 		const auto doneWritten = WriteLine(QStringLiteral("read-mode:done"));
 		(void)errorWritten;
 		(void)doneWritten;
-		return 1;
+		return { .exitCode = 1 };
 	}
 	if (!WriteRead(*output)) {
-		return 1;
+		return { .exitCode = 1 };
 	}
 	if (!WriteLine(QStringLiteral("read-mode:done"))) {
-		return 1;
+		return { .exitCode = 1 };
 	}
-	return 0;
+	return {
+		.nextCursor = output->nextCursor,
+	};
 }
 
 } // namespace TgCli::Hosted

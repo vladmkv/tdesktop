@@ -184,7 +184,9 @@ int RunHostedConsoleAccountsMode(Core::Application &application) {
 		return 1;
 	}
 
-	const auto startResult = application.domain().start(QByteArray());
+	const auto startResult = application.domain().started()
+		? Storage::StartResult::Success
+		: application.domain().start(QByteArray());
 	if (!WriteLine(
 			QStringLiteral("accounts-start-result:")
 			+ HostedConsoleAccountsStartResultToken(startResult))) {

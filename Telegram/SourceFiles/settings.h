@@ -103,6 +103,7 @@ DeclareSetting(QString, ConsoleAccountIndex);
 DeclareSetting(QString, ConsoleFormat);
 DeclareSetting(bool, ConsoleCommandMode);
 DeclareSetting(QStringList, ConsoleCommandArguments);
+DeclareSetting(bool, ConsoleReplMode);
 // TG_CHANGE_END: core-console-accounts-launch-state
 
 DeclareSetting(QByteArray, LocalSalt);

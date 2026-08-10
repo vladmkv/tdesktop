@@ -90,6 +90,7 @@ target_sources(Telegram PRIVATE
     tg_cli/hosted/hosted_console_chats_mode.cpp
     tg_cli/hosted/hosted_console_read_format.cpp
     tg_cli/hosted/hosted_console_read_mode.cpp
+    tg_cli/hosted/hosted_console_repl.cpp
     tg_cli/hosted/hosted_console_owner_probe.cpp
     tg_cli/hosted/hosted_console_profile_snapshot_diagnostics.cpp
     tg_cli/hosted/hosted_console_status_writer.cpp
