@@ -106,6 +106,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <cstdlib>
 // TG_CHANGE_END: application-console-profile-snapshot-storage-read-include
 // TG_CHANGE_BEGIN: application-console-accounts-include
+#include "../../tg_cli/hosted/hosted_console_command_dispatcher.h"
 #include "../../tg_cli/hosted/hosted_console_accounts_mode.h"
 #include "../../tg_cli/hosted/hosted_console_chats_mode.h"
 #include "../../tg_cli/hosted/hosted_console_read_mode.h"
@@ -303,12 +304,14 @@ void Application::run() {
 	_notifications = std::make_unique<Window::Notifications::System>();
 
 	// TG_CHANGE_BEGIN: application-console-accounts-branch
-	if ((cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode())
+	if ((cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()
+		|| cConsoleCommandMode())
 		&& (_domain->local().classifySnapshotStorage()
 			!= Storage::SnapshotStorageStatus::Ready)) {
-		const auto exitCode = (cConsoleChatsMode() || cConsoleReadMode())
-			? 1
-			: TgCli::Hosted::RunHostedConsoleAccountsMode(*this);
+			auto context = TgCli::Hosted::HostedConsoleCommandContext();
+			const auto exitCode = TgCli::Hosted::RunHostedConsoleCommand(
+				*this,
+				context).exitCode;
 		crl::on_main(this, [=] {
 			Quit();
 			QCoreApplication::exit(exitCode);
@@ -316,8 +319,17 @@ void Application::run() {
 		return;
 	}
 	startLocalStorage();
-	if (cConsoleAccountsMode()) {
-		const auto exitCode = TgCli::Hosted::RunHostedConsoleAccountsMode(*this);
+	if (cConsoleAccountsMode() || cConsoleCommandMode()) {
+		if (cConsoleCommandMode()
+			&& TgCli::Hosted::HostedConsoleCommandRequiresUiInitialization()) {
+			style::SetCustomFont(settings().customFontFamily());
+			style::internal::StartFonts();
+			style::StartManager(cScale());
+			Ui::Emoji::Init();
+		}
+		auto context = TgCli::Hosted::HostedConsoleCommandContext();
+		const auto result = TgCli::Hosted::RunHostedConsoleCommand(*this, context);
+		const auto exitCode = result.exitCode;
 		crl::on_main(this, [=] {
 			Quit();
 			QCoreApplication::exit(exitCode);
@@ -329,7 +341,10 @@ void Application::run() {
 		style::internal::StartFonts();
 		style::StartManager(cScale());
 		Ui::Emoji::Init();
-		const auto exitCode = TgCli::Hosted::RunHostedConsoleChatsMode(*this);
+		auto context = TgCli::Hosted::HostedConsoleCommandContext();
+		const auto exitCode = TgCli::Hosted::RunHostedConsoleCommand(
+			*this,
+			context).exitCode;
 		crl::on_main(this, [=] {
 			Quit();
 			QCoreApplication::exit(exitCode);
@@ -341,7 +356,10 @@ void Application::run() {
 		style::internal::StartFonts();
 		style::StartManager(cScale());
 		Ui::Emoji::Init();
-		const auto exitCode = TgCli::Hosted::RunHostedConsoleReadMode(*this);
+		auto context = TgCli::Hosted::HostedConsoleCommandContext();
+		const auto exitCode = TgCli::Hosted::RunHostedConsoleCommand(
+			*this,
+			context).exitCode;
 		crl::on_main(this, [=] {
 			Quit();
 			QCoreApplication::exit(exitCode);

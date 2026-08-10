@@ -57,6 +57,8 @@ int gConsoleReadLimit = 20;
 QString gConsoleReadCursor;
 QString gConsoleAccountIndex;
 QString gConsoleFormat;
+bool gConsoleCommandMode = false;
+QStringList gConsoleCommandArguments;
 // TG_CHANGE_END: core-console-accounts-launch-state
 
 uint32 gConnectionsInSession = 1;

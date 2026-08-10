@@ -101,6 +101,8 @@ DeclareSetting(int, ConsoleReadLimit);
 DeclareSetting(QString, ConsoleReadCursor);
 DeclareSetting(QString, ConsoleAccountIndex);
 DeclareSetting(QString, ConsoleFormat);
+DeclareSetting(bool, ConsoleCommandMode);
+DeclareSetting(QStringList, ConsoleCommandArguments);
 // TG_CHANGE_END: core-console-accounts-launch-state
 
 DeclareSetting(QByteArray, LocalSalt);

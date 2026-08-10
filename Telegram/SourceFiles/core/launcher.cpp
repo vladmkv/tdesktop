@@ -22,6 +22,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-include
 #include "settings.h"
 #include "../../tg_cli/hosted/hosted_console_checkpoint_guard.h"
+#include "../../tg_cli/hosted/hosted_console_command_dispatcher.h"
 #include "../../tg_cli/hosted/hosted_console_owner_probe.h"
 // TG_CHANGE_END: launcher-console-checkpoint-guard-include
 
@@ -480,7 +481,8 @@ int Launcher::exec() {
 	}
 	// TG_CHANGE_END: launcher-console-profile-snapshot-gates-validate
 	// TG_CHANGE_BEGIN: launcher-console-accounts-gates
-	if (cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()) {
+	if (cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()
+		|| cConsoleCommandMode()) {
 		if (cConsoleProfileSnapshotMode()) {
 			fprintf(
 				stderr,
@@ -549,7 +551,7 @@ int Launcher::exec() {
 
 	// TG_CHANGE_END: launcher-console-accounts-gates
 	// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-enforce
-	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode() && !cConsoleReadMode()) {
+	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode() && !cConsoleReadMode() && !cConsoleCommandMode()) {
 		const auto guard = TgCli::Hosted::EnforceHostedConsoleCheckpointGuard(
 			customWorkingDir(),
 			customWorkingDirPath());
@@ -758,6 +760,7 @@ void Launcher::processArguments() {
 		{ "-console-read" , KeyFormat::OneValue },
 		{ "-console-read-limit" , KeyFormat::OneValue },
 		{ "-console-read-cursor" , KeyFormat::OneValue },
+		{ "-console-command" , KeyFormat::OneValue },
 		{ "-console-account-index" , KeyFormat::OneValue },
 		{ "-console-format" , KeyFormat::OneValue },
 		{ "-console-owner-probe" , KeyFormat::NoValues },
@@ -835,6 +838,11 @@ void Launcher::processArguments() {
 	gConsoleReadCursor = parseResult.value(
 		"-console-read-cursor",
 		{}).join(QString());
+	gConsoleCommandMode = parseResult.contains("-console-command");
+	gConsoleCommandArguments = parseResult.value("-console-command", {});
+	if (gConsoleCommandMode) {
+		gConsoleCommandArguments += parseResult.value("--", {});
+	}
 	gConsoleReadLimit = 20;
 	if (parseResult.contains("-console-read-limit")) {
 		auto ok = false;
@@ -849,7 +857,8 @@ void Launcher::processArguments() {
 		|| gConsoleProfileSnapshotMode
 		|| gConsoleAccountsMode
 		|| gConsoleChatsMode
-		|| gConsoleReadMode;
+		|| gConsoleReadMode
+		|| gConsoleCommandMode;
 	gConsoleExitRequested = parseResult.contains("-console-exit");
 	gConsoleLogPath = parseResult.value("-console-log", {}).join(QString());
 	gConsoleAccountIndex = parseResult.value(
