@@ -95,6 +95,10 @@ DeclareSetting(QString, ConsoleProfileSnapshotManifestPath);
 DeclareSetting(bool, ConsoleAccountsMode);
 DeclareSetting(bool, ConsoleChatsMode);
 DeclareSetting(int, ConsoleChatsLimit);
+DeclareSetting(bool, ConsoleReadMode);
+DeclareSetting(QString, ConsoleReadPeerId);
+DeclareSetting(int, ConsoleReadLimit);
+DeclareSetting(QString, ConsoleReadCursor);
 DeclareSetting(QString, ConsoleAccountIndex);
 DeclareSetting(QString, ConsoleFormat);
 // TG_CHANGE_END: core-console-accounts-launch-state

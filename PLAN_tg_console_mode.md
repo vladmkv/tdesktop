@@ -85,8 +85,9 @@ Execute in this exact order; do not combine commits:
 	- Repeatable coverage: `Telegram/tg_cli/tools/run_hosted_console_chats_demo.ps1 -Limit 3` verifies exactly three text rows, a three-row compact JSON document, and invalid-limit exit code 1 against the dedicated dev profile.
 	- Outcome: user confirmed the first 10 history-backed CLI titles match the Desktop top-level order after excluding Desktop-only non-history entries.
 	- Definition of Done: one command lists the first N real dev-profile chats with stable typed IDs, title/type/unread/pinned/date; order matches desktop; bounded timeout/cancel works; no windows, read receipts, downloads, custom sorting, or duplicate model; regressions/builds/fences pass.
-4. A10.2: paged read command using `Data::HistoryMessagesViewer()` and existing message/media models. **high**
+4. [DONE] A10.2: paged read command using `Data::HistoryMessagesViewer()` and existing message/media models. **high**
 	- Description: resolve a stable chat ID to the existing `History`, consume bounded viewer pages, and format existing `HistoryItem` text and metadata without implementing MTProto history requests.
+	- Outcome (2026-08-10): `-console-read` accepts an optional strict `v1:<chat-id>:<message-id>:<unix-date>` cursor and passes its reconstructed `Data::MessagePosition` to the existing `HistoryMessagesViewer`; later pages request one existing-model slot for the anchor then suppress that exact anchor, returning non-overlapping message IDs. The read DTO drives both text and compact JSON, including `nextCursor`. Fresh Debug smoke against `user3527271` and `channel1563334810` verified text/JSON contracts, successor-page non-overlap, invalid peer/limit behavior, and a TG-owned static check that the read source invokes no mark-read, download, or save APIs. `history-no-progress` remains source-backed with explicit 30 s lifetime cleanup; no harmless current API/config fixture can safely force a no-emission runtime case, so that branch has no controlled runtime proof.
 	- Definition of Done: one command reads deterministic bounded pages from a private chat and a channel/supergroup; pagination anchor works; media metadata causes no download; no read receipt; timeout/cancel/error exits cleanly; no `Window::Controller`; regressions/builds/fences pass.
 5. A10.3a: shared command handlers for `accounts`, `chats`, `read`, `more`, `help`, and `quit`. **high**
 	- Description: extract one command-dispatch layer used identically by one-shot invocation and the later interactive loop; handlers orchestrate A9/A10 adapters and contain no Telegram backend logic.
@@ -108,7 +109,7 @@ Current readiness:
 - During A8 implementation, found and fixed three real runtime defects, not just packet-29 scope-splitting: (1) every console-mode launcher gate was dead code because flags were read before `Launcher::init()`/`processArguments()` ran; (2) the fail-closed abort path called `QCoreApplication::exit()` before any event loop existed and hung forever instead of terminating; (3) profile-status mode tripped checkpoint-lock enforcement meant only for `-console` checkpoint mode. All three are fixed and verified end to end (real `ready`, empty-dir `profile-not-found`, all four guards reject, `tdata` byte-identical before/after, packet-26 regression still passes).
 - A9 packet 30 implementation and full Definition-of-Done validation are complete and user-accepted after running `run_hosted_console_accounts_demo.ps1` against the persistent dev profile. A10 has not started.
 - A10.0's source decisions were folded into A10.1/A10.2 on 2026-08-10; packet 32 is retained as superseded planning history and does not block implementation.
-- A10.1 chats is in progress and remains TODO; A10.2 history is not started.
+- A10.1 chats and A10.2 paged read are complete; A10.3a shared handlers is next.
 
 ### A9 Refined Packet: Reuse Existing Account List
 

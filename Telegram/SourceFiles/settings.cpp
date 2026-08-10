@@ -51,6 +51,10 @@ QString gConsoleProfileSnapshotManifestPath;
 bool gConsoleAccountsMode = false;
 bool gConsoleChatsMode = false;
 int gConsoleChatsLimit = 100;
+bool gConsoleReadMode = false;
+QString gConsoleReadPeerId;
+int gConsoleReadLimit = 20;
+QString gConsoleReadCursor;
 QString gConsoleAccountIndex;
 QString gConsoleFormat;
 // TG_CHANGE_END: core-console-accounts-launch-state

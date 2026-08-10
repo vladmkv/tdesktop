@@ -388,7 +388,7 @@ int Launcher::exec() {
 	// TG_CHANGE_BEGIN: launcher-console-gates-init-order
 	// Arguments must be parsed before any console gate is evaluated.
 	init();
-	if ((cConsoleAccountsMode() || cConsoleChatsMode())
+	if ((cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode())
 		&& (cConsoleOwnerProbeMode() || cConsoleProfileSnapshotMode())) {
 		fprintf(
 			stderr,
@@ -480,7 +480,7 @@ int Launcher::exec() {
 	}
 	// TG_CHANGE_END: launcher-console-profile-snapshot-gates-validate
 	// TG_CHANGE_BEGIN: launcher-console-accounts-gates
-	if (cConsoleAccountsMode() || cConsoleChatsMode()) {
+	if (cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()) {
 		if (cConsoleProfileSnapshotMode()) {
 			fprintf(
 				stderr,
@@ -496,21 +496,21 @@ int Launcher::exec() {
 		if (!customWorkingDir()) {
 			fprintf(
 				stderr,
-				"FATAL: chats and accounts modes require explicit -workdir\n");
+				"FATAL: chats, read, and accounts modes require explicit -workdir\n");
 			return 1;
 		}
 		const auto workdir = QDir(customWorkingDirPath()).canonicalPath();
 		if (workdir.isEmpty()) {
 			fprintf(
 				stderr,
-				"FATAL: chats and accounts modes workdir does not exist: %s\n",
+				"FATAL: chats, read, and accounts modes workdir does not exist: %s\n",
 				customWorkingDirPath().toUtf8().constData());
 			return 1;
 		}
 		if (cConsoleLogPath().isEmpty()) {
 			fprintf(
 				stderr,
-				"FATAL: chats and accounts modes require explicit -console-log\n");
+				"FATAL: chats, read, and accounts modes require explicit -console-log\n");
 			return 1;
 		}
 		const auto logPath = QDir(cConsoleLogPath()).absolutePath();
@@ -528,7 +528,7 @@ int Launcher::exec() {
 			&& format != QStringLiteral("json")) {
 			fprintf(
 				stderr,
-				"FATAL: chats and accounts modes support only -console-format text|json\n");
+				"FATAL: chats, read, and accounts modes support only -console-format text|json\n");
 			return 1;
 		}
 		if (cConsoleChatsMode()
@@ -538,11 +538,18 @@ int Launcher::exec() {
 				"FATAL: -console-chats-limit must be an integer in range 1..1000\n");
 			return 1;
 		}
+		if (cConsoleReadMode()
+			&& (cConsoleReadLimit() < 1 || cConsoleReadLimit() > 100)) {
+			fprintf(
+				stderr,
+				"FATAL: -console-read-limit must be an integer in range 1..100\n");
+			return 1;
+		}
 	}
 
 	// TG_CHANGE_END: launcher-console-accounts-gates
 	// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-enforce
-	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode()) {
+	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode() && !cConsoleReadMode()) {
 		const auto guard = TgCli::Hosted::EnforceHostedConsoleCheckpointGuard(
 			customWorkingDir(),
 			customWorkingDirPath());
@@ -748,6 +755,9 @@ void Launcher::processArguments() {
 		{ "-console-accounts" , KeyFormat::NoValues },
 		{ "-console-chats" , KeyFormat::NoValues },
 		{ "-console-chats-limit" , KeyFormat::OneValue },
+		{ "-console-read" , KeyFormat::OneValue },
+		{ "-console-read-limit" , KeyFormat::OneValue },
+		{ "-console-read-cursor" , KeyFormat::OneValue },
 		{ "-console-account-index" , KeyFormat::OneValue },
 		{ "-console-format" , KeyFormat::OneValue },
 		{ "-console-owner-probe" , KeyFormat::NoValues },
@@ -820,10 +830,26 @@ void Launcher::processArguments() {
 			gConsoleChatsLimit = 0;
 		}
 	}
+	gConsoleReadMode = parseResult.contains("-console-read");
+	gConsoleReadPeerId = parseResult.value("-console-read", {}).join(QString());
+	gConsoleReadCursor = parseResult.value(
+		"-console-read-cursor",
+		{}).join(QString());
+	gConsoleReadLimit = 20;
+	if (parseResult.contains("-console-read-limit")) {
+		auto ok = false;
+		gConsoleReadLimit = parseResult.value(
+			"-console-read-limit",
+			{}).join(QString()).trimmed().toInt(&ok);
+		if (!ok) {
+			gConsoleReadLimit = 0;
+		}
+	}
 	gConsoleMode = parseResult.contains("-console")
 		|| gConsoleProfileSnapshotMode
 		|| gConsoleAccountsMode
-		|| gConsoleChatsMode;
+		|| gConsoleChatsMode
+		|| gConsoleReadMode;
 	gConsoleExitRequested = parseResult.contains("-console-exit");
 	gConsoleLogPath = parseResult.value("-console-log", {}).join(QString());
 	gConsoleAccountIndex = parseResult.value(
