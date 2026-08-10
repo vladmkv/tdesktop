@@ -74,12 +74,12 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. A9: hosted dev-profile startup + existing account enumeration (`Main::Domain::start()` then `Main::Domain::accounts()`); no new account parser or account model. Packet 30 implementation/validation complete and user-accepted; local commit is part of this packet closeout. **high**
-	- Description: cross from storage-only status into the existing Telegram Domain/Account/Session startup path and expose the account list already maintained by `Main::Domain`.
-	- Definition of Done: dedicated dev profile starts with no windows; existing `accounts()` returns the authenticated account; deterministic text/JSON reports storage index and existing session identity; no duplicate parser/model; two runs match; desktop, packet-26, builds, fences, and diff checks pass.
+1. [DONE] Pre-A10 fence quality and merge rehearsal toolchain (packet 31) implementation complete; pending user acceptance. **high**
+	- Description: deliver reusable fence-quality, manifest, inventory, and disposable merge/rebase rehearsal tooling by extending the existing checker, then shrink broad fences (especially `storage-domain-owner-account-factory`) without semantic code changes.
+	- Definition of Done: `PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md` implementation/report bundle is complete; A10 remains blocked until explicit user acceptance is recorded.
 2. A10.0: read-only API proof packet for existing session readiness, desktop-order dialog iteration, and `HistoryMessagesViewer` timeout/error semantics. **high**
 	- Description: resolve the three remaining API choices with bounded executable/read-only evidence before writing chat/history feature code.
-	- Definition of Done: exact session-ready signal and timeout are recorded; one existing dialog-list iteration path is proven to match desktop ordering; history viewer cancellation/error policy is selected; no feature implementation or duplicate request/model code is added; proof results are committed to the plan.
+	- Definition of Done: exact session-ready signal and timeout are recorded; one existing dialog-list iteration path is proven to match desktop ordering; history viewer cancellation/error policy is selected; no feature implementation or duplicate request/model code is added; proof results are committed to the plan. This item is blocked until packet 31 is accepted.
 3. A10.1: chats command using existing Telegram dialog loading and list models. **high**
 	- Description: request dialogs through `ApiWrap`, wait through `Data::Session`, iterate the A10.0-selected `Dialogs::MainList`, and format rows only.
 	- Definition of Done: one command lists the first N real dev-profile chats with stable typed IDs, title/type/unread/pinned/date; order matches desktop; bounded timeout/cancel works; no windows, read receipts, downloads, custom sorting, or duplicate model; regressions/builds/fences pass.
@@ -105,6 +105,7 @@ Current readiness:
 - A8 (profile status) is DONE against the dev profile: `tg.exe -console-profile-snapshot -workdir <profile> -console-log <path>` prints `snapshot-storage-status:ready|passcode-required|passcode-required-legacy|profile-corrupt|profile-not-found`, proven not to mutate `tdata`, with fail-closed argument guards. Commit `ba65a3d41b`.
 - During A8 implementation, found and fixed three real runtime defects, not just packet-29 scope-splitting: (1) every console-mode launcher gate was dead code because flags were read before `Launcher::init()`/`processArguments()` ran; (2) the fail-closed abort path called `QCoreApplication::exit()` before any event loop existed and hung forever instead of terminating; (3) profile-status mode tripped checkpoint-lock enforcement meant only for `-console` checkpoint mode. All three are fixed and verified end to end (real `ready`, empty-dir `profile-not-found`, all four guards reject, `tdata` byte-identical before/after, packet-26 regression still passes).
 - A9 packet 30 implementation and full Definition-of-Done validation are complete and user-accepted after running `run_hosted_console_accounts_demo.ps1` against the persistent dev profile. A10 has not started.
+- Active pre-A10 gate is packet 31 acceptance (`TG_PROBES/PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md`). Implementation is complete; no A10 implementation begins before packet-31 acceptance.
 - A10 (chats/history) is not started.
 
 ### A9 Refined Packet: Reuse Existing Account List

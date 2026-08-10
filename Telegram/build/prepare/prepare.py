@@ -742,9 +742,10 @@ win:
 """)
 
 # Somehow in x86 Debug build dav1d crashes on AV1 10bpc videos.
-# TG_CHANGE_BEGIN: dav1d-github-mirror
 stage('dav1d', """
+# TG_CHANGE_BEGIN: dav1d-github-mirror
     git clone -b 1.5.3 https://github.com/videolan/dav1d.git
+# TG_CHANGE_END: dav1d-github-mirror
     cd dav1d
 win32:
     SET "TARGET=x86"
@@ -807,7 +808,6 @@ mac:
 
     lipo -create build.arm64/libdav1d.a build/libdav1d.a -output ${USED_PREFIX}/lib/libdav1d.a
 """)
-# TG_CHANGE_END: dav1d-github-mirror
 
 stage('openh264', """
     git clone -b v2.6.0 https://github.com/cisco/openh264.git

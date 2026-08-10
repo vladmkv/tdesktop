@@ -1,0 +1,120 @@
+{
+  "exitCode": 0,
+  "generatedAtUtc": "2026-08-10T07:56:11Z",
+  "mode": "quality",
+  "schemaVersion": 1,
+  "summary": {
+    "base": "12e8d4a956b0e73c1f738112870a32ea079fa05f",
+    "committedBase": "12e8d4a956b0e73c1f738112870a32ea079fa05f",
+    "manifest": "TG_PROBES/tg_change_fence_manifest.json",
+    "violationCount": 0,
+    "violations": [],
+    "warningCount": 12,
+    "warnings": [
+      {
+        "contentLines": 53,
+        "key": "Telegram/SourceFiles/core/launcher.cpp:launcher-console-accounts-gates",
+        "limit": 40,
+        "severity": "warn",
+        "type": "fence-size"
+      },
+      {
+        "contentLines": 48,
+        "key": "Telegram/SourceFiles/core/launcher.cpp:launcher-console-owner-probe-gates",
+        "limit": 40,
+        "severity": "warn",
+        "type": "fence-size"
+      },
+      {
+        "denominator": 7,
+        "density": 0.2857,
+        "key": "Telegram/SourceFiles/core/sandbox.cpp:sandbox-console-second-instance-command",
+        "limit": 0.5,
+        "numerator": 2,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 4,
+        "density": 0.25,
+        "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-add-account-factory-usage",
+        "limit": 0.5,
+        "numerator": 1,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 3,
+        "density": 0.3333,
+        "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-activate-window",
+        "limit": 0.5,
+        "numerator": 1,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 26,
+        "density": 0.2308,
+        "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-passcode-transitions",
+        "limit": 0.5,
+        "numerator": 6,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 4,
+        "density": 0.25,
+        "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-postpone-unread-badge",
+        "limit": 0.5,
+        "numerator": 1,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 7,
+        "density": 0.2857,
+        "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-prevent-or-invoke",
+        "limit": 0.5,
+        "numerator": 2,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 10,
+        "density": 0.2,
+        "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-window-selection",
+        "limit": 0.5,
+        "numerator": 2,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 28,
+        "density": 0.4286,
+        "key": "Telegram/SourceFiles/storage/storage_account.cpp:storage-settings-capability-constructor",
+        "limit": 0.5,
+        "numerator": 12,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 3,
+        "density": 0.3333,
+        "key": "Telegram/SourceFiles/storage/storage_account.cpp:storage-settings-night-mode",
+        "limit": 0.5,
+        "numerator": 1,
+        "severity": "warn",
+        "type": "change-density"
+      },
+      {
+        "denominator": 3,
+        "density": 0.3333,
+        "key": "Telegram/SourceFiles/storage/storage_domain.cpp:storage-domain-owner-account-factory-scratch",
+        "limit": 0.5,
+        "numerator": 1,
+        "severity": "warn",
+        "type": "change-density"
+      }
+    ]
+  }
+}

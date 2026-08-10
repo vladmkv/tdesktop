@@ -385,7 +385,7 @@ void Launcher::initHighDpi() {
 }
 
 int Launcher::exec() {
-	// TG_CHANGE_BEGIN: launcher-console-profile-snapshot-gates
+	// TG_CHANGE_BEGIN: launcher-console-gates-init-order
 	// Arguments must be parsed before any console gate is evaluated.
 	init();
 	if (cConsoleAccountsMode()
@@ -395,6 +395,8 @@ int Launcher::exec() {
 			"FATAL: -console-accounts cannot be combined with another console probe mode\n");
 		return 1;
 	}
+	// TG_CHANGE_END: launcher-console-gates-init-order
+	// TG_CHANGE_BEGIN: launcher-console-owner-probe-gates
 	if (cConsoleOwnerProbeMode()) {
 		if (!customWorkingDir()) {
 			printf("owner-probe-status:owner-ambiguous\n");
@@ -443,7 +445,8 @@ int Launcher::exec() {
 			? 1
 			: 0;
 	}
-
+	// TG_CHANGE_END: launcher-console-owner-probe-gates
+	// TG_CHANGE_BEGIN: launcher-console-profile-snapshot-gates-validate
 	if (cConsoleProfileSnapshotMode()) {
 		if (!customWorkingDir()) {
 			fprintf(
@@ -475,7 +478,7 @@ int Launcher::exec() {
 		_customWorkingDir = workdir + '/';
 		gConsoleLogPath = logPath;
 	}
-	// TG_CHANGE_END: launcher-console-profile-snapshot-gates
+	// TG_CHANGE_END: launcher-console-profile-snapshot-gates-validate
 	// TG_CHANGE_BEGIN: launcher-console-accounts-gates
 	if (cConsoleAccountsMode()) {
 		if (cConsoleProfileSnapshotMode()) {

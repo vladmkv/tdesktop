@@ -283,7 +283,7 @@ Definition of Done:
 - A focused A9 commit emits deterministic text/JSON for the real dev account using only existing Domain/Account/Session identity APIs; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
 
 Roadmap pointer:
-- Active implementor packet: `PLAN_tg_probe_30_a9_existing_account_enumeration.md`; implementation/validation complete, awaiting user acceptance before local commit.
+- Active pre-A10 gate: packet 31 acceptance (`PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md`). Implementation and report bundle are complete; A10 remains blocked until explicit user acceptance.
 
 ### A10: Existing Chat List And History Viewer Reuse
 Status: [TODO] Refined in `PLAN_tg_console_mode.md`; implementation blocked on A10.0 proofs.

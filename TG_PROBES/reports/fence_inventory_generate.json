@@ -1,0 +1,11 @@
+{
+  "exitCode": 0,
+  "generatedAtUtc": "2026-08-07T09:36:08Z",
+  "mode": "inventory",
+  "schemaVersion": 1,
+  "summary": {
+    "fenceCount": 123,
+    "manifest": "TG_PROBES/tg_change_fence_manifest.json",
+    "operation": "generate"
+  }
+}

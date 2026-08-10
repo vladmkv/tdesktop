@@ -1,0 +1,2295 @@
+{
+  "activePacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+  "baseRevision": "12e8d4a956b0e73c1f738112870a32ea079fa05f",
+  "fences": [
+    {
+      "beginLine": 89,
+      "endLine": 101,
+      "exceptionRationale": "Cohesive snapshot-classification flow remains intentionally grouped for merge-audit clarity; split candidates reduce audit signal without reducing risk.",
+      "file": "AGENTS.md",
+      "groupIds": [],
+      "id": "tg-cli-agent-guidance",
+      "intent": "TG change block tg-cli-agent-guidance ownership and merge-audit intent.",
+      "lastTouchedCommit": "83cd14b073354ed465ff18ecb9ffd6080e9f1b8e",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "2026-08-07T09:40:00Z",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "exception-approved",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 77,
+      "endLine": 82,
+      "exceptionRationale": "",
+      "file": "Telegram/CMakeLists.txt",
+      "groupIds": [],
+      "id": "telegram-cmake-hosted-console-capability-sources",
+      "intent": "TG change block telegram-cmake-hosted-console-capability-sources ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 83,
+      "endLine": 93,
+      "exceptionRationale": "",
+      "file": "Telegram/CMakeLists.txt",
+      "groupIds": [],
+      "id": "telegram-cmake-hosted-console-status-writer-sources",
+      "intent": "TG change block telegram-cmake-hosted-console-status-writer-sources ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 7,
+      "endLine": 10,
+      "exceptionRationale": "",
+      "file": "Telegram/CMakeLists.txt",
+      "groupIds": [],
+      "id": "tg-cli-build-option",
+      "intent": "TG change block tg-cli-build-option ownership and merge-audit intent.",
+      "lastTouchedCommit": "43e1a6dba1da14e04a39da8204c4b35aac1dcd0b",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 68,
+      "endLine": 76,
+      "exceptionRationale": "",
+      "file": "Telegram/CMakeLists.txt",
+      "groupIds": [],
+      "id": "tg-cli-capability-desktop-sources",
+      "intent": "TG change block tg-cli-capability-desktop-sources ownership and merge-audit intent.",
+      "lastTouchedCommit": "43e1a6dba1da14e04a39da8204c4b35aac1dcd0b",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 28,
+      "endLine": 33,
+      "exceptionRationale": "",
+      "file": "Telegram/CMakeLists.txt",
+      "groupIds": [],
+      "id": "tg-cli-subdirectory",
+      "intent": "TG change block tg-cli-subdirectory ownership and merge-audit intent.",
+      "lastTouchedCommit": "43e1a6dba1da14e04a39da8204c4b35aac1dcd0b",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 2309,
+      "endLine": 2311,
+      "exceptionRationale": "",
+      "file": "Telegram/CMakeLists.txt",
+      "groupIds": [],
+      "id": "tg-executable-name",
+      "intent": "TG change block tg-executable-name ownership and merge-audit intent.",
+      "lastTouchedCommit": "43e1a6dba1da14e04a39da8204c4b35aac1dcd0b",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 303,
+      "endLine": 323,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-accounts-branch",
+      "intent": "TG change block application-console-accounts-branch ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 108,
+      "endLine": 110,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-accounts-include",
+      "intent": "TG change block application-console-accounts-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 98,
+      "endLine": 100,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-domain-bundle-select-a",
+      "intent": "TG change block application-console-domain-bundle-select-a ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 181,
+      "endLine": 189,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-domain-bundle-select-b",
+      "intent": "TG change block application-console-domain-bundle-select-b ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 373,
+      "endLine": 378,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-optional-exit",
+      "intent": "TG change block application-console-optional-exit ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 288,
+      "endLine": 298,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-profile-snapshot-storage-read-branch",
+      "intent": "TG change block application-console-profile-snapshot-storage-read-branch ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 104,
+      "endLine": 107,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-profile-snapshot-storage-read-include",
+      "intent": "TG change block application-console-profile-snapshot-storage-read-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 101,
+      "endLine": 103,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-status-line-a",
+      "intent": "TG change block application-console-status-line-a ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 354,
+      "endLine": 364,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-status-line-b",
+      "intent": "TG change block application-console-status-line-b ownership and merge-audit intent.",
+      "lastTouchedCommit": "98b709f8fd2b53f74bb61f943d3adfd8cc34c602",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 351,
+      "endLine": 353,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-window-suppress-a",
+      "intent": "TG change block application-console-window-suppress-a ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 379,
+      "endLine": 383,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-window-suppress-b",
+      "intent": "TG change block application-console-window-suppress-b ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 365,
+      "endLine": 372,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/application.cpp",
+      "groupIds": [],
+      "id": "application-console-window-suppress-c",
+      "intent": "TG change block application-console-window-suppress-c ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 482,
+      "endLine": 536,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-accounts-gates",
+      "intent": "TG change block launcher-console-accounts-gates ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 739,
+      "endLine": 749,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-argument-parse",
+      "intent": "TG change block launcher-console-argument-parse ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 537,
+      "endLine": 554,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-checkpoint-guard-enforce",
+      "intent": "TG change block launcher-console-checkpoint-guard-enforce ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 22,
+      "endLine": 26,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-checkpoint-guard-include",
+      "intent": "TG change block launcher-console-checkpoint-guard-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 31,
+      "endLine": 33,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-checkpoint-guard-include-cstdio",
+      "intent": "TG change block launcher-console-checkpoint-guard-include-cstdio ownership and merge-audit intent.",
+      "lastTouchedCommit": "98b709f8fd2b53f74bb61f943d3adfd8cc34c602",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 798,
+      "endLine": 815,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-flag-assign",
+      "intent": "TG change block launcher-console-flag-assign ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 388,
+      "endLine": 398,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-gates-init-order",
+      "intent": "TG change block launcher-console-gates-init-order ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 399,
+      "endLine": 448,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-owner-probe-gates",
+      "intent": "TG change block launcher-console-owner-probe-gates ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 449,
+      "endLine": 481,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [],
+      "id": "launcher-console-profile-snapshot-gates-validate",
+      "intent": "TG change block launcher-console-profile-snapshot-gates-validate ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 667,
+      "endLine": 671,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.cpp",
+      "groupIds": [
+        "auto-group-launcher-console-workdir-path-accessor"
+      ],
+      "id": "launcher-console-workdir-path-accessor",
+      "intent": "TG change block launcher-console-workdir-path-accessor ownership and merge-audit intent.",
+      "lastTouchedCommit": "98b709f8fd2b53f74bb61f943d3adfd8cc34c602",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 35,
+      "endLine": 37,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/launcher.h",
+      "groupIds": [
+        "auto-group-launcher-console-workdir-path-accessor"
+      ],
+      "id": "launcher-console-workdir-path-accessor",
+      "intent": "TG change block launcher-console-workdir-path-accessor ownership and merge-audit intent.",
+      "lastTouchedCommit": "98b709f8fd2b53f74bb61f943d3adfd8cc34c602",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 469,
+      "endLine": 479,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-checkpoint-lock-enforce",
+      "intent": "TG change block sandbox-console-checkpoint-lock-enforce ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 28,
+      "endLine": 30,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-checkpoint-lock-include",
+      "intent": "TG change block sandbox-console-checkpoint-lock-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 822,
+      "endLine": 826,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-exec-external-suppress",
+      "intent": "TG change block sandbox-console-exec-external-suppress ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 214,
+      "endLine": 219,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-fail-closed-abort",
+      "intent": "TG change block sandbox-console-fail-closed-abort ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 63,
+      "endLine": 65,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-fail-closed-flag",
+      "intent": "TG change block sandbox-console-fail-closed-flag ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 397,
+      "endLine": 405,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-command",
+      "intent": "TG change block sandbox-console-second-instance-command ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 650,
+      "endLine": 654,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-command-b",
+      "intent": "TG change block sandbox-console-second-instance-command-b ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 519,
+      "endLine": 550,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-command-c",
+      "intent": "TG change block sandbox-console-second-instance-command-c ownership and merge-audit intent.",
+      "lastTouchedCommit": "98b709f8fd2b53f74bb61f943d3adfd8cc34c602",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 25,
+      "endLine": 27,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-command-include",
+      "intent": "TG change block sandbox-console-second-instance-command-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "c11e14d898ab67bb0f7c4f23e84da38e098a1009",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 439,
+      "endLine": 441,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-cancel-a",
+      "intent": "TG change block sandbox-console-second-instance-timeout-cancel-a ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 458,
+      "endLine": 460,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-cancel-b",
+      "intent": "TG change block sandbox-console-second-instance-timeout-cancel-b ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 588,
+      "endLine": 590,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-cancel-c",
+      "intent": "TG change block sandbox-console-second-instance-timeout-cancel-c ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 466,
+      "endLine": 468,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-cancel-owner-a",
+      "intent": "TG change block sandbox-console-second-instance-timeout-cancel-owner-a ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 482,
+      "endLine": 484,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-cancel-owner-b",
+      "intent": "TG change block sandbox-console-second-instance-timeout-cancel-owner-b ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 60,
+      "endLine": 62,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-const",
+      "intent": "TG change block sandbox-console-second-instance-timeout-const ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 200,
+      "endLine": 208,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-preconnect",
+      "intent": "TG change block sandbox-console-second-instance-timeout-preconnect ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 409,
+      "endLine": 414,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-start",
+      "intent": "TG change block sandbox-console-second-instance-timeout-start ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 76,
+      "endLine": 89,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.cpp",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-timer",
+      "intent": "TG change block sandbox-console-second-instance-timeout-timer ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 16,
+      "endLine": 18,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.h",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-include",
+      "intent": "TG change block sandbox-console-second-instance-timeout-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 128,
+      "endLine": 130,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/core/sandbox.h",
+      "groupIds": [],
+      "id": "sandbox-console-second-instance-timeout-member",
+      "intent": "TG change block sandbox-console-second-instance-timeout-member ownership and merge-audit intent.",
+      "lastTouchedCommit": "d60d208b1e9767be5d8f8ca1b8f59944697c6ab5",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 54,
+      "endLine": 75,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [],
+      "id": "account-network-capability-constructor",
+      "intent": "TG change block account-network-capability-constructor ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 30,
+      "endLine": 33,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [],
+      "id": "account-network-capability-include",
+      "intent": "TG change block account-network-capability-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 154,
+      "endLine": 160,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [],
+      "id": "account-network-fallback-config",
+      "intent": "TG change block account-network-fallback-config ownership and merge-audit intent.",
+      "lastTouchedCommit": "4ff1e1b250ac01dbd75f1f9c9001ecadffd4bb69",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 172,
+      "endLine": 175,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [],
+      "id": "account-network-proxy-changes-source",
+      "intent": "TG change block account-network-proxy-changes-source ownership and merge-audit intent.",
+      "lastTouchedCommit": "",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 542,
+      "endLine": 545,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [],
+      "id": "account-network-proxy-state-change",
+      "intent": "TG change block account-network-proxy-state-change ownership and merge-audit intent.",
+      "lastTouchedCommit": "4ff1e1b250ac01dbd75f1f9c9001ecadffd4bb69",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 133,
+      "endLine": 139,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [
+        "auto-group-account-session-capability-accessor"
+      ],
+      "id": "account-session-capability-accessor",
+      "intent": "TG change block account-session-capability-accessor ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 92,
+      "endLine": 119,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [],
+      "id": "account-session-capability-constructor",
+      "intent": "TG change block account-session-capability-constructor ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 34,
+      "endLine": 36,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [],
+      "id": "account-session-capability-include",
+      "intent": "TG change block account-session-capability-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 76,
+      "endLine": 91,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.cpp",
+      "groupIds": [],
+      "id": "account-storage-capability-constructor",
+      "intent": "TG change block account-storage-capability-constructor ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 25,
+      "endLine": 29,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [],
+      "id": "account-network-capability-forward-declaration",
+      "intent": "TG change block account-network-capability-forward-declaration ownership and merge-audit intent.",
+      "lastTouchedCommit": "4ff1e1b250ac01dbd75f1f9c9001ecadffd4bb69",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 187,
+      "endLine": 189,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [],
+      "id": "account-network-capability-member",
+      "intent": "TG change block account-network-capability-member ownership and merge-audit intent.",
+      "lastTouchedCommit": "4ff1e1b250ac01dbd75f1f9c9001ecadffd4bb69",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 50,
+      "endLine": 56,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [],
+      "id": "account-network-capability-overload",
+      "intent": "TG change block account-network-capability-overload ownership and merge-audit intent.",
+      "lastTouchedCommit": "4ff1e1b250ac01dbd75f1f9c9001ecadffd4bb69",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 113,
+      "endLine": 115,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [
+        "auto-group-account-session-capability-accessor"
+      ],
+      "id": "account-session-capability-accessor",
+      "intent": "TG change block account-session-capability-accessor ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 35,
+      "endLine": 39,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [],
+      "id": "account-session-capability-forward-declaration",
+      "intent": "TG change block account-session-capability-forward-declaration ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 190,
+      "endLine": 192,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [],
+      "id": "account-session-capability-member",
+      "intent": "TG change block account-session-capability-member ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 65,
+      "endLine": 73,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [],
+      "id": "account-session-capability-overload",
+      "intent": "TG change block account-session-capability-overload ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 30,
+      "endLine": 34,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [],
+      "id": "account-storage-capability-forward-declaration",
+      "intent": "TG change block account-storage-capability-forward-declaration ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 57,
+      "endLine": 64,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_account.h",
+      "groupIds": [],
+      "id": "account-storage-capability-overload",
+      "intent": "TG change block account-storage-capability-overload ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 149,
+      "endLine": 164,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-account-factory-implementation",
+      "intent": "TG change block domain-account-factory-implementation ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 356,
+      "endLine": 361,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-add-account-factory-usage",
+      "intent": "TG change block domain-add-account-factory-usage ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 28,
+      "endLine": 30,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-capability-bundle-include",
+      "intent": "TG change block domain-capability-bundle-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 34,
+      "endLine": 40,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-capability-constructor-delegation",
+      "intent": "TG change block domain-capability-constructor-delegation ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 41,
+      "endLine": 57,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [
+        "auto-group-domain-capability-constructor-overload"
+      ],
+      "id": "domain-capability-constructor-overload",
+      "intent": "TG change block domain-capability-constructor-overload ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 196,
+      "endLine": 198,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-accounts-order",
+      "intent": "TG change block domain-lifecycle-accounts-order ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 533,
+      "endLine": 537,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-activate-window",
+      "intent": "TG change block domain-lifecycle-activate-window ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 444,
+      "endLine": 447,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-close-account-windows-separate-window",
+      "intent": "TG change block domain-lifecycle-close-account-windows-separate-window ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 343,
+      "endLine": 350,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-fallback-config-copy",
+      "intent": "TG change block domain-lifecycle-fallback-config-copy ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 368,
+      "endLine": 374,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-main-menu-settings",
+      "intent": "TG change block domain-lifecycle-main-menu-settings ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 65,
+      "endLine": 69,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-notification-manager",
+      "intent": "TG change block domain-lifecycle-notification-manager ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 100,
+      "endLine": 104,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-on-main-export-suggest",
+      "intent": "TG change block domain-lifecycle-on-main-export-suggest ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 429,
+      "endLine": 433,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-on-main-remove-redundant",
+      "intent": "TG change block domain-lifecycle-on-main-remove-redundant ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 563,
+      "endLine": 567,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-on-main-remove-redundant-after-activate",
+      "intent": "TG change block domain-lifecycle-on-main-remove-redundant-after-activate ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 577,
+      "endLine": 582,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-on-main-write-accounts",
+      "intent": "TG change block domain-lifecycle-on-main-write-accounts ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 468,
+      "endLine": 495,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-passcode-transitions",
+      "intent": "TG change block domain-lifecycle-passcode-transitions ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 314,
+      "endLine": 319,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-postpone-unread-badge",
+      "intent": "TG change block domain-lifecycle-postpone-unread-badge ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 521,
+      "endLine": 529,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-prevent-or-invoke",
+      "intent": "TG change block domain-lifecycle-prevent-or-invoke ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 515,
+      "endLine": 517,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-refresh-fallback-config",
+      "intent": "TG change block domain-lifecycle-refresh-fallback-config ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 61,
+      "endLine": 63,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-start-settings-background",
+      "intent": "TG change block domain-lifecycle-start-settings-background ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 380,
+      "endLine": 391,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.cpp",
+      "groupIds": [],
+      "id": "domain-lifecycle-window-selection",
+      "intent": "TG change block domain-lifecycle-window-selection ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 96,
+      "endLine": 98,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.h",
+      "groupIds": [],
+      "id": "domain-account-factory-method",
+      "intent": "TG change block domain-account-factory-method ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 22,
+      "endLine": 28,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.h",
+      "groupIds": [],
+      "id": "domain-capability-bundle-forward-declarations",
+      "intent": "TG change block domain-capability-bundle-forward-declarations ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 45,
+      "endLine": 49,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.h",
+      "groupIds": [
+        "auto-group-domain-capability-constructor-overload"
+      ],
+      "id": "domain-capability-constructor-overload",
+      "intent": "TG change block domain-capability-constructor-overload ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 112,
+      "endLine": 115,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_domain.h",
+      "groupIds": [],
+      "id": "domain-capability-members",
+      "intent": "TG change block domain-capability-members ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 63,
+      "endLine": 65,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_session.cpp",
+      "groupIds": [],
+      "id": "session-service-capability-include",
+      "intent": "TG change block session-service-capability-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 107,
+      "endLine": 109,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_session.cpp",
+      "groupIds": [],
+      "id": "session-service-capability-initializer",
+      "intent": "TG change block session-service-capability-initializer ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 271,
+      "endLine": 273,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_session.cpp",
+      "groupIds": [],
+      "id": "session-service-download-track",
+      "intent": "TG change block session-service-download-track ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 147,
+      "endLine": 152,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_session.cpp",
+      "groupIds": [],
+      "id": "session-service-setup-email-lock",
+      "intent": "TG change block session-service-setup-email-lock ownership and merge-audit intent.",
+      "lastTouchedCommit": "884cb247de0b50f1dfb439912166b552d092609c",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 158,
+      "endLine": 160,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_session.cpp",
+      "groupIds": [],
+      "id": "session-service-setup-email-unlock",
+      "intent": "TG change block session-service-setup-email-unlock ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 553,
+      "endLine": 557,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_session.cpp",
+      "groupIds": [],
+      "id": "session-service-window-selection",
+      "intent": "TG change block session-service-window-selection ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 86,
+      "endLine": 90,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_session.h",
+      "groupIds": [],
+      "id": "session-service-capability-forward-declaration",
+      "intent": "TG change block session-service-capability-forward-declaration ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 311,
+      "endLine": 313,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/main/main_session.h",
+      "groupIds": [],
+      "id": "session-service-capability-member",
+      "intent": "TG change block session-service-capability-member ownership and merge-audit intent.",
+      "lastTouchedCommit": "16babf664fb131f2dec2f0a435d9da1140ed43df",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 50,
+      "endLine": 54,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/settings.cpp",
+      "groupIds": [
+        "auto-group-core-console-accounts-launch-state"
+      ],
+      "id": "core-console-accounts-launch-state",
+      "intent": "TG change block core-console-accounts-launch-state ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 42,
+      "endLine": 49,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/settings.cpp",
+      "groupIds": [
+        "auto-group-core-console-launch-state"
+      ],
+      "id": "core-console-launch-state",
+      "intent": "TG change block core-console-launch-state ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 94,
+      "endLine": 98,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/settings.h",
+      "groupIds": [
+        "auto-group-core-console-accounts-launch-state"
+      ],
+      "id": "core-console-accounts-launch-state",
+      "intent": "TG change block core-console-accounts-launch-state ownership and merge-audit intent.",
+      "lastTouchedCommit": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 86,
+      "endLine": 93,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/settings.h",
+      "groupIds": [
+        "auto-group-core-console-launch-state"
+      ],
+      "id": "core-console-launch-state",
+      "intent": "TG change block core-console-launch-state ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 1160,
+      "endLine": 1164,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.cpp",
+      "groupIds": [],
+      "id": "storage-settings-background-tiles",
+      "intent": "TG change block storage-settings-background-tiles ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 175,
+      "endLine": 204,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.cpp",
+      "groupIds": [],
+      "id": "storage-settings-capability-constructor",
+      "intent": "TG change block storage-settings-capability-constructor ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 44,
+      "endLine": 46,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.cpp",
+      "groupIds": [],
+      "id": "storage-settings-capability-include",
+      "intent": "TG change block storage-settings-capability-include ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 446,
+      "endLine": 450,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.cpp",
+      "groupIds": [],
+      "id": "storage-settings-night-mode",
+      "intent": "TG change block storage-settings-night-mode ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 3739,
+      "endLine": 3761,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.cpp",
+      "groupIds": [],
+      "id": "storage-settings-tonsite-storage-id",
+      "intent": "TG change block storage-settings-tonsite-storage-id ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 42,
+      "endLine": 46,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.h",
+      "groupIds": [],
+      "id": "storage-settings-capability-forward-declaration",
+      "intent": "TG change block storage-settings-capability-forward-declaration ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 324,
+      "endLine": 326,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.h",
+      "groupIds": [],
+      "id": "storage-settings-capability-member",
+      "intent": "TG change block storage-settings-capability-member ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 74,
+      "endLine": 79,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.h",
+      "groupIds": [],
+      "id": "storage-settings-capability-overload",
+      "intent": "TG change block storage-settings-capability-overload ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 413,
+      "endLine": 416,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_account.h",
+      "groupIds": [],
+      "id": "storage-settings-tonsite-overload",
+      "intent": "TG change block storage-settings-tonsite-overload ownership and merge-audit intent.",
+      "lastTouchedCommit": "530dec607a08aaaba7214f035293af286285e978",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 150,
+      "endLine": 152,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_domain.cpp",
+      "groupIds": [],
+      "id": "storage-domain-owner-account-factory-legacy-alloc",
+      "intent": "TG change block storage-domain-owner-account-factory-legacy-alloc ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 286,
+      "endLine": 288,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_domain.cpp",
+      "groupIds": [],
+      "id": "storage-domain-owner-account-factory-modern-loop",
+      "intent": "TG change block storage-domain-owner-account-factory-modern-loop ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 346,
+      "endLine": 350,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_domain.cpp",
+      "groupIds": [],
+      "id": "storage-domain-owner-account-factory-scratch",
+      "intent": "TG change block storage-domain-owner-account-factory-scratch ownership and merge-audit intent.",
+      "lastTouchedCommit": "d7daf02d012526b304335c10bd8961d7966d89cf",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 37,
+      "endLine": 128,
+      "exceptionRationale": "Cohesive snapshot-classification flow remains intentionally grouped for merge-audit clarity; split candidates reduce audit signal without reducing risk.",
+      "file": "Telegram/SourceFiles/storage/storage_domain.cpp",
+      "groupIds": [],
+      "id": "storage-domain-snapshot-storage-read-classification",
+      "intent": "TG change block storage-domain-snapshot-storage-read-classification ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "2026-08-07T09:40:00Z",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "exception-approved",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 170,
+      "endLine": 178,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_domain.cpp",
+      "groupIds": [],
+      "id": "storage-domain-snapshot-storage-read-classification-method",
+      "intent": "TG change block storage-domain-snapshot-storage-read-classification-method ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 10,
+      "endLine": 14,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_domain.cpp",
+      "groupIds": [],
+      "id": "storage-domain-snapshot-storage-read-includes",
+      "intent": "TG change block storage-domain-snapshot-storage-read-includes ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 29,
+      "endLine": 37,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_domain.h",
+      "groupIds": [],
+      "id": "storage-domain-snapshot-storage-read-api-enum",
+      "intent": "TG change block storage-domain-snapshot-storage-read-api-enum ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 47,
+      "endLine": 49,
+      "exceptionRationale": "",
+      "file": "Telegram/SourceFiles/storage/storage_domain.h",
+      "groupIds": [],
+      "id": "storage-domain-snapshot-storage-read-api-method",
+      "intent": "TG change block storage-domain-snapshot-storage-read-api-method ownership and merge-audit intent.",
+      "lastTouchedCommit": "ba65a3d41bcfcf4df74a4fb3ec387bdf14039797",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    },
+    {
+      "beginLine": 746,
+      "endLine": 748,
+      "exceptionRationale": "",
+      "file": "Telegram/build/prepare/prepare.py",
+      "groupIds": [],
+      "id": "dav1d-github-mirror",
+      "intent": "TG change block dav1d-github-mirror ownership and merge-audit intent.",
+      "lastTouchedCommit": "690660eb50d8b1599720705f873986bdb56ecc79",
+      "ownerPacket": "PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md",
+      "rationaleReviewedAtUtc": "",
+      "removalCondition": "Remove when upstream provides equivalent seam and all packet regressions pass.",
+      "status": "active",
+      "tests": [
+        "fence-self-test",
+        "fence-validate"
+      ]
+    }
+  ],
+  "generatedAtUtc": "2026-08-07T09:36:38Z",
+  "groups": [
+    {
+      "cohesionRationale": "Auto-group for repeated fence id account-session-capability-accessor across declared occurrences.",
+      "groupId": "auto-group-account-session-capability-accessor",
+      "kind": "header-cpp-pair",
+      "members": [
+        "Telegram/SourceFiles/main/main_account.cpp:account-session-capability-accessor",
+        "Telegram/SourceFiles/main/main_account.h:account-session-capability-accessor"
+      ],
+      "splitPolicy": "allowed-broad-exception"
+    },
+    {
+      "cohesionRationale": "Auto-group for repeated fence id core-console-accounts-launch-state across declared occurrences.",
+      "groupId": "auto-group-core-console-accounts-launch-state",
+      "kind": "header-cpp-pair",
+      "members": [
+        "Telegram/SourceFiles/settings.cpp:core-console-accounts-launch-state",
+        "Telegram/SourceFiles/settings.h:core-console-accounts-launch-state"
+      ],
+      "splitPolicy": "allowed-broad-exception"
+    },
+    {
+      "cohesionRationale": "Auto-group for repeated fence id core-console-launch-state across declared occurrences.",
+      "groupId": "auto-group-core-console-launch-state",
+      "kind": "header-cpp-pair",
+      "members": [
+        "Telegram/SourceFiles/settings.cpp:core-console-launch-state",
+        "Telegram/SourceFiles/settings.h:core-console-launch-state"
+      ],
+      "splitPolicy": "allowed-broad-exception"
+    },
+    {
+      "cohesionRationale": "Auto-group for repeated fence id domain-capability-constructor-overload across declared occurrences.",
+      "groupId": "auto-group-domain-capability-constructor-overload",
+      "kind": "header-cpp-pair",
+      "members": [
+        "Telegram/SourceFiles/main/main_domain.cpp:domain-capability-constructor-overload",
+        "Telegram/SourceFiles/main/main_domain.h:domain-capability-constructor-overload"
+      ],
+      "splitPolicy": "allowed-broad-exception"
+    },
+    {
+      "cohesionRationale": "Auto-group for repeated fence id launcher-console-workdir-path-accessor across declared occurrences.",
+      "groupId": "auto-group-launcher-console-workdir-path-accessor",
+      "kind": "header-cpp-pair",
+      "members": [
+        "Telegram/SourceFiles/core/launcher.cpp:launcher-console-workdir-path-accessor",
+        "Telegram/SourceFiles/core/launcher.h:launcher-console-workdir-path-accessor"
+      ],
+      "splitPolicy": "allowed-broad-exception"
+    }
+  ],
+  "repoPolicy": "TG_CHANGE_POLICY.md",
+  "schemaVersion": 1
+}

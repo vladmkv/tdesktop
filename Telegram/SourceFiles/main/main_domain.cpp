@@ -436,14 +436,15 @@ void Domain::watchSession(not_null<Account*> account) {
 }
 
 void Domain::closeAccountWindows(not_null<Main::Account*> account) {
-	// TG_CHANGE_BEGIN: domain-lifecycle-close-account-windows
 	auto another = (Main::Account*)nullptr;
 	for (auto i = _accounts.begin(); i != _accounts.end(); ++i) {
 		const auto other = not_null(i->account.get());
 		if (other == account) {
 			continue;
+		// TG_CHANGE_BEGIN: domain-lifecycle-close-account-windows-separate-window
 		} else if (_domainLifecycleCapabilities->separateWindowFor(other)) {
 			const auto that = _domainLifecycleCapabilities->separateWindowFor(account);
+			// TG_CHANGE_END: domain-lifecycle-close-account-windows-separate-window
 			if (that) {
 				that->close();
 			}
@@ -455,7 +456,6 @@ void Domain::closeAccountWindows(not_null<Main::Account*> account) {
 	if (another) {
 		activate(another);
 	}
-	// TG_CHANGE_END: domain-lifecycle-close-account-windows
 }
 
 bool Domain::removePasscodeIfEmpty() {

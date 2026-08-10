@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "defaultTarget": "upstream/dev",
+  "worktreeNamePrefix": ".tg-rehearsal-",
+  "buildDirectory": "out-rehearsal",
+  "primaryBuildDirectory": "out",
+  "cacheImportKeys": [
+    "QT_DIR",
+    "TDESKTOP_API_ID",
+    "TDESKTOP_API_HASH",
+    "CMAKE_GENERATOR",
+    "CMAKE_GENERATOR_PLATFORM",
+    "CMAKE_GENERATOR_TOOLSET"
+  ],
+  "sensitiveKeys": [
+    "TDESKTOP_API_ID",
+    "TDESKTOP_API_HASH"
+  ],
+  "environment": {},
+  "configureCommand": [
+    "cmake",
+    "-S",
+    "{worktree}",
+    "-B",
+    "{build}",
+    "-G",
+    "{generator}",
+    "-A",
+    "{platform}",
+    "-T",
+    "{toolset}"
+  ],
+  "commands": [
+    {
+      "name": "fence-validate",
+      "tokens": [
+        "{python}",
+        "{worktree}/Telegram/tg_cli/tools/check_tg_change_fences.py",
+        "validate",
+        "--repo",
+        "{worktree}",
+        "--base",
+        "HEAD"
+      ]
+    },
+    {
+      "name": "fence-quality",
+      "tokens": [
+        "{python}",
+        "{worktree}/Telegram/tg_cli/tools/check_tg_change_fences.py",
+        "quality",
+        "--repo",
+        "{worktree}",
+        "--base",
+        "HEAD",
+        "--manifest",
+        "TG_PROBES/tg_change_fence_manifest.json",
+        "--warn-fence-lines",
+        "40",
+        "--max-fence-lines",
+        "80",
+        "--warn-min-change-density",
+        "0.50",
+        "--min-change-density",
+        "0.20",
+        "--warn-stale-days",
+        "180",
+        "--max-stale-days",
+        "365"
+      ]
+    },
+    {
+      "name": "inventory-check",
+      "tokens": [
+        "{python}",
+        "{worktree}/Telegram/tg_cli/tools/check_tg_change_fences.py",
+        "inventory",
+        "--repo",
+        "{worktree}",
+        "--base",
+        "HEAD",
+        "--manifest",
+        "TG_PROBES/tg_change_fence_manifest.json",
+        "--check"
+      ]
+    },
+    {
+      "name": "tg-cli-build",
+      "tokens": [
+        "cmake",
+        "--build",
+        "{build}",
+        "--config",
+        "{configuration}",
+        "--target",
+        "tg_cli"
+      ]
+    },
+    {
+      "name": "tg-cli-help",
+      "tokens": [
+        "{build}/Telegram/tg_cli/Debug/tg_cli.exe",
+        "--help"
+      ]
+    },
+    {
+      "name": "telegram-build",
+      "environment": {
+        "_CL_": "/MP1"
+      },
+      "tokens": [
+        "cmake",
+        "--build",
+        "{build}",
+        "--config",
+        "{configuration}",
+        "--target",
+        "Telegram",
+        "--",
+        "/m:1",
+        "/nodeReuse:false",
+        "/p:UseMultiToolTask=false",
+        "/p:CL_MPCount=1"
+      ]
+    },
+    {
+      "name": "packet26-test",
+      "tokens": [
+        "powershell",
+        "-NoProfile",
+        "-File",
+        "{worktree}/Telegram/tg_cli/tools/test_hosted_console_checkpoint_packet26_review.ps1",
+        "-BinaryPath",
+        "{build}/Debug/tg.exe"
+      ]
+    },
+    {
+      "name": "packet30-test",
+      "tokens": [
+        "powershell",
+        "-NoProfile",
+        "-File",
+        "{worktree}/Telegram/tg_cli/tools/test_hosted_console_accounts_packet30.ps1",
+        "-BinaryPath",
+        "{build}/Debug/tg.exe",
+        "-DevProfile",
+        "{repo_parent}/tg-dev-profile"
+      ]
+    }
+  ],
+  "optionalPrerequisites": {
+    "packet30-test": "{repo_parent}/tg-dev-profile"
+  }
+}

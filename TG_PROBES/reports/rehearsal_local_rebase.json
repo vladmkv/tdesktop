@@ -1,0 +1,821 @@
+{
+  "exitCode": 0,
+  "generatedAtUtc": "2026-08-08T14:35:58Z",
+  "mode": "rehearsal",
+  "schemaVersion": 1,
+  "summary": {
+    "buildRoot": "${BUILD}",
+    "committedBase": "12e8d4a956b0e73c1f738112870a32ea079fa05f",
+    "config": "TG_PROBES/tg_change_rehearsal_config.json",
+    "inputFingerprint": "c3374de332a4e56fbbe95fcb3b477c8ff4d3c45db3a9ba9d3f8dfd2fbef4ad21",
+    "manifest": "TG_PROBES/tg_change_fence_manifest.json",
+    "mode": "rebase",
+    "phases": [
+      {
+        "name": "snapshot-synthetic-commit",
+        "parentHead": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+        "status": "pass",
+        "syntheticCommit": "0296d75037db316345843274b6c1b64ae7852987"
+      },
+      {
+        "name": "fetch",
+        "reason": "--no-fetch default",
+        "status": "skipped"
+      },
+      {
+        "name": "resolve-target",
+        "status": "pass",
+        "target": "upstream/dev",
+        "targetSha": "f238e46ff988ec502290f6e691bd67c11cf5c75a"
+      },
+      {
+        "attempt": 1,
+        "command": [
+          "git",
+          "-C",
+          "${REPO}",
+          "worktree",
+          "add",
+          "-b",
+          "tg-rehearsal-a5126d502f",
+          "${WORKTREE}",
+          "0296d75037db316345843274b6c1b64ae7852987"
+        ],
+        "name": "worktree-add",
+        "status": "pass",
+        "stderr": "Updating files:  20% (1234/6151)\nUpdating files:  21% (1292/6151)\nUpdating files:  22% (1354/6151)\nUpdating files:  23% (1415/6151)\nUpdating files:  24% (1477/6151)\nUpdating files:  25% (1538/6151)\nUpdating files:  26% (1600/6151)\nUpdating files:  27% (1661/6151)\nUpdating files:  28% (1723/6151)\nUpdating files:  29% (1784/6151)\nUpdating files:  30% (1846/6151)\nUpdating files:  31% (1907/6151)\nUpdating files:  32% (1969/6151)\nUpdating files:  33% (2030/6151)\nUpdating files:  34% (2092/6151)\nUpdating files:  35% (2153/6151)\nUpdating files:  36% (2215/6151)\nUpdating files:  37% (2276/6151)\nUpdating files:  37% (2284/6151)\nUpdating files:  38% (2338/6151)\nUpdating files:  39% (2399/6151)\nUpdating files:  40% (2461/6151)\nUpdating files:  41% (2522/6151)\nUpdating files:  42% (2584/6151)\nUpdating files:  43% (2645/6151)\nUpdating files:  44% (2707/6151)\nUpdating files:  45% (2768/6151)\nUpdating files:  46% (2830/6151)\nUpdating files:  47% (2891/6151)\nUpdating files:  48% (2953/6151)\nUpdating files:  49% (3014/6151)\nUpdating files:  50% (3076/6151)\nUpdating files:  51% (3138/6151)\nUpdating files:  52% (3199/6151)\nUpdating files:  53% (3261/6151)\nUpdating files:  53% (3292/6151)\nUpdating files:  54% (3322/6151)\nUpdating files:  55% (3384/6151)\nUpdating files:  56% (3445/6151)\nUpdating files:  57% (3507/6151)\nUpdating files:  58% (3568/6151)\nUpdating files:  59% (3630/6151)\nUpdating files:  60% (3691/6151)\nUpdating files:  61% (3753/6151)\nUpdating files:  62% (3814/6151)\nUpdating files:  63% (3876/6151)\nUpdating files:  64% (3937/6151)\nUpdating files:  65% (3999/6151)\nUpdating files:  66% (4060/6151)\nUpdating files:  67% (4122/6151)\nUpdating files:  67% (4154/6151)\nUpdating files:  68% (4183/6151)\nUpdating files:  69% (4245/6151)\nUpdating files:  70% (4306/6151)\nUpdating files:  71% (4368/6151)\nUpdating files:  72% (4429/6151)\nUpdating files:  73% (4491/6151)\nUpdating files:  74% (4552/6151)\nUpdating files:  75% (4614/6151)\nUpdating files:  76% (4675/6151)\nUpdating files:  77% (4737/6151)\nUpdating files:  78% (4798/6151)\nUpdating files:  79% (4860/6151)\nUpdating files:  80% (4921/6151)\nUpdating files:  81% (4983/6151)\nUpdating files:  82% (5044/6151)\nUpdating files:  82% (5075/6151)\nUpdating files:  83% (5106/6151)\nUpdating files:  84% (5167/6151)\nUpdating files:  85% (5229/6151)\nUpdating files:  86% (5290/6151)\nUpdating files:  87% (5352/6151)\nUpdating files:  88% (5413/6151)\nUpdating files:  89% (5475/6151)\nUpdating files:  90% (5536/6151)\nUpdating files:  91% (5598/6151)\nUpdating files:  92% (5659/6151)\nUpdating files:  93% (5721/6151)\nUpdating files:  94% (5782/6151)\nUpdating files:  95% (5844/6151)\nUpdating files:  96% (5905/6151)\nUpdating files:  97% (5967/6151)\nUpdating files:  98% (6028/6151)\nUpdating files:  99% (6090/6151)\nUpdating files: 100% (6151/6151)\nUpdating files: 100% (6151/6151), done.\n",
+        "stdout": "Preparing worktree (new branch 'tg-rehearsal-a5126d502f')\nHEAD is now at 0296d75037 tg rehearsal synthetic snapshot 2026-08-08T12:40:40Z\n"
+      },
+      {
+        "command": [
+          "git",
+          "worktree",
+          "add",
+          "-b",
+          "tg-rehearsal-a5126d502f"
+        ],
+        "name": "rebase-branch-create",
+        "status": "pass",
+        "stderr": "",
+        "stdout": "created during worktree-add"
+      },
+      {
+        "command": [
+          "git",
+          "-C",
+          "${WORKTREE}",
+          "rebase",
+          "f238e46ff988ec502290f6e691bd67c11cf5c75a"
+        ],
+        "name": "git-rebase-native-attempt",
+        "status": "pass",
+        "stderr": "Rebasing (1/24)\nRebasing (2/24)\nRebasing (3/24)\nRebasing (4/24)\nRebasing (5/24)\nRebasing (6/24)\nRebasing (7/24)\nRebasing (8/24)\nRebasing (9/24)\nRebasing (10/24)\nRebasing (11/24)\nRebasing (12/24)\nRebasing (13/24)\nRebasing (14/24)\nRebasing (15/24)\nRebasing (16/24)\nRebasing (17/24)\nRebasing (18/24)\nRebasing (19/24)\nRebasing (20/24)\nRebasing (21/24)\nRebasing (22/24)\nRebasing (23/24)\nRebasing (24/24)\n\n\u001b[KSuccessfully rebased and updated refs/heads/tg-rehearsal-a5126d502f.\n",
+        "stdout": ""
+      },
+      {
+        "command": [
+          "git",
+          "-C",
+          "${WORKTREE}",
+          "rebase",
+          "f238e46ff988ec502290f6e691bd67c11cf5c75a"
+        ],
+        "name": "git-rebase",
+        "status": "pass",
+        "stderr": "Rebasing (1/24)\nRebasing (2/24)\nRebasing (3/24)\nRebasing (4/24)\nRebasing (5/24)\nRebasing (6/24)\nRebasing (7/24)\nRebasing (8/24)\nRebasing (9/24)\nRebasing (10/24)\nRebasing (11/24)\nRebasing (12/24)\nRebasing (13/24)\nRebasing (14/24)\nRebasing (15/24)\nRebasing (16/24)\nRebasing (17/24)\nRebasing (18/24)\nRebasing (19/24)\nRebasing (20/24)\nRebasing (21/24)\nRebasing (22/24)\nRebasing (23/24)\nRebasing (24/24)\n\n\u001b[KSuccessfully rebased and updated refs/heads/tg-rehearsal-a5126d502f.\n",
+        "stdout": ""
+      },
+      {
+        "committedBase": "12e8d4a956b0e73c1f738112870a32ea079fa05f",
+        "name": "rehearsal-base",
+        "status": "pass",
+        "temporaryBase": "f238e46ff988ec502290f6e691bd67c11cf5c75a"
+      },
+      {
+        "key": "file:id",
+        "missingFenceCount": 0,
+        "movedFenceCount": 1,
+        "movedFences": [
+          {
+            "key": "Telegram/CMakeLists.txt:tg-executable-name",
+            "manifestRange": [
+              2309,
+              2311
+            ],
+            "overlayRange": [
+              2314,
+              2316
+            ]
+          }
+        ],
+        "movedSpanLineDelta": 10,
+        "name": "manifest-overlay-refresh",
+        "status": "pass",
+        "unknownFenceCount": 0
+      },
+      {
+        "name": "fence-validate",
+        "status": "pass",
+        "summary": {
+          "base": "f238e46ff988ec502290f6e691bd67c11cf5c75a",
+          "checkedFileCount": 20,
+          "scopeMode": "manifest-files-vs-target",
+          "violationCount": 0,
+          "violations": []
+        }
+      },
+      {
+        "name": "fence-quality",
+        "status": "pass",
+        "summary": {
+          "base": "f238e46ff988ec502290f6e691bd67c11cf5c75a",
+          "committedBase": "12e8d4a956b0e73c1f738112870a32ea079fa05f",
+          "manifest": "TG_PROBES/tg_change_fence_manifest.json",
+          "violationCount": 0,
+          "violations": [],
+          "warningCount": 12,
+          "warnings": [
+            {
+              "contentLines": 53,
+              "key": "Telegram/SourceFiles/core/launcher.cpp:launcher-console-accounts-gates",
+              "limit": 40,
+              "severity": "warn",
+              "type": "fence-size"
+            },
+            {
+              "contentLines": 48,
+              "key": "Telegram/SourceFiles/core/launcher.cpp:launcher-console-owner-probe-gates",
+              "limit": 40,
+              "severity": "warn",
+              "type": "fence-size"
+            },
+            {
+              "denominator": 7,
+              "density": 0.2857,
+              "key": "Telegram/SourceFiles/core/sandbox.cpp:sandbox-console-second-instance-command",
+              "limit": 0.5,
+              "numerator": 2,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 4,
+              "density": 0.25,
+              "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-add-account-factory-usage",
+              "limit": 0.5,
+              "numerator": 1,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 3,
+              "density": 0.3333,
+              "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-activate-window",
+              "limit": 0.5,
+              "numerator": 1,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 26,
+              "density": 0.2308,
+              "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-passcode-transitions",
+              "limit": 0.5,
+              "numerator": 6,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 4,
+              "density": 0.25,
+              "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-postpone-unread-badge",
+              "limit": 0.5,
+              "numerator": 1,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 7,
+              "density": 0.2857,
+              "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-prevent-or-invoke",
+              "limit": 0.5,
+              "numerator": 2,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 10,
+              "density": 0.2,
+              "key": "Telegram/SourceFiles/main/main_domain.cpp:domain-lifecycle-window-selection",
+              "limit": 0.5,
+              "numerator": 2,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 28,
+              "density": 0.4286,
+              "key": "Telegram/SourceFiles/storage/storage_account.cpp:storage-settings-capability-constructor",
+              "limit": 0.5,
+              "numerator": 12,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 3,
+              "density": 0.3333,
+              "key": "Telegram/SourceFiles/storage/storage_account.cpp:storage-settings-night-mode",
+              "limit": 0.5,
+              "numerator": 1,
+              "severity": "warn",
+              "type": "change-density"
+            },
+            {
+              "denominator": 3,
+              "density": 0.3333,
+              "key": "Telegram/SourceFiles/storage/storage_domain.cpp:storage-domain-owner-account-factory-scratch",
+              "limit": 0.5,
+              "numerator": 1,
+              "severity": "warn",
+              "type": "change-density"
+            }
+          ]
+        }
+      },
+      {
+        "name": "fence-inventory-check",
+        "status": "pass",
+        "summary": {
+          "driftCount": 0,
+          "drifts": [],
+          "manifest": "TG_PROBES/tg_change_fence_manifest.json",
+          "operation": "check"
+        }
+      },
+      {
+        "freeBytes": 78637240320,
+        "freeGiB": 73.24,
+        "name": "disk-space",
+        "status": "pass",
+        "strategy": "single-rehearsal-build-per-invocation"
+      },
+      {
+        "declaredTopLevelCount": 36,
+        "missing": [],
+        "name": "submodule-local-sources",
+        "protocolPolicy": "file-only",
+        "sources": [
+          {
+            "commit": "87f9d768866548b5b86e72be66c60c5abd4d9b37",
+            "name": "Telegram/ThirdParty/GSL",
+            "path": "Telegram/ThirdParty/GSL",
+            "source": "${REPO}/Telegram/ThirdParty/GSL"
+          },
+          {
+            "commit": "674ef54b5113e6ab73f1afbcae97de8287d8466d",
+            "name": "Telegram/ThirdParty/MicroTeX",
+            "path": "Telegram/ThirdParty/MicroTeX",
+            "source": "${REPO}/Telegram/ThirdParty/MicroTeX"
+          },
+          {
+            "commit": "720f62bddb7226106071d4728c292cb1df519ceb",
+            "name": "Telegram/ThirdParty/QR",
+            "path": "Telegram/ThirdParty/QR",
+            "source": "${REPO}/Telegram/ThirdParty/QR"
+          },
+          {
+            "commit": "b86af81982860c96295a7e95e4c60cb335615cef",
+            "name": "Telegram/ThirdParty/TooManyCooks",
+            "path": "Telegram/ThirdParty/TooManyCooks",
+            "source": "${REPO}/Telegram/ThirdParty/TooManyCooks"
+          },
+          {
+            "commit": "b48dc46512566f5a2d41118c8c1116c4f96dc661",
+            "name": "Telegram/ThirdParty/cld3",
+            "path": "Telegram/ThirdParty/cld3",
+            "source": "${REPO}/Telegram/ThirdParty/cld3"
+          },
+          {
+            "commit": "587a12bb54d95ac37241377e6ddc93ea0e45439b",
+            "name": "Telegram/ThirdParty/cmark-gfm",
+            "path": "Telegram/ThirdParty/cmark-gfm",
+            "source": "${REPO}/Telegram/ThirdParty/cmark-gfm"
+          },
+          {
+            "commit": "292eff8bd8ee230a7df1d6a1c00c4ea0eb2f0362",
+            "name": "Telegram/ThirdParty/expected",
+            "path": "Telegram/ThirdParty/expected",
+            "source": "${REPO}/Telegram/ThirdParty/expected"
+          },
+          {
+            "commit": "c743b12e6780edf1dcfe9071531c80f050cacb95",
+            "name": "Telegram/ThirdParty/fcitx5-qt",
+            "path": "Telegram/ThirdParty/fcitx5-qt",
+            "source": "${REPO}/Telegram/ThirdParty/fcitx5-qt"
+          },
+          {
+            "commit": "9b3e6f9ab59d1fe4d9de73d3bf0fed7789f921c5",
+            "name": "Telegram/ThirdParty/hime",
+            "path": "Telegram/ThirdParty/hime",
+            "source": "${REPO}/Telegram/ThirdParty/hime"
+          },
+          {
+            "commit": "22c3381e2066bed616250d373fc5c935598b564a",
+            "name": "Telegram/ThirdParty/hunspell",
+            "path": "Telegram/ThirdParty/hunspell",
+            "source": "${REPO}/Telegram/ThirdParty/hunspell"
+          },
+          {
+            "commit": "fd84da51b554eac25e35b1e3f373edaab3029b15",
+            "name": "Telegram/ThirdParty/kcoreaddons",
+            "path": "Telegram/ThirdParty/kcoreaddons",
+            "source": "${REPO}/Telegram/ThirdParty/kcoreaddons"
+          },
+          {
+            "commit": "df82311a1081e576c4ac020204578bb8a81b21ec",
+            "name": "Telegram/ThirdParty/kimageformats",
+            "path": "Telegram/ThirdParty/kimageformats",
+            "source": "${REPO}/Telegram/ThirdParty/kimageformats"
+          },
+          {
+            "commit": "170bee2b82cdb7b2ed25af301f62cb6efdd40ec1",
+            "name": "Telegram/ThirdParty/libcbor",
+            "path": "Telegram/ThirdParty/libcbor",
+            "source": "${REPO}/Telegram/ThirdParty/libcbor"
+          },
+          {
+            "commit": "b974e7cf2ee7392134cc12c08b76a068cf250dd8",
+            "name": "Telegram/ThirdParty/libfido2",
+            "path": "Telegram/ThirdParty/libfido2",
+            "source": "${REPO}/Telegram/ThirdParty/libfido2"
+          },
+          {
+            "commit": "23b0d70f9709da9b38561d5706891a134d18df76",
+            "name": "Telegram/ThirdParty/libprisma",
+            "path": "Telegram/ThirdParty/libprisma",
+            "source": "${REPO}/Telegram/ThirdParty/libprisma"
+          },
+          {
+            "commit": "5ff839680134437dbf4678f3d0c7b371d84f4964",
+            "name": "Telegram/ThirdParty/lz4",
+            "path": "Telegram/ThirdParty/lz4",
+            "source": "${REPO}/Telegram/ThirdParty/lz4"
+          },
+          {
+            "commit": "498ec7ffab3ac140c2469638a14451788f03e798",
+            "name": "Telegram/ThirdParty/nimf",
+            "path": "Telegram/ThirdParty/nimf",
+            "source": "${REPO}/Telegram/ThirdParty/nimf"
+          },
+          {
+            "commit": "a81477931a8aa2ad025c6bda0609f38e09e4d7ec",
+            "name": "Telegram/ThirdParty/range-v3",
+            "path": "Telegram/ThirdParty/range-v3",
+            "source": "${REPO}/Telegram/ThirdParty/range-v3"
+          },
+          {
+            "commit": "8c69fc20cf2e150db304311f1233a4b55a8892d7",
+            "name": "Telegram/ThirdParty/rlottie",
+            "path": "Telegram/ThirdParty/rlottie",
+            "source": "${REPO}/Telegram/ThirdParty/rlottie"
+          },
+          {
+            "commit": "2faee3b5524f54d56c91c2058c00e11c656a74b3",
+            "name": "Telegram/ThirdParty/tgcalls",
+            "path": "Telegram/ThirdParty/tgcalls",
+            "source": "${REPO}/Telegram/ThirdParty/tgcalls"
+          },
+          {
+            "commit": "23a76c392170dbbd26230f85ef56c3a57e52b857",
+            "name": "Telegram/ThirdParty/xdg-desktop-portal",
+            "path": "Telegram/ThirdParty/xdg-desktop-portal",
+            "source": "${REPO}/Telegram/ThirdParty/xdg-desktop-portal"
+          },
+          {
+            "commit": "bbb27a5efb85b92a0486cf361a8635715a53f6ba",
+            "name": "Telegram/ThirdParty/xxHash",
+            "path": "Telegram/ThirdParty/xxHash",
+            "source": "${REPO}/Telegram/ThirdParty/xxHash"
+          },
+          {
+            "commit": "1996c7c61e62eeb95e0fd35dc806238a1760eea7",
+            "name": "Telegram/codegen",
+            "path": "Telegram/codegen",
+            "source": "${REPO}/Telegram/codegen"
+          },
+          {
+            "commit": "82d182a275e197fd717fecc86193d9d91f4fc5b5",
+            "name": "Telegram/lib_base",
+            "path": "Telegram/lib_base",
+            "source": "${REPO}/Telegram/lib_base"
+          },
+          {
+            "commit": "7a165302fed408c84b2d1c2513e35a21a141da44",
+            "name": "Telegram/lib_crl",
+            "path": "Telegram/lib_crl",
+            "source": "${REPO}/Telegram/lib_crl"
+          },
+          {
+            "commit": "49d67cf66d3573cd71a3228af47a4ac59b64fc90",
+            "name": "Telegram/lib_lottie",
+            "path": "Telegram/lib_lottie",
+            "source": "${REPO}/Telegram/lib_lottie"
+          },
+          {
+            "commit": "6fdf60461444ba150e13ac36009c0ffce72c4c83",
+            "name": "Telegram/lib_qr",
+            "path": "Telegram/lib_qr",
+            "source": "${REPO}/Telegram/lib_qr"
+          },
+          {
+            "commit": "c57cccffb01d85570decd7fccb88419c9a682e63",
+            "name": "Telegram/lib_rpl",
+            "path": "Telegram/lib_rpl",
+            "source": "${REPO}/Telegram/lib_rpl"
+          },
+          {
+            "commit": "1f18c1e35b99697fe58d48d7f5a88e96c928128e",
+            "name": "Telegram/lib_spellcheck",
+            "path": "Telegram/lib_spellcheck",
+            "source": "${REPO}/Telegram/lib_spellcheck"
+          },
+          {
+            "commit": "ccdc72548a5065b5991b4e06e610d76bc4f6023e",
+            "name": "Telegram/lib_storage",
+            "path": "Telegram/lib_storage",
+            "source": "${REPO}/Telegram/lib_storage"
+          },
+          {
+            "commit": "aa7791326d9b8516fa0f8086599414c7bd645382",
+            "name": "Telegram/lib_tl",
+            "path": "Telegram/lib_tl",
+            "source": "${REPO}/Telegram/lib_tl"
+          },
+          {
+            "commit": "09c10726220e6862ca91d39b5dec5119aa0177bc",
+            "name": "Telegram/lib_translate",
+            "path": "Telegram/lib_translate",
+            "source": "${REPO}/Telegram/lib_translate"
+          },
+          {
+            "commit": "632ae6ac4e1750900bbb2f40241b2e60eea00cef",
+            "name": "Telegram/lib_ui",
+            "path": "Telegram/lib_ui",
+            "source": "${REPO}/Telegram/lib_ui"
+          },
+          {
+            "commit": "52636e86eaa493de670daf71959d000b281bd153",
+            "name": "Telegram/lib_webrtc",
+            "path": "Telegram/lib_webrtc",
+            "source": "${REPO}/Telegram/lib_webrtc"
+          },
+          {
+            "commit": "c1ae42b304bcf532e4c3857a8f2637e1a01f0148",
+            "name": "Telegram/lib_webview",
+            "path": "Telegram/lib_webview",
+            "source": "${REPO}/Telegram/lib_webview"
+          },
+          {
+            "commit": "80cd031dc4c81805b8bb118e8250356afaad6614",
+            "name": "cmake",
+            "path": "cmake",
+            "source": "${REPO}/cmake"
+          }
+        ],
+        "status": "pass"
+      },
+      {
+        "command": [
+          "git",
+          "-C",
+          "${WORKTREE}",
+          "-c",
+          "protocol.file.allow=always",
+          "-c",
+          "submodule.Telegram/ThirdParty/GSL.url=${REPO}/Telegram/ThirdParty/GSL",
+          "-c",
+          "submodule.Telegram/ThirdParty/MicroTeX.url=${REPO}/Telegram/ThirdParty/MicroTeX",
+          "-c",
+          "submodule.Telegram/ThirdParty/QR.url=${REPO}/Telegram/ThirdParty/QR",
+          "-c",
+          "submodule.Telegram/ThirdParty/TooManyCooks.url=${REPO}/Telegram/ThirdParty/TooManyCooks",
+          "-c",
+          "submodule.Telegram/ThirdParty/cld3.url=${REPO}/Telegram/ThirdParty/cld3",
+          "-c",
+          "submodule.Telegram/ThirdParty/cmark-gfm.url=${REPO}/Telegram/ThirdParty/cmark-gfm",
+          "-c",
+          "submodule.Telegram/ThirdParty/expected.url=${REPO}/Telegram/ThirdParty/expected",
+          "-c",
+          "submodule.Telegram/ThirdParty/fcitx5-qt.url=${REPO}/Telegram/ThirdParty/fcitx5-qt",
+          "-c",
+          "submodule.Telegram/ThirdParty/hime.url=${REPO}/Telegram/ThirdParty/hime",
+          "-c",
+          "submodule.Telegram/ThirdParty/hunspell.url=${REPO}/Telegram/ThirdParty/hunspell",
+          "-c",
+          "submodule.Telegram/ThirdParty/kcoreaddons.url=${REPO}/Telegram/ThirdParty/kcoreaddons",
+          "-c",
+          "submodule.Telegram/ThirdParty/kimageformats.url=${REPO}/Telegram/ThirdParty/kimageformats",
+          "-c",
+          "submodule.Telegram/ThirdParty/libcbor.url=${REPO}/Telegram/ThirdParty/libcbor",
+          "-c",
+          "submodule.Telegram/ThirdParty/libfido2.url=${REPO}/Telegram/ThirdParty/libfido2",
+          "-c",
+          "submodule.Telegram/ThirdParty/libprisma.url=${REPO}/Telegram/ThirdParty/libprisma",
+          "-c",
+          "submodule.Telegram/ThirdParty/lz4.url=${REPO}/Telegram/ThirdParty/lz4",
+          "-c",
+          "submodule.Telegram/ThirdParty/nimf.url=${REPO}/Telegram/ThirdParty/nimf",
+          "-c",
+          "submodule.Telegram/ThirdParty/range-v3.url=${REPO}/Telegram/ThirdParty/range-v3",
+          "-c",
+          "submodule.Telegram/ThirdParty/rlottie.url=${REPO}/Telegram/ThirdParty/rlottie",
+          "-c",
+          "submodule.Telegram/ThirdParty/tgcalls.url=${REPO}/Telegram/ThirdParty/tgcalls",
+          "-c",
+          "submodule.Telegram/ThirdParty/xdg-desktop-portal.url=${REPO}/Telegram/ThirdParty/xdg-desktop-portal",
+          "-c",
+          "submodule.Telegram/ThirdParty/xxHash.url=${REPO}/Telegram/ThirdParty/xxHash",
+          "-c",
+          "submodule.Telegram/codegen.url=${REPO}/Telegram/codegen",
+          "-c",
+          "submodule.Telegram/lib_base.url=${REPO}/Telegram/lib_base",
+          "-c",
+          "submodule.Telegram/lib_crl.url=${REPO}/Telegram/lib_crl",
+          "-c",
+          "submodule.Telegram/lib_lottie.url=${REPO}/Telegram/lib_lottie",
+          "-c",
+          "submodule.Telegram/lib_qr.url=${REPO}/Telegram/lib_qr",
+          "-c",
+          "submodule.Telegram/lib_rpl.url=${REPO}/Telegram/lib_rpl",
+          "-c",
+          "submodule.Telegram/lib_spellcheck.url=${REPO}/Telegram/lib_spellcheck",
+          "-c",
+          "submodule.Telegram/lib_storage.url=${REPO}/Telegram/lib_storage",
+          "-c",
+          "submodule.Telegram/lib_tl.url=${REPO}/Telegram/lib_tl",
+          "-c",
+          "submodule.Telegram/lib_translate.url=${REPO}/Telegram/lib_translate",
+          "-c",
+          "submodule.Telegram/lib_ui.url=${REPO}/Telegram/lib_ui",
+          "-c",
+          "submodule.Telegram/lib_webrtc.url=${REPO}/Telegram/lib_webrtc",
+          "-c",
+          "submodule.Telegram/lib_webview.url=${REPO}/Telegram/lib_webview",
+          "-c",
+          "submodule.cmake.url=${REPO}/cmake",
+          "submodule",
+          "update",
+          "--init",
+          "--no-fetch",
+          "--",
+          "Telegram/ThirdParty/GSL",
+          "Telegram/ThirdParty/MicroTeX",
+          "Telegram/ThirdParty/QR",
+          "Telegram/ThirdParty/TooManyCooks",
+          "Telegram/ThirdParty/cld3",
+          "Telegram/ThirdParty/cmark-gfm",
+          "Telegram/ThirdParty/expected",
+          "Telegram/ThirdParty/fcitx5-qt",
+          "Telegram/ThirdParty/hime",
+          "Telegram/ThirdParty/hunspell",
+          "Telegram/ThirdParty/kcoreaddons",
+          "Telegram/ThirdParty/kimageformats",
+          "Telegram/ThirdParty/libcbor",
+          "Telegram/ThirdParty/libfido2",
+          "Telegram/ThirdParty/libprisma",
+          "Telegram/ThirdParty/lz4",
+          "Telegram/ThirdParty/nimf",
+          "Telegram/ThirdParty/range-v3",
+          "Telegram/ThirdParty/rlottie",
+          "Telegram/ThirdParty/tgcalls",
+          "Telegram/ThirdParty/xdg-desktop-portal",
+          "Telegram/ThirdParty/xxHash",
+          "Telegram/codegen",
+          "Telegram/lib_base",
+          "Telegram/lib_crl",
+          "Telegram/lib_lottie",
+          "Telegram/lib_qr",
+          "Telegram/lib_rpl",
+          "Telegram/lib_spellcheck",
+          "Telegram/lib_storage",
+          "Telegram/lib_tl",
+          "Telegram/lib_translate",
+          "Telegram/lib_ui",
+          "Telegram/lib_webrtc",
+          "Telegram/lib_webview",
+          "cmake"
+        ],
+        "name": "submodule-init",
+        "protocolPolicy": "GIT_ALLOW_PROTOCOL=file",
+        "status": "pass",
+        "stderr": "Cloning into '${WORKTREE}/Telegram/ThirdParty/GSL'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/MicroTeX'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/QR'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/TooManyCooks'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/cld3'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/cmark-gfm'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/expected'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/fcitx5-qt'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/hime'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/hunspell'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/kcoreaddons'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/kimageformats'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/libcbor'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/libfido2'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/libprisma'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/lz4'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/nimf'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/range-v3'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/rlottie'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/tgcalls'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/xdg-desktop-portal'...\ndone.\nCloning into '${WORKTREE}/Telegram/ThirdParty/xxHash'...\ndone.\nCloning into '${WORKTREE}/Telegram/codegen'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_base'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_crl'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_lottie'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_qr'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_rpl'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_spellcheck'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_storage'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_tl'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_translate'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_ui'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_webrtc'...\ndone.\nCloning into '${WORKTREE}/Telegram/lib_webview'...\ndone.\nCloning into '${WORKTREE}/cmake'...\ndone.\n",
+        "stdout": "Submodule path 'Telegram/ThirdParty/GSL': checked out '87f9d768866548b5b86e72be66c60c5abd4d9b37'\nSubmodule path 'Telegram/ThirdParty/MicroTeX': checked out '674ef54b5113e6ab73f1afbcae97de8287d8466d'\nSubmodule path 'Telegram/ThirdParty/QR': checked out '720f62bddb7226106071d4728c292cb1df519ceb'\nSubmodule path 'Telegram/ThirdParty/TooManyCooks': checked out 'b86af81982860c96295a7e95e4c60cb335615cef'\nSubmodule path 'Telegram/ThirdParty/cld3': checked out 'b48dc46512566f5a2d41118c8c1116c4f96dc661'\nSubmodule path 'Telegram/ThirdParty/cmark-gfm': checked out '587a12bb54d95ac37241377e6ddc93ea0e45439b'\nSubmodule path 'Telegram/ThirdParty/expected': checked out '292eff8bd8ee230a7df1d6a1c00c4ea0eb2f0362'\nSubmodule path 'Telegram/ThirdParty/fcitx5-qt': checked out 'c743b12e6780edf1dcfe9071531c80f050cacb95'\nSubmodule path 'Telegram/ThirdParty/hime': checked out '9b3e6f9ab59d1fe4d9de73d3bf0fed7789f921c5'\nSubmodule path 'Telegram/ThirdParty/hunspell': checked out '22c3381e2066bed616250d373fc5c935598b564a'\nSubmodule path 'Telegram/ThirdParty/kcoreaddons': checked out 'fd84da51b554eac25e35b1e3f373edaab3029b15'\nSubmodule path 'Telegram/ThirdParty/kimageformats': checked out 'df82311a1081e576c4ac020204578bb8a81b21ec'\nSubmodule path 'Telegram/ThirdParty/libcbor': checked out '170bee2b82cdb7b2ed25af301f62cb6efdd40ec1'\nSubmodule path 'Telegram/ThirdParty/libfido2': checked out 'b974e7cf2ee7392134cc12c08b76a068cf250dd8'\nSubmodule path 'Telegram/ThirdParty/libprisma': checked out '23b0d70f9709da9b38561d5706891a134d18df76'\nSubmodule path 'Telegram/ThirdParty/lz4': checked out '5ff839680134437dbf4678f3d0c7b371d84f4964'\nSubmodule path 'Telegram/ThirdParty/nimf': checked out '498ec7ffab3ac140c2469638a14451788f03e798'\nSubmodule path 'Telegram/ThirdParty/range-v3': checked out 'a81477931a8aa2ad025c6bda0609f38e09e4d7ec'\nSubmodule path 'Telegram/ThirdParty/rlottie': checked out '8c69fc20cf2e150db304311f1233a4b55a8892d7'\nSubmodule path 'Telegram/ThirdParty/tgcalls': checked out '2faee3b5524f54d56c91c2058c00e11c656a74b3'\nSubmodule path 'Telegram/ThirdParty/xdg-desktop-portal': checked out '23a76c392170dbbd26230f85ef56c3a57e52b857'\nSubmodule path 'Telegram/ThirdParty/xxHash': checked out 'bbb27a5efb85b92a0486cf361a8635715a53f6ba'\nSubmodule path 'Telegram/codegen': checked out '1996c7c61e62eeb95e0fd35dc806238a1760eea7'\nSubmodule path 'Telegram/lib_base': checked out '82d182a275e197fd717fecc86193d9d91f4fc5b5'\nSubmodule path 'Telegram/lib_crl': checked out '7a165302fed408c84b2d1c2513e35a21a141da44'\nSubmodule path 'Telegram/lib_lottie': checked out '49d67cf66d3573cd71a3228af47a4ac59b64fc90'\nSubmodule path 'Telegram/lib_qr': checked out '6fdf60461444ba150e13ac36009c0ffce72c4c83'\nSubmodule path 'Telegram/lib_rpl': checked out 'c57cccffb01d85570decd7fccb88419c9a682e63'\nSubmodule path 'Telegram/lib_spellcheck': checked out '1f18c1e35b99697fe58d48d7f5a88e96c928128e'\nSubmodule path 'Telegram/lib_storage': checked out 'ccdc72548a5065b5991b4e06e610d76bc4f6023e'\nSubmodule path 'Telegram/lib_tl': checked out 'aa7791326d9b8516fa0f8086599414c7bd645382'\nSubmodule path 'Telegram/lib_translate': checked out '09c10726220e6862ca91d39b5dec5119aa0177bc'\nSubmodule path 'Telegram/lib_ui': checked out '632ae6ac4e1750900bbb2f40241b2e60eea00cef'\nSubmodule path 'Telegram/lib_webrtc': checked out '52636e86eaa493de670daf71959d000b281bd153'\nSubmodule path 'Telegram/lib_webview': checked out 'c1ae42b304bcf532e4c3857a8f2637e1a01f0148'\nSubmodule path 'cmake': checked out '80cd031dc4c81805b8bb118e8250356afaad6614'\n"
+      },
+      {
+        "name": "submodule-verify",
+        "required": [
+          "cmake",
+          "Telegram/lib_rpl",
+          "Telegram/lib_crl",
+          "Telegram/lib_base",
+          "Telegram/lib_ui",
+          "Telegram/lib_tl",
+          "Telegram/lib_spellcheck",
+          "Telegram/lib_storage",
+          "Telegram/lib_lottie",
+          "Telegram/lib_qr",
+          "Telegram/lib_translate",
+          "Telegram/lib_webrtc",
+          "Telegram/lib_webview",
+          "Telegram/codegen"
+        ],
+        "requiredCount": 14,
+        "status": "pass"
+      },
+      {
+        "command": [
+          "cmake",
+          "-S",
+          "${WORKTREE}",
+          "-B",
+          "${BUILD}",
+          "-G",
+          "Visual Studio 17 2022",
+          "-A",
+          "x64",
+          "-T",
+          "v143",
+          "-DBUILD_TG_CLI=ON",
+          "-DQT_DIR=${REPO}/../Libraries/win64/Qt-5.15.19/lib/cmake/Qt5",
+          "-DTDESKTOP_API_ID=<REDACTED>",
+          "-DTDESKTOP_API_HASH=<REDACTED>"
+        ],
+        "env": {
+          "QT": "5.15.19"
+        },
+        "name": "configure",
+        "status": "pass",
+        "stderr": "Version: 7.0.6\nResolved NuGet executable: ${REPO}/../ThirdParty/NuGet/nuget.exe\n",
+        "stdout": "-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.\n-- The C compiler identification is MSVC 19.44.35226.0\n-- The CXX compiler identification is MSVC 19.44.35226.0\n-- Detecting C compiler ABI info\n-- Detecting C compiler ABI info - done\n-- Check for working C compiler: ${ABS_PATH}\n-- Detecting C compile features\n-- Detecting C compile features - done\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: ${ABS_PATH}\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Performing Test HAVE_FLAG_ADDRESS_SANITIZER\n-- Performing Test HAVE_FLAG_ADDRESS_SANITIZER - Failed\n-- Performing Test HAVE_FLAG_SANITIZE_ADDRESS\n-- Performing Test HAVE_FLAG_SANITIZE_ADDRESS - Failed\n-- Checking _FILE_OFFSET_BITS for large files\n-- Checking _FILE_OFFSET_BITS for large files - not needed\n-- Performing Test COMPILER_HAS_DEPRECATED_ATTR\n-- Performing Test COMPILER_HAS_DEPRECATED_ATTR - Failed\n-- Performing Test COMPILER_HAS_DEPRECATED\n-- Performing Test COMPILER_HAS_DEPRECATED - Success\n-- Looking for stdbool.h\n-- Looking for stdbool.h - found\n-- Performing Test HAVE___BUILTIN_EXPECT\n-- Performing Test HAVE___BUILTIN_EXPECT - Failed\n-- Performing Test HAVE___ATTRIBUTE__\n-- Performing Test HAVE___ATTRIBUTE__ - Failed\n-- Found Python3: ${WORKTREE}/../ThirdParty/python/Scripts/python (found version \"3.12.4\") found components: Interpreter\nFeeds used:\n  ${ABS_PATH}\n  https://api.nuget.org/v3/index.json\n  https://chba-artifactory.varian.com/artifactory/api/nuget/TPMS-BlueLake-pre-release-local\n\n\n\nAttempting to gather dependency information for package 'Microsoft.Web.WebView2.1.0.1901.177' with respect to project '${BUILD}/packages', targeting 'Any,Version=v0.0'\nGathering dependency information took 1,29 sec\nAttempting to resolve dependencies for package 'Microsoft.Web.WebView2.1.0.1901.177' with DependencyBehavior 'Lowest'\nResolving dependency information took 0 ms\nResolving actions to install package 'Microsoft.Web.WebView2.1.0.1901.177'\nResolved actions to install package 'Microsoft.Web.WebView2.1.0.1901.177'\nRetrieving package 'Microsoft.Web.WebView2 1.0.1901.177' from '${ABS_PATH}'.\nAdding package 'Microsoft.Web.WebView2.1.0.1901.177' to folder '${BUILD}/packages'\nAdded package 'Microsoft.Web.WebView2.1.0.1901.177' to folder '${BUILD}/packages'\nSuccessfully installed 'Microsoft.Web.WebView2 1.0.1901.177' to ${BUILD}/packages\nExecuting nuget actions took 1,48 sec\n-- Looking for include file endian.h\n-- Looking for include file endian.h - not found\n-- Looking for include file err.h\n-- Looking for include file err.h - not found\n-- Looking for include file signal.h\n-- Looking for include file signal.h - found\n-- Looking for include file sys/random.h\n-- Looking for include file sys/random.h - not found\n-- Looking for include file unistd.h\n-- Looking for include file unistd.h - not found\n-- Looking for arc4random_buf\n-- Looking for arc4random_buf - not found\n-- Looking for asprintf\n-- Looking for asprintf - not found\n-- Looking for clock_gettime\n-- Looking for clock_gettime - not found\n-- Looking for explicit_bzero\n-- Looking for explicit_bzero - not found\n-- Looking for freezero\n-- Looking for freezero - not found\n-- Looking for getline\n-- Looking for getline - not found\n-- Looking for getpagesize\n-- Looking for getpagesize - not found\n-- Looking for getrandom\n-- Looking for getrandom - not found\n-- Looking for memset_s\n-- Looking for memset_s - not found\n-- Looking for recallocarray\n-- Looking for recallocarray - not found\n-- Looking for strlcat\n-- Looking for strlcat - not found\n-- Looking for strlcpy\n-- Looking for strlcpy - not found\n-- Looking for strsep\n-- Looking for strsep - not found\n-- Looking for sysconf\n-- Looking for sysconf - not found\n-- Looking for timespecsub\n-- Looking for timespecsub - not found\n-- Looking for timingsafe_bcmp\n-- Looking for timingsafe_bcmp - not found\n-- Models: will bake ${WORKTREE}/Telegram/Resources/art/**/*.obj -> .binobj\n-- Configuring done (55.6s)\n-- Generating done (11.6s)\n-- Build files have been written to: ${BUILD}\n"
+      },
+      {
+        "name": "fence-validate",
+        "reason": "already-executed-by-rehearsal-core",
+        "status": "skipped"
+      },
+      {
+        "name": "fence-quality",
+        "reason": "already-executed-by-rehearsal-core",
+        "status": "skipped"
+      },
+      {
+        "name": "inventory-check",
+        "reason": "already-executed-by-rehearsal-core",
+        "status": "skipped"
+      },
+      {
+        "command": [
+          "cmake",
+          "--build",
+          "${BUILD}",
+          "--config",
+          "Debug",
+          "--target",
+          "tg_cli"
+        ],
+        "env": {
+          "QT": "5.15.19"
+        },
+        "exitCode": 0,
+        "name": "tg-cli-build",
+        "status": "pass",
+        "stderr": "",
+        "stdout": "MSBuild version 17.14.40+3e7442088 for .NET Framework\n\n  Checking File Globs\n  1>Checking Build System\n  Building Custom Rule ${WORKTREE}/Telegram/tg_cli/CMakeLists.txt\n  main.cpp\n  session_service_capabilities_cli.cpp\n  storage_settings_capabilities_cli.cpp\n  tg_cli.vcxproj -> ${BUILD}/Telegram/tg_cli/Debug/tg_cli.exe\n"
+      },
+      {
+        "command": [
+          "${BUILD}/Telegram/tg_cli/Debug/tg_cli.exe",
+          "--help"
+        ],
+        "env": {
+          "QT": "5.15.19"
+        },
+        "exitCode": 0,
+        "name": "tg-cli-help",
+        "status": "pass",
+        "stderr": "",
+        "stdout": "Usage: ${BUILD}/Telegram/tg_cli/Debug/tg_cli.exe [options]\nTelegram command-line client skeleton\n\nOptions:\n  -?, -h, --help  Displays help on commandline options.\n  --help-all      Displays help including Qt specific options.\n"
+      },
+      {
+        "command": [
+          "cmake",
+          "--build",
+          "${BUILD}",
+          "--config",
+          "Debug",
+          "--target",
+          "Telegram",
+          "--",
+          "/m:1",
+          "/nodeReuse:false",
+          "/p:UseMultiToolTask=false",
+          "/p:CL_MPCount=1"
+        ],
+        "env": {
+          "QT": "5.15.19",
+          "_CL_": "/MP1"
+        },
+        "exitCode": 0,
+        "name": "telegram-build",
+        "status": "pass",
+        "stderr": "",
+        "stdout": "MSBuild version 17.14.40+3e7442088 for .NET Framework\n\n  Checking File Globs\n  1>Generating headers from IDLs (Telegram)\n  Microsoft (R) 32b/64b MIDL Compiler Version 8.01.0628 \n  Copyright (c) Microsoft Corporation. All rights reserved.\n  64 bit Processing ${WORKTREE}/Telegram/SourceFiles/platform/win/windows_quiethours.idl\n  windows_quiethours.idl\n  64 bit Processing ${ABS_PATH}\n  oaidl.idl\n  64 bit Processing ${ABS_PATH}\n  objidl.idl\n  64 bit Processing ${ABS_PATH}\n  unknwn.idl\n  64 bit Processing ${ABS_PATH}\n  wtypes.idl\n  64 bit Processing ${ABS_PATH}\n  wtypesbase.idl\n  64 bit Processing ${ABS_PATH}\n  basetsd.h\n  64 bit Processing ${ABS_PATH}\n  guiddef.h\n  64 bit Processing ${ABS_PATH}\n  oaidl.acf\n  Microsoft (R) 32b/64b MIDL Compiler Version 8.01.0628 \n  Copyright (c) Microsoft Corporation. All rights reserved.\n  64 bit Processing ${WORKTREE}/Telegram/SourceFiles/platform/win/windows_toastactivator.idl\n  windows_toastactivator.idl\n  64 bit Processing ${ABS_PATH}\n  oaidl.idl\n  64 bit Processing ${ABS_PATH}\n  objidl.idl\n  64 bit Processing ${ABS_PATH}\n  unknwn.idl\n  64 bit Processing ${ABS_PATH}\n  wtypes.idl\n  64 bit Processing ${ABS_PATH}\n  wtypesbase.idl\n  64 bit Processing ${ABS_PATH}\n  basetsd.h\n  64 bit Processing ${ABS_PATH}\n  guiddef.h\n  64 bit Processing ${ABS_PATH}\n  ocidl.idl\n  64 bit Processing ${ABS_PATH}\n  oleidl.idl\n  64 bit Processing ${ABS_PATH}\n  servprov.idl\n  64 bit Processing ${ABS_PATH}\n  urlmon.idl\n  64 bit Processing ${ABS_PATH}\n  msxml.idl\n  64 bit Processing ${ABS_PATH}\n  oaidl.acf\n  64 bit Processing ${ABS_PATH}\n  ocidl.acf\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  1>Baking model: premium/coin_inner.obj -> premium/coin_inner.binobj\n  6>Baking model: premium/diamond_outer.obj -> premium/diamond_outer.binobj\n  2>Baking model: premium/coin_logo.obj -> premium/coin_logo.binobj\n  3>Baking model: premium/coin_outer.obj -> premium/coin_outer.binobj\n  4>Baking model: premium/coin_stars.obj -> premium/coin_stars.binobj\n  7>Baking model: premium/diamond_outer_2.obj -> premium/diamond_outer_2.binobj\n  8>Baking model: premium/star.obj -> premium/star.binobj\n  5>Baking model: premium/diamond.obj -> premium/diamond.binobj\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  Building Custom Rule ${WORKTREE}/cmake/win_directx_helper/CMakeLists.txt\n  win_directx_helper.cpp\n  win_directx_helper.vcxproj -> ${BUILD}/cmake/win_directx_helper/Debug/win_directx_helper.lib\n  Building Custom Rule ${WORKTREE}/cmake/external/qt/qt_static_plugins/kimageformats/CMakeLists.txt\n  init.cpp\n  external_qt_static_plugins_kimageformats_init.vcxproj -> ${BUILD}/cmake/external/qt/qt_static_plugins/kimageformats/external_qt_static_plugins_kimageformats_init.dir/Debug/external_qt_static_plugins_kimageformats_init.lib\n  Automatic MOC for target external_qt_static_plugins_kimageformats\n  Building Custom Rule ${WORKTREE}/cmake/external/qt/qt_static_plugins/kimageformats/CMakeLists.txt\n  mocs_compilation_Debug.cpp\n  avif.cpp\n  heif.cpp\n  jxl.cpp\n  qoi.cpp\n  scanlineconverter.cpp\n  Generating Code...\n  external_qt_static_plugins_kimageformats.vcxproj -> ${BUILD}/cmake/external/qt/qt_static_plugins/kimageformats/Debug/external_qt_static_plugins_kimageformats.lib\n  Building Custom Rule ${WORKTREE}/cmake/external/qt/qt_static_plugins/CMakeLists.txt\n  qt_static_plugins.cpp\n  external_qt_static_plugins.vcxproj -> ${BUILD}/cmake/external/qt/qt_static_plugins/external_qt_static_plugins.dir/Debug/external_qt_static_plugins.lib\n  Building Custom Rule ${WORKTREE}/Telegram/lib_crl/CMakeLists.txt\n  crl_common_fp_exceptions.cpp\n  crl_common_list.cpp\n  crl_common_on_main.cpp\n  crl_common_queue.cpp\n  crl_dispatch_async.cpp\n  crl_dispatch_queue.cpp\n  crl_dispatch_semaphore.cpp\n  crl_winapi_async.cpp\n  crl_winapi_fp_exceptions.cpp\n  crl_winapi_list.cpp\n  crl_winapi_time.cpp\n  crl_object_on_thread.cpp\n  crl_time.cpp\n  Generating Code...\n  lib_crl.vcxproj -> ${BUILD}/Telegram/lib_crl/lib_crl.dir/Debug/lib_crl.lib\n  Building Custom Rule ${WORKTREE}/cmake/external/lz4/CMakeLists.txt\n  lz4.c\n  lz4frame.c\n  lz4hc.c\n  xxhash.c\n  Generating Code...\n  external_lz4_bundled.vcxproj -> ${BUILD}/cmake/external/lz4/Debug/external_lz4_bundled.lib\n  Building Custom Rule ${WORKTREE}/Telegram/lib_base/CMakeLists.txt\n  cmake_pch.cxx\n  base_battery_saving_win.cpp\n  base_file_utilities_win.cpp\n  base_global_shortcuts_win.cpp\n  base_haptic_win.cpp\n  base_info_win.cpp\n  base_last_input_win.cpp\n  base_layout_switch_win.cpp\n  base_network_reachability_win.cpp\n  base_power_save_blocker_win.cpp\n  base_process_win.cpp\n  base_screen_reader_state_win.cpp\n  base_system_media_controls_win.cpp\n  base_system_unlock_win.cpp\n  base_url_scheme_win.cpp\n  base_windows_safe_library.cpp\n  base_windows_winrt.cpp\n  base_windows_wrl.cpp\n  base_platform_info.cpp\n  algorithm.cpp\n  assertion.cpp\n  Generating Code...\n  Compiling...\n  base_file_utilities.cpp\n  battery_saving.cpp\n  bytes.cpp\n  call_delayed.cpp\n  crc32hash.cpp\n  concurrent_timer.cpp\n  debug_log.cpp\n  event_filter.cpp\n  file_lock_win.cpp\n  global_shortcuts_generic.cpp\n  integration.cpp\n  last_user_input.cpp\n  network_reachability.cpp\n  options.cpp\n  parse_helper.cpp\n  power_save_blocker.cpp\n  qthelp_url.cpp\n  random.cpp\n  runtime_composer.cpp\n  screen_reader_state.cpp\n  Generating Code...\n  Compiling...\n  single_instance.cpp\n  timer.cpp\n  unixtime.cpp\n  qt_tab_key.cpp\n  Generating Code...\n  lib_base.vcxproj -> ${BUILD}/Telegram/lib_base/Debug/lib_base.lib\n  Building Custom Rule ${WORKTREE}/Telegram/codegen/codegen/common/CMakeLists.txt\n  basic_tokenized_file.cpp\n  checked_utf8_string.cpp\n  clean_file.cpp\n  cpp_file.cpp\n  logging.cpp\n  Generating Code...\n  codegen_common.vcxproj -> ${BUILD}/Telegram/codegen/codegen/common/codegen_common.dir/Debug/codegen_common.lib\n  Building Custom Rule ${WORKTREE}/Telegram/codegen/codegen/emoji/CMakeLists.txt\n  data.cpp\n  data_old.cpp\n  data_read.cpp\n  generator.cpp\n  main.cpp\n  options.cpp\n  replaces.cpp\n  Generating Code...\n     Creating library ${BUILD}/Telegram/codegen/codegen/emoji/Debug/codegen_emoji.lib and object ${BUILD}/Telegram/codegen/codegen/emoji/Debug/codegen_emoji.exp\n  codegen_emoji.vcxproj -> ${BUILD}/Telegram/codegen/codegen/emoji/Debug/codegen_emoji.exe\n  1>Generating emoji (lib_ui)\n  Building Custom Rule ${WORKTREE}/Telegram/lib_ui/CMakeLists.txt\n  Building Custom Rule ${WORKTREE}/Telegram/codegen/codegen/style/CMakeLists.txt\n  generator.cpp\n  main.cpp\n  module.cpp\n  options.cpp\n  parsed_file.cpp\n  processor.cpp\n  render_svg.cpp\n  structure_types.cpp\n  Generating Code...\n  codegen_style.vcxproj -> ${BUILD}/Telegram/codegen/codegen/style/Debug/codegen_style.exe\n  1>Generating palette (lib_ui)\n  Building Custom Rule ${WORKTREE}/Telegram/lib_ui/CMakeLists.txt\n  1>Generating styles (lib_ui)\n  Building Custom Rule ${WORKTREE}/Telegram/lib_ui/CMakeLists.txt\n  1>Automatic MOC for target lib_ui\n  Building Custom Rule ${WORKTREE}/Telegram/lib_ui/CMakeLists.txt\n  1>Automatic RCC for fonts/fonts.qrc\n  2>Automatic RCC for qt_conf/win.qrc\n  Building Custom Rule ${WORKTREE}/Telegram/lib_ui/CMakeLists.txt\n  cmake_pch.cxx\n  mocs_compilation_Debug.cpp\n  palette.cpp\n  style_basic.cpp\n  style_layers.cpp\n  style_widgets.cpp\n  emoji.cpp\n  emoji_suggestions_data.cpp\n  ui_accessible_factory.cpp\n  ui_accessible_item.cpp\n  ui_accessible_widget.cpp\n  dpr_icon.cpp\n  animation_value.cpp\n  animations.cpp\n  cross_animation.cpp\n  cross_line.cpp\n  fade_animation.cpp\n  frame_generator.cpp\n  gradient.cpp\n  numbers_animation.cpp\n  panel_animation.cpp\n  Generating Code...\n  Compiling...\n  path_shift_gradient.cpp\n  radial_animation.cpp\n  ripple_animation.cpp\n  round_area_with_shadow.cpp\n  show_animation.cpp\n  slide_animation.cpp\n  spoiler_mess.cpp\n  gl_detection.cpp\n  gl_image.cpp\n  gl_math.cpp\n  gl_primitives.cpp\n  gl_shader.cpp\n  gl_surface.cpp\n  gl_window.cpp\n  rhi_image.cpp\n  rhi_shader.cpp\n  rhi_surface.cpp\n  image_prepare.cpp\n  box_content.cpp\n  box_layer_widget.cpp\n  Generating Code...\n  Compiling...\n  generic_box.cpp\n  layer_manager.cpp\n  layer_widget.cpp\n  show.cpp\n  arcs.cpp\n  blob.cpp\n  blobs.cpp\n  blobs_linear.cpp\n  ui_window_shadow_win.cpp\n  ui_window_title_win.cpp\n  ui_window_win.cpp\n  ui_windows_direct_manipulation.cpp\n  ui_windows_native_event_filter.cpp\n  ui_utility_win.cpp\n  ui_platform_window_title.cpp\n  ui_platform_window.cpp\n  style_core.cpp\n  style_core_color.cpp\n  style_core_direction.cpp\n  style_core_font.cpp\n  Generating Code...\n  Compiling...\n  style_core_icon.cpp\n  style_core_palette.cpp\n  style_core_scale.cpp\n  style_core_types.cpp\n  style_palette_colorizer.cpp\n  custom_emoji_helper.cpp\n  custom_emoji_instance.cpp\n  custom_emoji_text_badge.cpp\n  text.cpp\n  text_block.cpp\n  text_block_parser.cpp\n  text_custom_emoji.cpp\n  text_entity.cpp\n  text_extended_data.cpp\n  text_html_tags.cpp\n  text_renderer.cpp\n  text_stack_engine.cpp\n  text_utilities.cpp\n  text_variant.cpp\n  text_word_parser.cpp\n  Generating Code...\n  Compiling...\n  toast.cpp\n  toast_manager.cpp\n  toast_widget.cpp\n  box_content_divider.cpp\n  buttons.cpp\n  call_button.cpp\n  checkbox.cpp\n  dropdown_menu.cpp\n  icon_button_with_text.cpp\n  inner_dropdown.cpp\n  custom_field_object.cpp\n  input_field.cpp\n  masked_input_field.cpp\n  number_input.cpp\n  password_input.cpp\n  time_part_input.cpp\n  labels.cpp\n  menu.cpp\n  menu_action.cpp\n  menu_add_action_callback.cpp\n  Generating Code...\n  Compiling...\n  menu_add_action_callback_factory.cpp\n  menu_common.cpp\n  menu_item_base.cpp\n  menu_multiline_action.cpp\n  menu_separator.cpp\n  menu_toggle.cpp\n  elastic_scroll.cpp\n  pill_tabs.cpp\n  popup_menu.cpp\n  rp_window.cpp\n  separate_panel.cpp\n  scroll_area.cpp\n  side_bar_button.cpp\n  shadow.cpp\n  time_input.cpp\n  tooltip.cpp\n  fade_wrap.cpp\n  follow_slide_wrap.cpp\n  padding_wrap.cpp\n  slide_wrap.cpp\n  Generating Code...\n  Compiling...\n  table_layout.cpp\n  vertical_layout.cpp\n  vertical_layout_reorder.cpp\n  abstract_button.cpp\n  animated_icon.cpp\n  basic_click_handlers.cpp\n  cached_special_layer_shadow_corners.cpp\n  click_handler.cpp\n  delayed_activation.cpp\n  dragging_scroll_manager.cpp\n  emoji_config.cpp\n  inactive_press.cpp\n  integration.cpp\n  main_queue_processor.cpp\n  ph.cpp\n  round_rect.cpp\n  rp_widget.cpp\n  screen_reader_mode.cpp\n  ui_utility.cpp\n  emoji_suggestions.cpp\n  Generating Code...\n  Compiling...\n  qrc_fonts.cpp\n  qrc_win.cpp\n  Generating Code...\n  lib_ui.vcxproj -> ${BUILD}/Telegram/lib_ui/Debug/lib_ui.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  ffmpeg_frame_generator.cpp\n  ffmpeg_utility.cpp\n  Generating Code...\n  lib_ffmpeg.vcxproj -> ${BUILD}/Telegram/lib_ffmpeg.dir/Debug/lib_ffmpeg.lib\n  Building Custom Rule ${WORKTREE}/cmake/external/rlottie/CMakeLists.txt\n  lottieanimation.cpp\n  lottieitem.cpp\n  lottiekeypath.cpp\n  lottieloader.cpp\n  lottiemodel.cpp\n  lottieparser.cpp\n  lottieproxymodel.cpp\n  v_ft_math.cpp\n  v_ft_raster.cpp\n  v_ft_stroker.cpp\n  vregion.cpp\n  vbezier.cpp\n  vbitmap.cpp\n  vbrush.cpp\n  vcompositionfunctions.cpp\n  vdasher.cpp\n  vdebug.cpp\n  vdrawable.cpp\n  vdrawhelper.cpp\n  vdrawhelper_neon.cpp\n  Generating Code...\n  Compiling...\n  vdrawhelper_sse2.cpp\n  velapsedtimer.cpp\n  vimageloader.cpp\n  vinterpolator.cpp\n  vmatrix.cpp\n  vpainter.cpp\n  vpath.cpp\n  vpathmesure.cpp\n  vraster.cpp\n  vrect.cpp\n  vrle.cpp\n  Generating Code...\n  external_rlottie_bundled.vcxproj -> ${BUILD}/cmake/external/rlottie/Debug/external_rlottie_bundled.lib\n  Building Custom Rule ${WORKTREE}/Telegram/lib_lottie/CMakeLists.txt\n  lottie_frame_provider_direct.cpp\n  lottie_frame_provider_shared.cpp\n  lottie_frame_renderer.cpp\n  lottie_animation.cpp\n  lottie_common.cpp\n  lottie_frame_generator.cpp\n  lottie_multi_player.cpp\n  lottie_single_player.cpp\n  lottie_icon.cpp\n  lottie_toast_icon.cpp\n  lottie_cache.cpp\n  lottie_cache_frame_storage.cpp\n  lottie_frame_provider_cached.cpp\n  lottie_frame_provider_cached_multi.cpp\n  Generating Code...\n  lib_lottie.vcxproj -> ${BUILD}/Telegram/lib_lottie/lib_lottie.dir/Debug/lib_lottie.lib\n  Building Custom Rule ${WORKTREE}/cmake/external/qr_code_generator/CMakeLists.txt\n  qrcodegen.cpp\n  external_qr_code_generator_bundled.vcxproj -> ${BUILD}/cmake/external/qr_code_generator/Debug/external_qr_code_generator_bundled.lib\n  Building Custom Rule ${WORKTREE}/Telegram/lib_qr/CMakeLists.txt\n  qr_generate.cpp\n  lib_qr.vcxproj -> ${BUILD}/Telegram/lib_qr/lib_qr.dir/Debug/lib_qr.lib\n  Building Custom Rule ${WORKTREE}/Telegram/lib_storage/CMakeLists.txt\n  cmake_pch.cxx\n  storage_clear_legacy.cpp\n  storage_clear_legacy_win.cpp\n  storage_databases.cpp\n  storage_encrypted_file.cpp\n  storage_encryption.cpp\n  storage_cache_binlog_reader.cpp\n  storage_cache_cleaner.cpp\n  storage_cache_compactor.cpp\n  storage_cache_database.cpp\n  storage_cache_database_object.cpp\n  storage_cache_types.cpp\n  Generating Code...\n  lib_storage.vcxproj -> ${BUILD}/Telegram/lib_storage/lib_storage.dir/Debug/lib_storage.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  cmake_pch.cxx\n  stripe_api_client.cpp\n  stripe_card.cpp\n  stripe_card_params.cpp\n  stripe_card_validator.cpp\n  stripe_decode.cpp\n  stripe_error.cpp\n  stripe_form_encoder.cpp\n  stripe_token.cpp\n  smartglocal_api_client.cpp\n  smartglocal_card.cpp\n  smartglocal_error.cpp\n  smartglocal_token.cpp\n  Generating Code...\n  lib_stripe.vcxproj -> ${BUILD}/Telegram/lib_stripe.dir/Debug/lib_stripe.lib\n  Building Custom Rule ${WORKTREE}/Telegram/lib_tl/CMakeLists.txt\n  tl_basic_types.cpp\n  lib_tl.vcxproj -> ${BUILD}/Telegram/lib_tl/lib_tl.dir/Debug/lib_tl.lib\n  Building Custom Rule ${WORKTREE}/Telegram/lib_webrtc/CMakeLists.txt\n  cmake_pch.cxx\n  webrtc_audio_input_tester.cpp\n  webrtc_create_adm.cpp\n  webrtc_device_resolver.cpp\n  webrtc_environment.cpp\n  webrtc_system_audio_capture.cpp\n  webrtc_video_track.cpp\n  webrtc_environment_openal.cpp\n  webrtc_environment_video_capture.cpp\n  webrtc_openal_adm.cpp\n  webrtc_environment_win.cpp\n  webrtc_loopback_adm_win.cpp\n  Generating Code...\n  lib_webrtc.vcxproj -> ${BUILD}/Telegram/lib_webrtc/lib_webrtc.dir/Debug/lib_webrtc.lib\n  1>Generating scheme (td_scheme)\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  scheme.cpp\n  scheme-dump_to_text.cpp\n  Generating Code...\n  td_scheme.vcxproj -> ${BUILD}/Telegram/td_scheme.dir/Debug/td_scheme.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  cmake_pch.cxx\n  export_api_wrap.cpp\n  export_controller.cpp\n  export_settings.cpp\n  export_data_types.cpp\n  export_output_abstract.cpp\n  export_output_file.cpp\n  export_output_html.cpp\n  export_output_html_and_json.cpp\n  export_output_json.cpp\n  export_output_stats.cpp\n  Generating Code...\n  td_export.vcxproj -> ${BUILD}/Telegram/td_export.dir/Debug/td_export.lib\n  Building Custom Rule ${WORKTREE}/Telegram/codegen/codegen/lang/CMakeLists.txt\n  generator.cpp\n  main.cpp\n  options.cpp\n  parsed_file.cpp\n  processor.cpp\n  subsets.cpp\n  Generating Code...\n  codegen_lang.vcxproj -> ${BUILD}/Telegram/codegen/codegen/lang/Debug/codegen_lang.exe\n  1>Generating lang (td_lang)\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  cmake_pch.cxx\n  lang_auto.cpp\n  lang_file_parser.cpp\n  lang_keys.cpp\n  lang_tag.cpp\n  lang_text_entity.cpp\n  Generating Code...\n  td_lang.vcxproj -> ${BUILD}/Telegram/td_lang.dir/Debug/td_lang.lib\n  1>Generating styles (td_ui)\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  1>Generating protobuf feature_extractor.proto (external_cld3_bundled)\n  Building Custom Rule ${WORKTREE}/cmake/external/cld3/CMakeLists.txt\n  1>Generating protobuf sentence.proto (external_cld3_bundled)\n  Building Custom Rule ${WORKTREE}/cmake/external/cld3/CMakeLists.txt\n  1>Generating protobuf task_spec.proto (external_cld3_bundled)\n  Building Custom Rule ${WORKTREE}/cmake/external/cld3/CMakeLists.txt\n  Building Custom Rule ${WORKTREE}/cmake/external/cld3/CMakeLists.txt\n  feature_extractor.pb.cc\n  sentence.pb.cc\n  task_spec.pb.cc\n  base.cc\n  embedding_feature_extractor.cc\n  embedding_network.cc\n  feature_extractor.cc\n  feature_types.cc\n  fml_parser.cc\n  language_identifier_features.cc\n  lang_id_nn_params.cc\n  nnet_language_identifier.cc\n  registry.cc\n  relevant_script_feature.cc\n  sentence_features.cc\n  task_context.cc\n  task_context_params.cc\n  unicodetext.cc\n  utils.cc\n  workspace.cc\n  Generating Code...\n  Compiling...\n  generated_entities.cc\n  getonescriptspan.cc\n  utf8statetable.cc\n  offsetmap.cc\n  text_processing.cc\n  fixunicodevalue.cc\n  Generating Code...\n  external_cld3_bundled.vcxproj -> ${BUILD}/cmake/external/cld3/Debug/external_cld3_bundled.lib\n  Building Custom Rule ${WORKTREE}/cmake/external/hunspell/CMakeLists.txt\n  affentry.cxx\n  affixmgr.cxx\n  csutil.cxx\n  filemgr.cxx\n  hashmgr.cxx\n  hunspell.cxx\n  hunzip.cxx\n  phonet.cxx\n  replist.cxx\n  suggestmgr.cxx\n  Generating Code...\n  external_hunspell_bundled.vcxproj -> ${BUILD}/cmake/external/hunspell/Debug/external_hunspell_bundled.lib\n  Building Custom Rule ${WORKTREE}/cmake/external/kcoreaddons/CMakeLists.txt\n  kurlmimedata.cpp\n  ksandbox.cpp\n  Generating Code...\n  external_kcoreaddons_bundled.vcxproj -> ${BUILD}/cmake/external/kcoreaddons/Debug/external_kcoreaddons_bundled.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  Highlight.cpp\n  LanguageTree.cpp\n  SyntaxHighlighter.cpp\n  TokenList.cpp\n  Generating Code...\n  lib_prisma.vcxproj -> ${BUILD}/Telegram/Debug/lib_prisma.lib\n  1>Automatic RCC for highlighting/highlighting.qrc\n  Building Custom Rule ${WORKTREE}/Telegram/lib_spellcheck/CMakeLists.txt\n  cmake_pch.cxx\n  spellcheck_win.cpp\n  language_cld3.cpp\n  hunspell_controller.cpp\n  spellcheck_highlight_syntax.cpp\n  spellcheck_utils.cpp\n  spellcheck_value.cpp\n  spelling_highlighter.cpp\n  spelling_highlighter_helper.cpp\n  qrc_highlighting.cpp\n  Generating Code...\n  lib_spellcheck.vcxproj -> ${BUILD}/Telegram/lib_spellcheck/Debug/lib_spellcheck.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  Instance.cpp\n  AudioDeviceHelper.cpp\n  ChannelManager.cpp\n  CodecSelectHelper.cpp\n  CryptoHelper.cpp\n  EncryptedConnection.cpp\n  FakeAudioDeviceModule.cpp\n  FieldTrialsConfig.cpp\n  InstanceImpl.cpp\n  LogSinkImpl.cpp\n  Manager.cpp\n  MediaManager.cpp\n  Message.cpp\n  NetworkManager.cpp\n  SctpDataChannelProviderInterfaceImpl.cpp\n  StaticThreads.cpp\n  TurnCustomizerImpl.cpp\n  VideoCaptureInterface.cpp\n  VideoCaptureInterfaceImpl.cpp\n  gzip.cpp\n  Generating Code...\n  Compiling...\n  ContentNegotiation.cpp\n  CustomDcSctpSocket.cpp\n  DirectNetworkingImpl.cpp\n  ExternalSignalingConnection.cpp\n  InstanceV2ReferenceImpl.cpp\n  InstanceV2Impl.cpp\n  NativeNetworkingImpl.cpp\n  RawTcpSocket.cpp\n  ReflectorPort.cpp\n  ReflectorRelayPortFactory.cpp\n  Signaling.cpp\n  SignalingConnection.cpp\n  SignalingEncryption.cpp\n  SignalingSctpConnection.cpp\n  DesktopCaptureSource.cpp\n  DesktopCaptureSourceHelper.cpp\n  DesktopCaptureSourceManager.cpp\n  AVIOContextImpl.cpp\n  AudioStreamingPart.cpp\n  AudioStreamingPartInternal.cpp\n  Generating Code...\n  Compiling...\n  AudioStreamingPartPersistentDecoder.cpp\n  GroupInstanceCustomImpl.cpp\n  GroupJoinPayloadInternal.cpp\n  GroupNetworkManager.cpp\n  StreamingMediaContext.cpp\n  VideoStreamingPart.cpp\n  DesktopInterface.cpp\n  VideoCapturerInterfaceImpl.cpp\n  VideoCapturerTrackSource.cpp\n  VideoCameraCapturer.cpp\n  json11.cpp\n  Generating Code...\n  lib_tgcalls.vcxproj -> ${BUILD}/Telegram/Debug/lib_tgcalls.lib\n  Building Custom Rule ${WORKTREE}/Telegram/lib_webview/CMakeLists.txt\n  webview_data_stream_memory.cpp\n  webview_dialog.cpp\n  webview_embed.cpp\n  webview_win.cpp\n  webview_windows_data_stream.cpp\n  webview_windows_edge_chromium.cpp\n  webview_windows_edge_html.cpp\n  Generating Code...\n  lib_webview.vcxproj -> ${BUILD}/Telegram/lib_webview/Debug/lib_webview.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  cmake_pch.cxx\n  style_td_common.cpp\n  style_filter_icons.cpp\n  style_menu_icons.cpp\n  style_chat.cpp\n  style_chat_style.cpp\n  style_history_view_about_view.cpp\n  style_credits.cpp\n  style_premium.cpp\n  style_premium_limits.cpp\n  style_color_indices.cpp\n  style_userpic_button.cpp\n  style_boxes.cpp\n  style_api_chat_invite.cpp\n  style_add_contact_box.cpp\n  style_background_preview_box.cpp\n  style_moderate_messages_box.cpp\n  style_passcode_box.cpp\n  style_peer_list_section_index.cpp\n  style_edit_peer_members.cpp\n  style_share_box.cpp\n  Generating Code...\n  Compiling...\n  style_stickers_box.cpp\n  style_url_auth_box_content.cpp\n  style_info_community_requests_widget.cpp\n  style_settings_notifications.cpp\n  style_calendar_box.cpp\n  style_choose_date_time.cpp\n  style_collectible_info_box.cpp\n  style_country_select_box.cpp\n  style_labeled_emoji_tabs.cpp\n  style_color_editor.cpp\n  style_window_lock_widgets.cpp\n  style_compose_ai_box.cpp\n  style_connection_box.cpp\n  style_polls.cpp\n  style_dialogs.cpp\n  style_dialogs_widget.cpp\n  style_dialogs_layout.cpp\n  style_chat_helpers.cpp\n  style_emoji_picker_overlay.cpp\n  style_history_view_voice_record_bar.cpp\n  Generating Code...\n  Compiling...\n  style_location_picker.cpp\n  style_calls.cpp\n  style_export.cpp\n  style_info.cpp\n  style_info_profile_actions.cpp\n  style_info_profile_top_bar.cpp\n  style_giveaway.cpp\n  style_channel_earn.cpp\n  style_info_levels.cpp\n  style_info_userpic_builder.cpp\n  style_intro.cpp\n  style_iv.cpp\n  style_media_player.cpp\n  style_media_stories.cpp\n  style_passport.cpp\n  style_payments.cpp\n  style_profile.cpp\n  style_settings.cpp\n  style_settings_local_storage.cpp\n  style_settings_active_sessions.cpp\n  Generating Code...\n  Compiling...\n  style_settings_premium.cpp\n  style_filter_link_header.cpp\n  style_media_view.cpp\n  style_overview.cpp\n  style_window.cpp\n  style_window_main_menu.cpp\n  style_editor.cpp\n  style_statistics.cpp\n  edit_peer_history_visibility_box.cpp\n  toggle_topics_box.cpp\n  url_auth_box_content.cpp\n  translate_box_content.cpp\n  calls_group_recording_box.cpp\n  calls_group_scheduled_labels.cpp\n  calls_group_stars_coloring.cpp\n  desktop_capture_choose_source.cpp\n  calls_device_menu.cpp\n  field_characters_count_manager.cpp\n  stickers_emoji_image_loader.cpp\n  current_geo_location.cpp\n  Generating Code...\n  Compiling...\n  file_location.cpp\n  mime_type.cpp\n  countries_instance.cpp\n  raw_countries_bounds.cpp\n  data_birthday.cpp\n  data_passkey_deserialize.cpp\n  data_statistics_chart.cpp\n  chat_search_empty.cpp\n  chat_search_in.cpp\n  dialogs_pill.cpp\n  dialogs_stories_list.cpp\n  dialogs_top_bar_suggestion_content.cpp\n  posts_search_intro.cpp\n  top_peers_strip.cpp\n  undo_controller.cpp\n  editor_crop.cpp\n  editor_layer_widget.cpp\n  photo_editor_common.cpp\n  scene.cpp\n  scene_item_base.cpp\n  Generating Code...\n  Compiling...\n  scene_item_canvas.cpp\n  scene_item_image.cpp\n  scene_item_line.cpp\n  scene_item_shape.cpp\n  scene_item_text.cpp\n  scene_emoji_document.cpp\n  about_cocoon_box.cpp\n  history_view_top_toast.cpp\n  history_view_characters_limit.cpp\n  history_view_voice_record_button.cpp\n  info_flexible_scroll.cpp\n  info_profile_icon.cpp\n  info_profile_music_button.cpp\n  info_profile_text.cpp\n  info_profile_top_bar_action_button.cpp\n  info_userpic_bubble_wrap.cpp\n  info_userpic_color_circle_button.cpp\n  info_userpic_emoji_builder_layer.cpp\n  boost_badge.cpp\n  giveaway_type_row.cpp\n  Generating Code...\n  Compiling...\n  select_countries_box.cpp\n  earn_format.cpp\n  earn_icons.cpp\n  intro_code_input.cpp\n  abstract_layout_item.cpp\n  layout_mosaic.cpp\n  layout_position.cpp\n  layout_selection.cpp\n  media_clip_check_streaming.cpp\n  media_clip_ffmpeg.cpp\n  media_clip_implementation.cpp\n  media_clip_reader.cpp\n  media_player_button.cpp\n  media_player_dropdown.cpp\n  gift_resale_filter.cpp\n  menu_action_with_thumbnail.cpp\n  menu_checked_action.cpp\n  menu_check_item.cpp\n  menu_item_rate_transcribe.cpp\n  menu_timecode_action.cpp\n  Generating Code...\n  Compiling...\n  menu_ttl.cpp\n  passport_details_row.cpp\n  passport_form_row.cpp\n  payments_edit_card.cpp\n  payments_edit_information.cpp\n  payments_form_summary.cpp\n  payments_field.cpp\n  payments_panel.cpp\n  payments_reaction_box.cpp\n  current_geo_location_win.cpp\n  profile_back_button.cpp\n  settings_common.cpp\n  settings_key_navigation.cpp\n  settings_cloud_password_common.cpp\n  chart_lines_filter_controller.cpp\n  chart_rulers_data.cpp\n  chart_widget.cpp\n  segment_tree.cpp\n  statistics_data_deserialize.cpp\n  statistics_format_values.cpp\n  Generating Code...\n  Compiling...\n  statistics_graphics.cpp\n  abstract_chart_view.cpp\n  bar_chart_view.cpp\n  chart_rulers_view.cpp\n  chart_view_factory.cpp\n  linear_chart_view.cpp\n  stack_chart_common.cpp\n  stack_linear_chart_common.cpp\n  stack_linear_chart_view.cpp\n  chart_header_widget.cpp\n  chart_lines_filter_widget.cpp\n  point_details_widget.cpp\n  auto_delete_settings.cpp\n  boost_box.cpp\n  calendar_box.cpp\n  choose_date_time.cpp\n  choose_font_box.cpp\n  choose_language_box.cpp\n  choose_time.cpp\n  collectible_info_box.cpp\n  Generating Code...\n  Compiling...\n  confirm_box.cpp\n  confirm_phone_box.cpp\n  country_select_box.cpp\n  edit_birthday_box.cpp\n  edit_factcheck_box.cpp\n  edit_invite_link.cpp\n  rate_call_box.cpp\n  report_box_graphics.cpp\n  show_or_premium_box.cpp\n  single_choice_box.cpp\n  time_picker_box.cpp\n  attach_abstract_single_file_preview.cpp\n  attach_abstract_single_media_preview.cpp\n  attach_album_preview.cpp\n  attach_album_thumbnail.cpp\n  attach_bot_downloads.cpp\n  attach_bot_webview.cpp\n  standalone_layer_stack.cpp\n  attach_controls.cpp\n  attach_extensions.cpp\n  Generating Code...\n  Compiling...\n  attach_prepare.cpp\n  attach_send_files_way.cpp\n  attach_single_file_preview.cpp\n  attach_single_media_preview.cpp\n  chat_style.cpp\n  chat_style_radius.cpp\n  chat_theme.cpp\n  chats_filter_tag.cpp\n  forward_options_box.cpp\n  group_call_bar.cpp\n  group_call_userpics.cpp\n  message_bar.cpp\n  message_bubble.cpp\n  more_chats_bar.cpp\n  pinned_bar.cpp\n  requests_bar.cpp\n  button_labels.cpp\n  call_mute_button.cpp\n  chat_service_checkbox.cpp\n  delete_message_context_action.cpp\n  Generating Code...\n  Compiling...\n  download_bar.cpp\n  dynamic_images_strip.cpp\n  emoji_button.cpp\n  feature_list.cpp\n  filter_link_header.cpp\n  jump_down_button.cpp\n  invite_link_buttons.cpp\n  invite_link_label.cpp\n  labeled_emoji_tabs.cpp\n  peer_list_dummy.cpp\n  popup_selector.cpp\n  round_video_recorder.cpp\n  send_as_button.cpp\n  send_button.cpp\n  stars_rating.cpp\n  subsection_tabs_slider.cpp\n  subsection_tabs_slider_reorder.cpp\n  sub_tabs.cpp\n  swipe_handler.cpp\n  tabbed_search.cpp\n  Generating Code...\n  Compiling...\n  ton_common.cpp\n  who_reacted_context_action.cpp\n  window_outdated_bar_dummy.cpp\n  window_screen_reader_bar.cpp\n  fireworks_animation.cpp\n  glare.cpp\n  loading_element.cpp\n  ministar_particles.cpp\n  outline_segments.cpp\n  premium_3d_cover.cpp\n  premium_3d_mesh.cpp\n  premium_3d_support.cpp\n  premium_bubble.cpp\n  premium_coin.cpp\n  premium_coin_renderer.cpp\n  premium_diamond.cpp\n  premium_diamond_renderer.cpp\n  premium_graphics.cpp\n  premium_star.cpp\n  premium_star_model.cpp\n  Generating Code...\n  Compiling...\n  premium_star_particles.cpp\n  premium_star_renderer.cpp\n  premium_stars.cpp\n  premium_stars_colored.cpp\n  premium_top_bar.cpp\n  round_checkbox.cpp\n  scroll_content_shadow.cpp\n  skeleton_animation.cpp\n  shake_animation.cpp\n  snowflakes.cpp\n  toggle_arrow.cpp\n  upload_progress_overlay.cpp\n  ttl_icon.cpp\n  search_field_controller.cpp\n  format_song_name.cpp\n  format_values.cpp\n  text_lottie_custom_emoji.cpp\n  text_options.cpp\n  svg_preview.cpp\n  special_fields.cpp\n  Generating Code...\n  Compiling...\n  time_part_input_with_placeholder.cpp\n  chat_filters_tabs_slider.cpp\n  chat_filters_tabs_slider_reorder.cpp\n  cross_fade_label.cpp\n  color_editor.cpp\n  continuous_sliders.cpp\n  discrete_sliders.cpp\n  gradient_round_button.cpp\n  horizontal_fit_container.cpp\n  level_meter.cpp\n  middle_click_autoscroll.cpp\n  multi_select.cpp\n  sent_code_field.cpp\n  participants_check_view.cpp\n  sliding_tabs.cpp\n  vertical_drum_picker.cpp\n  cached_round_corners.cpp\n  color_contrast.cpp\n  color_int_conversion.cpp\n  empty_userpic.cpp\n  Generating Code...\n  Compiling...\n  grouped_layout.cpp\n  new_badges.cpp\n  color_sample.cpp\n  power_saving.cpp\n  vertical_list.cpp\n  unread_badge_paint.cpp\n  unread_counter_format.cpp\n  userpic_view.cpp\n  webview_helpers.cpp\n  window_slide_animation.cpp\n  Generating Code...\n  td_ui.vcxproj -> ${BUILD}/Telegram/td_ui.dir/Debug/td_ui.lib\n  1>Automatic RCC for ../../../Telegram/ThirdParty/MicroTeX/res/bundled.qrc\n  Building Custom Rule ${WORKTREE}/cmake/external/microtex/CMakeLists.txt\n  atom_basic.cpp\n  atom_char.cpp\n  atom_impl.cpp\n  atom_matrix.cpp\n  atom_row.cpp\n  atom_space.cpp\n  colors_def.cpp\n  unit_conversion.cpp\n  box.cpp\n  box_factory.cpp\n  box_group.cpp\n  box_single.cpp\n  core.cpp\n  formula.cpp\n  formula_def.cpp\n  glue.cpp\n  localized_num.cpp\n  macro.cpp\n  macro_def.cpp\n  macro_impl.cpp\n  Generating Code...\n  Compiling...\n  parser.cpp\n  alphabet.cpp\n  font_basic.cpp\n  font_info.cpp\n  fonts.cpp\n  string_utils.cpp\n  utf.cpp\n  utils.cpp\n  formula_mappings.res.cpp\n  symbol_mapping.res.cpp\n  tex_param.res.cpp\n  tex_symbols.res.cpp\n  bi10.def.cpp\n  bx10.def.cpp\n  cmbsy10.def.cpp\n  cmbx10.def.cpp\n  cmbxti10.def.cpp\n  cmex10.def.cpp\n  cmmi10.def.cpp\n  cmmi10_unchanged.def.cpp\n  Generating Code...\n  Compiling...\n  cmmib10.def.cpp\n  cmmib10_unchanged.def.cpp\n  cmr10.def.cpp\n  cmss10.def.cpp\n  cmssbx10.def.cpp\n  cmssi10.def.cpp\n  cmsy10.def.cpp\n  cmti10.def.cpp\n  cmti10_unchanged.def.cpp\n  cmtt10.def.cpp\n  dsrom10.def.cpp\n  eufb10.def.cpp\n  eufm10.def.cpp\n  i10.def.cpp\n  moustache.def.cpp\n  msam10.def.cpp\n  msbm10.def.cpp\n  r10.def.cpp\n  r10_unchanged.def.cpp\n  rsfs10.def.cpp\n  Generating Code...\n  Compiling...\n  sb10.def.cpp\n  sbi10.def.cpp\n  si10.def.cpp\n  special.def.cpp\n  ss10.def.cpp\n  stmary10.def.cpp\n  tt10.def.cpp\n  builtin_font_reg.cpp\n  builtin_syms_reg.cpp\n  amsfonts.def.cpp\n  amssymb.def.cpp\n  base.def.cpp\n  stmaryrd.def.cpp\n  symspecial.def.cpp\n  latex.cpp\n  render.cpp\n  graphic_qt.cpp\n  qrc_bundled.cpp\n  Generating Code...\n  external_microtex_bundled.vcxproj -> ${BUILD}/cmake/external/microtex/Debug/external_microtex_bundled.lib\n  Building Custom Rule ${WORKTREE}/Telegram/ThirdParty/cmark-gfm/extensions/CMakeLists.txt\n  core-extensions.c\n  table.c\n  strikethrough.c\n  autolink.c\n  tagfilter.c\n  ext_scanners.c\n  tasklist.c\n  Generating Code...\n  libcmark-gfm-extensions_static.vcxproj -> ${BUILD}/cmake/external/cmark_gfm/cmark-gfm-build/extensions/Debug/cmark-gfm-extensions_static.lib\n  Building Custom Rule ${WORKTREE}/Telegram/ThirdParty/cmark-gfm/src/CMakeLists.txt\n  cmark.c\n  node.c\n  iterator.c\n  blocks.c\n  inlines.c\n  scanners.c\n  utf8.c\n  buffer.c\n  references.c\n  footnotes.c\n  map.c\n  render.c\n  man.c\n  xml.c\n  html.c\n  commonmark.c\n  plaintext.c\n  latex.c\n  houdini_href_e.c\n  houdini_html_e.c\n  Generating Code...\n  Compiling...\n  houdini_html_u.c\n  cmark_ctype.c\n  arena.c\n  linked_list.c\n  syntax_extension.c\n  registry.c\n  plugin.c\n  Generating Code...\n  libcmark-gfm_static.vcxproj -> ${BUILD}/cmake/external/cmark_gfm/cmark-gfm-build/src/Debug/cmark-gfm_static.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  cmake_pch.cxx\n  iv_editor_box.cpp\n  iv_editor_clipboard.cpp\n  iv_editor_state.cpp\n  iv_editor_text_entities.cpp\n  iv_editor_toolbar_pill.cpp\n  iv_editor_widget.cpp\n  iv_editor_window.cpp\n  iv_controller.cpp\n  iv_data.cpp\n  iv_search_bar.cpp\n  iv_search_controller.cpp\n  iv_zoom_controls.cpp\n  iv_markdown_common.cpp\n  iv_markdown_article.cpp\n  iv_markdown_article_layout_blocks.cpp\n  iv_markdown_article_layout_structure.cpp\n  iv_markdown_article_paint.cpp\n  iv_markdown_article_scroll_forwarder.cpp\n  iv_markdown_article_selection.cpp\n  iv_markdown_article_text.cpp\n  Generating Code...\n  Compiling...\n  iv_markdown_controller.cpp\n  iv_markdown_document.cpp\n  iv_markdown_embed_overlay.cpp\n  iv_markdown_history_view_media.cpp\n  iv_markdown_math.cpp\n  iv_markdown_math_renderer.cpp\n  iv_markdown_microtex.cpp\n  iv_markdown_parse.cpp\n  iv_markdown_parse_convert.cpp\n  iv_markdown_parse_finalize.cpp\n  iv_markdown_parse_validate.cpp\n  iv_markdown_media_block.cpp\n  iv_markdown_media_reuse.cpp\n  iv_markdown_prepare.cpp\n  iv_markdown_prepare_blocks.cpp\n  iv_markdown_prepare_formulas.cpp\n  iv_markdown_prepare_inline.cpp\n  iv_markdown_prepare_links.cpp\n  iv_markdown_prepare_native_blocks.cpp\n  iv_markdown_prepare_native_richtext.cpp\n  Generating Code...\n  Compiling...\n  iv_markdown_prepare_serialize.cpp\n  iv_markdown_prepare_state.cpp\n  iv_markdown_slideshow_chrome.cpp\n  iv_markdown_view.cpp\n  iv_markdown_view_widget.cpp\n  Generating Code...\n  td_iv.vcxproj -> ${BUILD}/Telegram/td_iv.dir/Debug/td_iv.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  cmake_pch.cxx\n  mtproto_abstract_socket.cpp\n  mtproto_bound_key_creator.cpp\n  mtproto_dc_key_binder.cpp\n  mtproto_dc_key_creator.cpp\n  mtproto_dcenter.cpp\n  mtproto_domain_resolver.cpp\n  mtproto_dump_to_text.cpp\n  mtproto_received_ids_manager.cpp\n  mtproto_rsa_public_key.cpp\n  mtproto_serialized_request.cpp\n  mtproto_tcp_socket.cpp\n  mtproto_tls_socket.cpp\n  mtproto_auth_key.cpp\n  mtproto_concurrent_sender.cpp\n  mtproto_config.cpp\n  mtproto_dc_options.cpp\n  mtproto_dh_utils.cpp\n  mtproto_proxy_data.cpp\n  mtproto_response.cpp\n  Generating Code...\n  td_mtproto.vcxproj -> ${BUILD}/Telegram/td_mtproto.dir/Debug/td_mtproto.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  tde2e_api.cpp\n  td_tde2e.vcxproj -> ${BUILD}/Telegram/td_tde2e.dir/Debug/td_tde2e.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  cable_core.cpp\n  cable_tunnel.cpp\n  cable_scanner_win.cpp\n  Generating Code...\n  td_webauthn.vcxproj -> ${BUILD}/Telegram/td_webauthn.dir/Debug/td_webauthn.lib\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  allocators.c\n  arrays.c\n  bytestrings.c\n  callbacks.c\n  common.c\n  encoding.c\n  floats_ctrls.c\n  builder_callbacks.c\n  encoders.c\n  loaders.c\n  memory_utils.c\n  stack.c\n  unicode.c\n  ints.c\n  maps.c\n  serialization.c\n  streaming.c\n  strings.c\n  tags.c\n  aes256.c\n  Generating Code...\n  Compiling...\n  assert.c\n  authkey.c\n  bio.c\n  blob.c\n  buf.c\n  compress.c\n  config.c\n  cred.c\n  credman.c\n  dev.c\n  ecdh.c\n  eddsa.c\n  err.c\n  es256.c\n  es384.c\n  hid.c\n  info.c\n  io.c\n  iso7816.c\n  largeblob.c\n  Generating Code...\n  Compiling...\n  log.c\n  pin.c\n  random.c\n  reset.c\n  rs1.c\n  rs256.c\n  time.c\n  touch.c\n  tpm.c\n  types.c\n  u2f.c\n  util.c\n  hid_win.c\n  bsd-asprintf.c\n  bsd-getpagesize.c\n  clock_gettime.c\n  endian_win32.c\n  explicit_bzero.c\n  explicit_bzero_win32.c\n  freezero.c\n  Generating Code...\n  Compiling...\n  recallocarray.c\n  strlcat.c\n  timingsafe_bcmp.c\n  Generating Code...\n  cbor.c\n  cbor.c\n  lib_fido2.vcxproj -> ${BUILD}/Telegram/Debug/lib_fido2.lib\n  1>Automatic MOC for target Telegram\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  1>Automatic RCC for Resources/qrc/emoji_1.qrc\n  2>Automatic RCC for Resources/qrc/emoji_2.qrc\n  4>Automatic RCC for Resources/qrc/emoji_4.qrc\n  14>Automatic RCC for Resources/qrc/telegram/sounds.qrc\n  10>Automatic RCC for Resources/qrc/telegram/animations.qrc\n  12>Automatic RCC for Resources/qrc/telegram/picker.qrc\n  15>Automatic RCC for models/models.qrc\n  5>Automatic RCC for Resources/qrc/emoji_5.qrc\n  13>Automatic RCC for Resources/qrc/telegram/telegram.qrc\n  3>Automatic RCC for Resources/qrc/emoji_3.qrc\n  11>Automatic RCC for Resources/qrc/telegram/export.qrc\n  8>Automatic RCC for Resources/qrc/emoji_8.qrc\n  6>Automatic RCC for Resources/qrc/emoji_6.qrc\n  7>Automatic RCC for Resources/qrc/emoji_7.qrc\n  9>Automatic RCC for Resources/qrc/emoji_preview.qrc\n  Building Custom Rule ${WORKTREE}/Telegram/CMakeLists.txt\n  cmake_pch.cxx\n  mocs_compilation_Debug.cpp\n  account_network_capabilities.cpp\n  session_service_capabilities.cpp\n  storage_settings_capabilities.cpp\n  domain_lifecycle_capabilities.cpp\n  hosted_console_domain_capability_bundle.cpp\n  hosted_console_checkpoint_guard.cpp\n  hosted_console_accounts_format.cpp\n  hosted_console_accounts_mode.cpp\n  hosted_console_owner_probe.cpp\n  hosted_console_profile_snapshot_diagnostics.cpp\n  hosted_console_status_writer.cpp\n  api_attached_stickers.cpp\n  api_authorizations.cpp\n  api_blocked_peers.cpp\n  api_bot.cpp\n  api_chat_filters.cpp\n  api_chat_filters_remove_manager.cpp\n  api_chat_invite.cpp\n  api_chat_links.cpp\n  Generating Code...\n  Compiling...\n  api_chat_participants.cpp\n  api_cloud_password.cpp\n  api_communities.cpp\n  data_search_calendar.cpp\n  api_common.cpp\n  api_confirm_phone.cpp\n  api_compose_with_ai.cpp\n  api_credits.cpp\n  api_credits_history_entry.cpp\n  api_earn.cpp\n  api_editing.cpp\n  api_global_privacy.cpp\n  api_hash.cpp\n  api_invite_links.cpp\n  api_media.cpp\n  api_messages_search.cpp\n  api_messages_search_merged.cpp\n  api_peer_colors.cpp\n  api_peer_photo.cpp\n  api_peer_search.cpp\n  Generating Code...\n  Compiling...\n  api_polls.cpp\n  api_premium.cpp\n  api_premium_option.cpp\n  api_reactions_notify_settings.cpp\n  api_read_metrics.cpp\n  api_report.cpp\n  api_ringtones.cpp\n  api_self_destruct.cpp\n  api_send_progress.cpp\n  api_sending.cpp\n  api_sensitive_content.cpp\n  api_single_message_search.cpp\n  api_statistics.cpp\n  api_statistics_data_deserialize.cpp\n  api_statistics_sender.cpp\n  api_stickers_creator.cpp\n  api_suggest_post.cpp\n  api_text_entities.cpp\n  api_todo_lists.cpp\n  api_toggling_media.cpp\n  Generating Code...\n  Compiling...\n  api_transcribes.cpp\n  api_unread_things.cpp\n  api_updates.cpp\n  api_user_names.cpp\n  api_user_privacy.cpp\n  api_views.cpp\n  api_websites.cpp\n  api_who_reacted.cpp\n  edit_filter_box.cpp\n  edit_filter_chats_list.cpp\n  edit_filter_chats_preview.cpp\n  edit_filter_links.cpp\n  add_bot_to_chat_box.cpp\n  add_participants_box.cpp\n  add_to_community_box.cpp\n  channel_ownership_transfer.cpp\n  choose_peer_box.cpp\n  community_box.cpp\n  community_pending_requests_box.cpp\n  create_managed_bot_box.cpp\n  Generating Code...\n  Compiling...\n  edit_contact_box.cpp\n  edit_forum_topic_box.cpp\n  edit_discussion_link_box.cpp\n  edit_members_visible.cpp\n  manage_community_box.cpp\n  edit_participant_box.cpp\n  edit_tag_control.cpp\n  edit_participants_box.cpp\n  edit_peer_color_box.cpp\n  edit_peer_info_box.cpp\n  edit_peer_invite_link.cpp\n  edit_peer_invite_links.cpp\n  edit_peer_permissions_box.cpp\n  edit_peer_reactions.cpp\n  edit_peer_requests_box.cpp\n  edit_peer_type_box.cpp\n  edit_peer_usernames_list.cpp\n  peer_short_info_box.cpp\n  prepare_short_info_box.cpp\n  replace_boost_box.cpp\n  Generating Code...\n  Compiling...\n  tag_info_box.cpp\n  verify_peers_box.cpp\n  about_box.cpp\n  about_sponsored_box.cpp\n  abstract_box.cpp\n  add_contact_box.cpp\n  auto_lock_box.cpp\n  auto_download_box.cpp\n  background_box.cpp\n  background_preview_box.cpp\n  choose_filter_box.cpp\n  connection_box.cpp\n  create_poll_box.cpp\n  delete_messages_box.cpp\n  dictionaries_manager.cpp\n  download_path_box.cpp\n  edit_caption_box.cpp\n  edit_privacy_box.cpp\n  edit_todo_list_box.cpp\n  gift_credits_box.cpp\n  Generating Code...\n  Compiling...\n  gift_premium_box.cpp\n  language_box.cpp\n  max_invite_box.cpp\n  moderate_messages_box.cpp\n  peer_list_box.cpp\n  peer_list_controllers.cpp\n  peer_list_section_headers.cpp\n  peer_list_section_index.cpp\n  peer_list_widgets.cpp\n  peer_lists_box.cpp\n  passcode_box.cpp\n  phone_banned_box.cpp\n  pin_messages_box.cpp\n  premium_limits_box.cpp\n  premium_preview_box.cpp\n  reactions_settings_box.cpp\n  report_messages_box.cpp\n  ringtones_box.cpp\n  select_future_owner_box.cpp\n  self_destruction_box.cpp\n  Generating Code...\n  Compiling...\n  send_credits_box.cpp\n  send_gif_with_caption_box.cpp\n  send_files_box.cpp\n  send_files_box_reply_header.cpp\n  share_box.cpp\n  star_gift_auction_box.cpp\n  star_gift_box.cpp\n  star_gift_cover_box.cpp\n  star_gift_craft_animation.cpp\n  star_gift_craft_box.cpp\n  star_gift_preview_box.cpp\n  star_gift_resale_box.cpp\n  sticker_creator_box.cpp\n  sticker_set_box.cpp\n  stickers_box.cpp\n  transfer_gift_box.cpp\n  compose_ai_box.cpp\n  create_ai_box.cpp\n  create_ai_tone_box.cpp\n  preview_ai_tone_box.cpp\n  Generating Code...\n  Compiling...\n  translate_box.cpp\n  unconfirmed_auth_denied_box.cpp\n  url_auth_box.cpp\n  username_box.cpp\n  calls_choose_join_as.cpp\n  calls_cover_item.cpp\n  calls_group_call.cpp\n  calls_group_common.cpp\n  calls_group_invite_controller.cpp\n  calls_group_members.cpp\n  calls_group_members_row.cpp\n  calls_group_menu.cpp\n  calls_group_message_encryption.cpp\n  calls_group_message_field.cpp\n  calls_group_messages.cpp\n  calls_group_messages_ui.cpp\n  calls_group_panel.cpp\n  calls_group_rtmp.cpp\n  calls_group_settings.cpp\n  calls_group_stars_box.cpp\n  Generating Code...\n  Compiling...\n  calls_group_toasts.cpp\n  calls_group_viewport.cpp\n  calls_group_viewport_opengl.cpp\n  calls_group_viewport_raster.cpp\n  calls_group_viewport_rhi.cpp\n  calls_group_viewport_tile.cpp\n  calls_volume_item.cpp\n  calls_box_controller.cpp\n  calls_call.cpp\n  calls_emoji_fingerprint.cpp\n  calls_instance.cpp\n  calls_panel.cpp\n  calls_panel_background.cpp\n  calls_signal_bars.cpp\n  calls_top_bar.cpp\n  calls_userpic.cpp\n  calls_video_bubble.cpp\n  calls_video_incoming.cpp\n  calls_window.cpp\n  compose_show.cpp\n  Generating Code...\n  Compiling...\n  bot_command.cpp\n  bot_keyboard.cpp\n  emoji_interactions.cpp\n  emoji_keywords.cpp\n  emoji_list_widget.cpp\n  emoji_picker_overlay.cpp\n  emoji_sets_manager.cpp\n  emoji_suggestions_widget.cpp\n  field_autocomplete.cpp\n  gifs_list_widget.cpp\n  message_field.cpp\n  share_message_phrase_factory.cpp\n  spellchecker_common.cpp\n  stickers_dice_pack.cpp\n  stickers_emoji_pack.cpp\n  stickers_gift_box_pack.cpp\n  stickers_list_footer.cpp\n  stickers_list_widget.cpp\n  stickers_lottie.cpp\n  tabbed_panel.cpp\n  Generating Code...\n  Compiling...\n  tabbed_section.cpp\n  tabbed_selector.cpp\n  ttl_media_layer_widget.cpp\n  application.cpp\n  proxy_rotation_manager.cpp\n  bank_card_click_handler.cpp\n  base_integration.cpp\n  changelogs.cpp\n  click_handler_types.cpp\n  core_cloud_password.cpp\n  core_settings.cpp\n  core_settings_proxy.cpp\n  crash_report_window.cpp\n  crash_reports.cpp\n  deep_links_chats.cpp\n  deep_links_contacts.cpp\n  deep_links_new.cpp\n  deep_links_router.cpp\n  deep_links_settings.cpp\n  external_control.cpp\n  Generating Code...\n  Compiling...\n  file_utilities.cpp\n  launcher.cpp\n  local_url_handlers.cpp\n  phone_click_handler.cpp\n  sandbox.cpp\n  shortcuts.cpp\n  ui_integration.cpp\n  update_checker.cpp\n  utils.cpp\n  countries_manager.cpp\n  data_business_chatbots.cpp\n  data_business_common.cpp\n  data_business_info.cpp\n  data_shortcut_messages.cpp\n  credits.cpp\n  ephemeral_messages.cpp\n  factchecks.cpp\n  gift_auctions.cpp\n  location_pickers.cpp\n  passkeys.cpp\n  Generating Code...\n  Compiling...\n  promo_suggestions.cpp\n  recent_inline_bots.cpp\n  recent_peers.cpp\n  recent_shared_media_gifts.cpp\n  scheduled_messages.cpp\n  sponsored_messages.cpp\n  top_peers.cpp\n  data_notify_settings.cpp\n  data_peer_notify_settings.cpp\n  data_peer_notify_volume.cpp\n  data_custom_emoji.cpp\n  data_stickers_set.cpp\n  data_stickers.cpp\n  data_abstract_structure.cpp\n  data_ai_compose_tones.cpp\n  data_audio_msg_id.cpp\n  data_auto_download.cpp\n  data_bot_app.cpp\n  data_chat.cpp\n  data_chat_filters.cpp\n  Generating Code...\n  Compiling...\n  data_chat_participant_status.cpp\n  data_changes.cpp\n  data_channel.cpp\n  data_channel_admins.cpp\n  data_cloud_file.cpp\n  data_cloud_themes.cpp\n  data_community.cpp\n  data_document.cpp\n  data_document_media.cpp\n  data_document_resolver.cpp\n  data_download_manager.cpp\n  data_drafts.cpp\n  data_emoji_statuses.cpp\n  data_folder.cpp\n  data_forum.cpp\n  data_forum_icons.cpp\n  data_forum_topic.cpp\n  data_file_click_handler.cpp\n  data_file_origin.cpp\n  data_game.cpp\n  Generating Code...\n  Compiling...\n  data_group_call.cpp\n  data_groups.cpp\n  data_histories.cpp\n  data_history_messages.cpp\n  data_location.cpp\n  data_media_preload.cpp\n  data_media_rotation.cpp\n  data_media_types.cpp\n  data_message_reaction_id.cpp\n  data_message_reactions.cpp\n  data_peer.cpp\n  data_peer_bot_command.cpp\n  data_peer_bot_commands.cpp\n  data_peer_id.cpp\n  data_peer_values.cpp\n  data_photo.cpp\n  data_photo_media.cpp\n  data_poll.cpp\n  data_poll_messages.cpp\n  data_premium_limits.cpp\n  Generating Code...\n  Compiling...\n  data_pts_waiter.cpp\n  data_replies_list.cpp\n  data_reply_preview.cpp\n  data_saved_messages.cpp\n  data_saved_music.cpp\n  data_saved_sublist.cpp\n  data_search_controller.cpp\n  data_send_action.cpp\n  data_session.cpp\n  data_shared_media.cpp\n  data_sparse_ids.cpp\n  data_star_gift.cpp\n  data_stories.cpp\n  data_stories_ids.cpp\n  data_story.cpp\n  data_streaming.cpp\n  data_thread.cpp\n  data_todo_list.cpp\n  data_types.cpp\n  data_unread_value.cpp\n  Generating Code...\n  Compiling...\n  data_user.cpp\n  data_user_photos.cpp\n  data_user_names.cpp\n  data_wall_paper.cpp\n  data_web_page.cpp\n  dialogs_layout.cpp\n  dialogs_message_view.cpp\n  dialogs_stories_content.cpp\n  dialogs_suggestions.cpp\n  dialogs_topics_view.cpp\n  dialogs_video_userpic.cpp\n  dialogs_community_chats_list.cpp\n  dialogs_community_requestable_list.cpp\n  dialogs_community_rows_view.cpp\n  dialogs_entry.cpp\n  dialogs_indexed_list.cpp\n  dialogs_inner_widget.cpp\n  dialogs_inner_widget_accessibility.cpp\n  dialogs_key.cpp\n  dialogs_list.cpp\n  Generating Code...\n  Compiling...\n  dialogs_main_list.cpp\n  dialogs_pinned_list.cpp\n  dialogs_quick_action.cpp\n  dialogs_row.cpp\n  dialogs_search_from_controllers.cpp\n  dialogs_search_tags.cpp\n  dialogs_search_posts.cpp\n  dialogs_top_bar_suggestion.cpp\n  dialogs_top_bar_suggestion_test.cpp\n  suggestion.cpp\n  suggestion_birthday_contacts.cpp\n  suggestion_birthday_setup.cpp\n  suggestion_custom_promo.cpp\n  suggestion_gift_auctions.cpp\n  suggestion_low_credits_subs.cpp\n  suggestion_premium_grace.cpp\n  suggestion_premium_offer.cpp\n  suggestion_unreviewed_auth.cpp\n  suggestion_userpic_setup.cpp\n  dialogs_widget.cpp\n  Generating Code...\n  Compiling...\n  color_picker.cpp\n  stickers_panel_controller.cpp\n  editor_paint.cpp\n  photo_editor.cpp\n  photo_editor_content.cpp\n  photo_editor_controls.cpp\n  photo_editor_layer_widget.cpp\n  scene_item_sticker.cpp\n  export_manager.cpp\n  export_view_content.cpp\n  export_view_panel_controller.cpp\n  export_view_progress.cpp\n  export_view_settings.cpp\n  export_view_top_bar.cpp\n  history_admin_log_filter.cpp\n  history_admin_log_inner.cpp\n  history_admin_log_item.cpp\n  history_admin_log_section.cpp\n  history_view_compose_ai_button.cpp\n  history_view_compose_ai_tooltip.cpp\n  Generating Code...\n  Compiling...\n  history_view_compose_controls.cpp\n  history_view_compose_media_edit_manager.cpp\n  history_view_compose_search.cpp\n  history_view_draft_options.cpp\n  history_view_forward_panel.cpp\n  history_view_rich_draft_preview.cpp\n  history_view_suggest_options.cpp\n  history_view_ttl_button.cpp\n  history_view_voice_record_bar.cpp\n  history_view_webpage_processor.cpp\n  history_view_birthday_suggestion.cpp\n  history_view_call.cpp\n  history_view_community_added.cpp\n  history_view_contact.cpp\n  history_view_custom_emoji.cpp\n  history_view_dice.cpp\n  history_view_document.cpp\n  history_view_ephemeral_plate.cpp\n  history_view_file.cpp\n  history_view_game.cpp\n  Generating Code...\n  Compiling...\n  history_view_gif.cpp\n  history_view_giveaway.cpp\n  history_view_invoice.cpp\n  history_view_large_emoji.cpp\n  history_view_location.cpp\n  history_view_media.cpp\n  history_view_media_common.cpp\n  history_view_media_generic.cpp\n  history_view_media_grouped.cpp\n  history_view_media_spoiler.cpp\n  history_view_media_unwrapped.cpp\n  history_view_no_forwards_request.cpp\n  history_view_photo.cpp\n  history_view_poll.cpp\n  history_view_poll_menu.cpp\n  history_view_premium_gift.cpp\n  history_view_save_document_action.cpp\n  history_view_service_box.cpp\n  history_view_similar_channels.cpp\n  history_view_slot_machine.cpp\n  Generating Code...\n  Compiling...\n  history_view_sticker.cpp\n  history_view_sticker_player.cpp\n  history_view_story_mention.cpp\n  history_view_suggest_decision.cpp\n  history_view_theme_document.cpp\n  history_view_todo_list.cpp\n  history_view_unique_gift.cpp\n  history_view_userpic_suggestion.cpp\n  history_view_web_page.cpp\n  history_view_reactions.cpp\n  history_view_reactions_button.cpp\n  history_view_reactions_list.cpp\n  history_view_reactions_selector.cpp\n  history_view_reactions_strip.cpp\n  history_view_reactions_tabs.cpp\n  history_view_top_peers_selector.cpp\n  history_view_about_view.cpp\n  history_view_bottom_info.cpp\n  history_view_chat_preview.cpp\n  history_view_chat_section.cpp\n  Generating Code...\n  Compiling...\n  history_view_contact_status.cpp\n  history_view_context_menu.cpp\n  history_view_corner_buttons.cpp\n  history_view_cursor_state.cpp\n  history_view_drag.cpp\n  history_view_draw_to_reply.cpp\n  history_view_add_poll_option.cpp\n  history_view_element_overlay.cpp\n  history_view_element.cpp\n  history_view_emoji_interactions.cpp\n  history_view_empty_list_bubble.cpp\n  history_view_fake_items.cpp\n  history_view_group_call_bar.cpp\n  history_view_group_members_widget.cpp\n  history_view_keyboard_text_selection.cpp\n  history_view_list_widget.cpp\n  history_view_message.cpp\n  history_view_paid_reaction_toast.cpp\n  history_view_pinned_bar.cpp\n  history_view_pinned_section.cpp\n  Generating Code...\n  Compiling...\n  history_view_pinned_tracker.cpp\n  history_view_quick_action.cpp\n  history_view_reaction_preview.cpp\n  history_view_read_metrics_tracker.cpp\n  history_view_reply.cpp\n  history_view_reply_button.cpp\n  history_view_requests_bar.cpp\n  history_view_schedule_box.cpp\n  history_view_scheduled_section.cpp\n  history_view_self_forwards_tagger.cpp\n  history_view_send_action.cpp\n  history_view_service_message.cpp\n  history_view_sponsored_click_handler.cpp\n  history_view_sticker_toast.cpp\n  history_view_subsection_tabs.cpp\n  history_view_summary_header.cpp\n  history_view_text_helper.cpp\n  history_view_transcribe_button.cpp\n  history_view_translate_bar.cpp\n  history_view_translate_tracker.cpp\n  Generating Code...\n  Compiling...\n  history_view_top_bar_widget.cpp\n  history_view_view_button.cpp\n  history_view_webpage_preview.cpp\n  history.cpp\n  history_drag_area.cpp\n  history_item.cpp\n  history_item_components.cpp\n  history_item_edition.cpp\n  history_item_helpers.cpp\n  history_item_reply_markup.cpp\n  history_item_text.cpp\n  history_inner_widget.cpp\n  history_inner_widget_accessibility.cpp\n  history_location_manager.cpp\n  history_streamed_drafts.cpp\n  history_translation.cpp\n  history_unread_things.cpp\n  history_view_highlight_manager.cpp\n  history_view_pull_to_next_channel.cpp\n  history_view_swipe_back_session.cpp\n  Generating Code...\n  Compiling...\n  history_widget.cpp\n  info_bot_earn_list.cpp\n  info_bot_earn_widget.cpp\n  info_bot_starref_common.cpp\n  info_bot_starref_join_widget.cpp\n  info_bot_starref_setup_widget.cpp\n  create_giveaway_box.cpp\n  giveaway_list_controllers.cpp\n  info_boosts_inner_widget.cpp\n  info_boosts_widget.cpp\n  info_channel_earn_list.cpp\n  info_channel_earn_widget.cpp\n  info_common_groups_inner_widget.cpp\n  info_common_groups_widget.cpp\n  info_community_widget.cpp\n  info_community_requests_widget.cpp\n  info_downloads_inner_widget.cpp\n  info_downloads_provider.cpp\n  info_downloads_widget.cpp\n  info_global_media_widget.cpp\n  Generating Code...\n  Compiling...\n  info_global_media_inner_widget.cpp\n  info_global_media_provider.cpp\n  info_media_buttons.cpp\n  info_media_common.cpp\n  info_media_empty_widget.cpp\n  info_media_grid_zoom.cpp\n  info_media_inner_widget.cpp\n  info_media_list_section.cpp\n  info_media_list_widget.cpp\n  info_media_provider.cpp\n  info_media_widget.cpp\n  info_members_widget.cpp\n  info_peer_gifts_collections.cpp\n  info_peer_gifts_common.cpp\n  info_peer_gifts_widget.cpp\n  info_polls_list_widget.cpp\n  info_polls_results_inner_widget.cpp\n  info_polls_results_widget.cpp\n  info_profile_actions.cpp\n  info_profile_badge_tooltip.cpp\n  Generating Code...\n  Compiling...\n  info_profile_badge.cpp\n  info_profile_birthday_effect.cpp\n  info_profile_cover.cpp\n  info_profile_emoji_status_panel.cpp\n  info_profile_inner_widget.cpp\n  info_profile_members.cpp\n  info_profile_members_controllers.cpp\n  info_profile_phone_menu.cpp\n  info_profile_section_stack.cpp\n  info_profile_shared_media_classic.cpp\n  info_profile_status_label.cpp\n  info_profile_top_bar.cpp\n  info_profile_values.cpp\n  info_profile_widget.cpp\n  info_profile_tab_media.cpp\n  info_profile_tab_peer_lists.cpp\n  info_profile_tab_stories.cpp\n  info_profile_tab_sub_controller.cpp\n  info_profile_tab_members.cpp\n  info_profile_tab_polls.cpp\n  Generating Code...\n  Compiling...\n  info_profile_tab_saved.cpp\n  info_profile_tab_skeleton.cpp\n  info_profile_tabs_host.cpp\n  info_profile_tabs_strip.cpp\n  info_reactions_list_widget.cpp\n  info_requests_list_widget.cpp\n  info_saved_music_common.cpp\n  info_saved_music_provider.cpp\n  info_saved_music_widget.cpp\n  info_saved_sublist_inline.cpp\n  info_saved_sublists_widget.cpp\n  info_settings_widget.cpp\n  info_similar_peers_widget.cpp\n  info_statistics_inner_widget.cpp\n  info_statistics_list_controllers.cpp\n  info_statistics_recent_message.cpp\n  info_statistics_widget.cpp\n  info_stories_albums.cpp\n  info_stories_inner_widget.cpp\n  info_stories_provider.cpp\n  Generating Code...\n  Compiling...\n  info_stories_widget.cpp\n  info_userpic_colors_editor.cpp\n  info_userpic_emoji_builder.cpp\n  info_userpic_emoji_builder_common.cpp\n  info_userpic_emoji_builder_menu_item.cpp\n  info_userpic_emoji_builder_preview.cpp\n  info_userpic_emoji_builder_widget.cpp\n  info_content_widget.cpp\n  info_controller.cpp\n  info_layer_widget.cpp\n  info_memento.cpp\n  info_section_widget.cpp\n  info_top_bar.cpp\n  info_wrap_widget.cpp\n  bot_attach_web_view.cpp\n  inline_bot_confirm_prepared.cpp\n  inline_bot_downloads.cpp\n  inline_bot_layout_internal.cpp\n  inline_bot_layout_item.cpp\n  inline_bot_result.cpp\n  Generating Code...\n  Compiling...\n  inline_bot_send_data.cpp\n  inline_bot_storage.cpp\n  inline_results_inner.cpp\n  inline_results_widget.cpp\n  intro_code.cpp\n  intro_email.cpp\n  intro_password_check.cpp\n  intro_phone.cpp\n  intro_qr.cpp\n  intro_signup.cpp\n  intro_start.cpp\n  intro_step.cpp\n  intro_widget.cpp\n  iv_cached_media.cpp\n  iv_editor_session.cpp\n  iv_delegate_impl.cpp\n  iv_instance.cpp\n  iv_rich_message_serializer.cpp\n  iv_rich_page.cpp\n  lang_cloud_manager.cpp\n  Generating Code...\n  Compiling...\n  lang_instance.cpp\n  lang_numbers_animation.cpp\n  lang_translator.cpp\n  translate_mtproto_provider.cpp\n  translate_provider.cpp\n  translate_url_provider.cpp\n  layout_document_generic_preview.cpp\n  layout_item_base.cpp\n  main_account.cpp\n  main_app_config.cpp\n  main_app_config_values.cpp\n  main_domain.cpp\n  main_session.cpp\n  main_session_settings.cpp\n  send_as_peers.cpp\n  session_show.cpp\n  media_audio.cpp\n  media_audio_edit.cpp\n  media_audio_capture.cpp\n  media_audio_ffmpeg_loader.cpp\n  Generating Code...\n  Compiling...\n  media_audio_loader.cpp\n  media_audio_loaders.cpp\n  media_audio_local_cache.cpp\n  media_audio_track.cpp\n  media_child_ffmpeg_loader.cpp\n  media_player_float.cpp\n  media_player_instance.cpp\n  media_player_listen_tracker.cpp\n  media_player_panel.cpp\n  media_player_volume_controller.cpp\n  media_player_widget.cpp\n  media_stories_caption_full_view.cpp\n  media_stories_controller.cpp\n  media_stories_delegate.cpp\n  media_stories_header.cpp\n  media_stories_reactions.cpp\n  media_stories_recent_views.cpp\n  media_stories_reply.cpp\n  media_stories_repost_view.cpp\n  media_stories_share.cpp\n  Generating Code...\n  Compiling...\n  media_stories_sibling.cpp\n  media_stories_slider.cpp\n  media_stories_stealth.cpp\n  media_stories_view.cpp\n  media_streaming_audio_track.cpp\n  media_streaming_document.cpp\n  media_streaming_file.cpp\n  media_streaming_instance.cpp\n  media_streaming_loader.cpp\n  media_streaming_loader_local.cpp\n  media_streaming_loader_mtproto.cpp\n  media_streaming_player.cpp\n  media_streaming_reader.cpp\n  media_streaming_round_preview.cpp\n  media_streaming_utility.cpp\n  media_streaming_video_track.cpp\n  media_view_group_thumbs.cpp\n  media_view_open_common.cpp\n  media_view_overlay_opengl.cpp\n  media_view_overlay_raster.cpp\n  Generating Code...\n  Compiling...\n  media_view_overlay_rhi.cpp\n  media_view_overlay_widget.cpp\n  media_view_recognition_selection.cpp\n  media_view_pip.cpp\n  media_view_pip_opengl.cpp\n  media_view_pip_raster.cpp\n  media_view_pip_rhi.cpp\n  media_view_playback_controls.cpp\n  media_view_playback_progress.cpp\n  media_view_playback_sponsored.cpp\n  media_view_video_stream.cpp\n  system_media_controls_manager.cpp\n  menu_antispam_validator.cpp\n  menu_dock.cpp\n  menu_item_download_files.cpp\n  menu_item_rate_transcribe_session.cpp\n  menu_mute.cpp\n  menu_send.cpp\n  menu_sponsored.cpp\n  menu_ttl_validator.cpp\n  Generating Code...\n  Compiling...\n  config_loader.cpp\n  connection_abstract.cpp\n  connection_http.cpp\n  connection_resolving.cpp\n  connection_tcp.cpp\n  dedicated_file_loader.cpp\n  facade.cpp\n  mtp_instance.cpp\n  proxy_check.cpp\n  session.cpp\n  session_private.cpp\n  special_config_request.cpp\n  overview_checkbox.cpp\n  overview_layout.cpp\n  poll_link_box.cpp\n  poll_link_thumbnail.cpp\n  poll_media_upload.cpp\n  passport_encryption.cpp\n  passport_form_controller.cpp\n  passport_form_view_controller.cpp\n  Generating Code...\n  Compiling...\n  passport_panel.cpp\n  passport_panel_controller.cpp\n  passport_panel_edit_contact.cpp\n  passport_panel_edit_document.cpp\n  passport_panel_edit_scans.cpp\n  passport_panel_form.cpp\n  passport_panel_password.cpp\n  payments_checkout_process.cpp\n  payments_form.cpp\n  payments_non_panel_process.cpp\n  payments_reaction_process.cpp\n  file_utilities_win.cpp\n  launcher_win.cpp\n  integration_win.cpp\n  main_window_win.cpp\n  notifications_manager_win.cpp\n  specific_win.cpp\n  tray_win.cpp\n  webauthn_win.cpp\n  windows_app_user_model_id.cpp\n  Generating Code...\n  Compiling...\n  windows_dlls.cpp\n  windows_autostart_task.cpp\n  windows_taskbar_buttons.cpp\n  windows_toast_activator.cpp\n  platform_file_utilities.cpp\n  platform_integration.cpp\n  platform_overlay_widget.cpp\n  profile_block_widget.cpp\n  profile_cover_drop_area.cpp\n  settings_away_message.cpp\n  settings_shortcut_messages.cpp\n  settings_chat_intro.cpp\n  settings_chat_links.cpp\n  settings_chatbots.cpp\n  settings_greeting.cpp\n  settings_location.cpp\n  settings_quick_replies.cpp\n  settings_recipients_helper.cpp\n  settings_working_hours.cpp\n  settings_cloud_password_email.cpp\n  Generating Code...\n  Compiling...\n  settings_cloud_password_email_confirm.cpp\n  settings_cloud_password_hint.cpp\n  settings_cloud_password_input.cpp\n  settings_cloud_password_login_email.cpp\n  settings_cloud_password_login_email_confirm.cpp\n  settings_cloud_password_manage.cpp\n  settings_cloud_password_start.cpp\n  settings_cloud_password_step.cpp\n  settings_cloud_password_validate_icon.cpp\n  settings_active_sessions.cpp\n  settings_advanced.cpp\n  settings_chat.cpp\n  settings_blocked_peers.cpp\n  settings_business.cpp\n  settings_calls.cpp\n  settings_codes.cpp\n  settings_common_session.cpp\n  detailed_settings_button.cpp\n  settings_credits.cpp\n  settings_credits_graphics.cpp\n  Generating Code...\n  Compiling...\n  settings_experimental.cpp\n  settings_folders.cpp\n  settings_global_ttl.cpp\n  settings_information.cpp\n  settings_intro.cpp\n  settings_local_passcode.cpp\n  settings_local_storage.cpp\n  settings_main.cpp\n  settings_recent_searches.cpp\n  settings_search.cpp\n  settings_faq_suggestions.cpp\n  settings_builder.cpp\n  settings_notifications.cpp\n  settings_privacy_security.cpp\n  settings_notifications_reactions.cpp\n  settings_notifications_type.cpp\n  settings_passkeys.cpp\n  settings_power_saving.cpp\n  settings_premium.cpp\n  settings_privacy_controllers.cpp\n  Generating Code...\n  Compiling...\n  settings_scale_preview.cpp\n  settings_shortcuts.cpp\n  settings_websites.cpp\n  storage_file_utilities.cpp\n  storage_settings_scheme.cpp\n  download_manager_mtproto.cpp\n  file_download.cpp\n  file_download_mtproto.cpp\n  file_download_web.cpp\n  file_upload.cpp\n  localimageloader.cpp\n  localstorage.cpp\n  serialize_common.cpp\n  serialize_document.cpp\n  serialize_peer.cpp\n  storage_account.cpp\n  storage_cloud_blob.cpp\n  storage_domain.cpp\n  storage_facade.cpp\n  storage_media_prepare.cpp\n  Generating Code...\n  Compiling...\n  storage_shared_media.cpp\n  storage_sparse_ids_list.cpp\n  storage_user_photos.cpp\n  streamed_file_downloader.cpp\n  support_autocomplete.cpp\n  support_common.cpp\n  support_helper.cpp\n  support_preload.cpp\n  support_templates.cpp\n  tde2e_integration.cpp\n  test_agent.cpp\n  test_capture.cpp\n  test_launch_fuse.cpp\n  test_log.cpp\n  test_open_handoff.cpp\n  test_runner.cpp\n  test_scenario.cpp\n  test_widgets.cpp\n  edit_invite_link_session.cpp\n  emoji_stake_box.cpp\n  Generating Code...\n  Compiling...\n  peer_qr_box.cpp\n  attach_item_single_file_preview.cpp\n  attach_item_single_media_preview.cpp\n  choose_send_as.cpp\n  choose_theme_controller.cpp\n  sponsored_message_bar.cpp\n  compose_ai_button_factory.cpp\n  custom_emoji_toast_icon.cpp\n  emoji_button_factory.cpp\n  location_picker.cpp\n  silent_toggle.cpp\n  table_rows.cpp\n  userpic_button.cpp\n  warning_tooltip.cpp\n  animated_string.cpp\n  credits_graphics.cpp\n  emoji_fly_animation.cpp\n  message_sending_animation_controller.cpp\n  reaction_fly_animation.cpp\n  thanos_effect.cpp\n  Generating Code...\n  Compiling...\n  thanos_effect_controller.cpp\n  thanos_effect_renderer.cpp\n  thanos_effect_session.cpp\n  send_action_animations.cpp\n  voice_once_particles.cpp\n  image.cpp\n  image_location.cpp\n  image_location_factory.cpp\n  format_song_document_name.cpp\n  expandable_peer_list.cpp\n  chat_filters_tabs_strip.cpp\n  peer_bubble.cpp\n  countryinput.cpp\n  dynamic_thumbnails.cpp\n  filter_icons.cpp\n  filter_icon_panel.cpp\n  item_text_options.cpp\n  rows_scroll_cache.cpp\n  top_background_gradient.cpp\n  unread_badge.cpp\n  Generating Code...\n  Compiling...\n  video_userpic_player.cpp\n  cable_box.cpp\n  cable_ceremony.cpp\n  webauthn_common.cpp\n  main_window.cpp\n  notifications_manager.cpp\n  notifications_manager_default.cpp\n  notifications_utilities.cpp\n  section_widget.cpp\n  window_adaptive.cpp\n  window_chat_preview.cpp\n  window_chat_switch_process.cpp\n  window_connecting_widget.cpp\n  window_controller.cpp\n  window_filters_favorite.cpp\n  window_filters_menu.cpp\n  window_history_hider.cpp\n  window_lock_widgets.cpp\n  window_main_menu.cpp\n  window_main_menu_helpers.cpp\n  Generating Code...\n  Compiling...\n  window_media_preview.cpp\n  window_peer_menu.cpp\n  window_separate_id.cpp\n  window_session_media.cpp\n  window_session_controller.cpp\n  window_setup_email.cpp\n  window_theme.cpp\n  window_theme_editor.cpp\n  window_theme_editor_block.cpp\n  window_theme_editor_box.cpp\n  window_theme_preview.cpp\n  window_theme_warning.cpp\n  window_themes_chat.cpp\n  window_themes_cloud_list.cpp\n  window_themes_embedded.cpp\n  window_themes_generate_name.cpp\n  apiwrap.cpp\n  logs.cpp\n  main.cpp\n  mainwidget.cpp\n  Generating Code...\n  Compiling...\n  mainwindow.cpp\n  settings.cpp\n  tray.cpp\n  tray_accounts_menu_dummy.cpp\n  qrc_emoji_1.cpp\n  qrc_emoji_2.cpp\n  qrc_emoji_3.cpp\n  qrc_emoji_4.cpp\n  qrc_emoji_5.cpp\n  qrc_emoji_6.cpp\n  qrc_emoji_7.cpp\n  qrc_emoji_8.cpp\n  qrc_emoji_preview.cpp\n  qrc_animations.cpp\n  qrc_export.cpp\n  qrc_picker.cpp\n  qrc_telegram.cpp\n  qrc_sounds.cpp\n  qrc_models.cpp\n  Generating Code...\n  windows_quiethours_i.c\n  windows_toastactivator_i.c\n  Generating Code...\n     Creating library ${BUILD}/Telegram/Debug/tg.lib and object ${BUILD}/Telegram/Debug/tg.exp\n  Telegram.vcxproj -> ${BUILD}/Debug/tg.exe\n"
+      },
+      {
+        "command": [
+          "powershell",
+          "-NoProfile",
+          "-File",
+          "${WORKTREE}/Telegram/tg_cli/tools/test_hosted_console_checkpoint_packet26_review.ps1",
+          "-BinaryPath",
+          "${BUILD}/Debug/tg.exe"
+        ],
+        "env": {
+          "QT": "5.15.19"
+        },
+        "exitCode": 0,
+        "name": "packet26-test",
+        "status": "pass",
+        "stderr": "",
+        "stdout": "1\n1\n0\n0\n1\n0\n0\n0\n0\nHOSTED_CHECKPOINT_PACKET26_REVIEW_TESTS=PASS\n"
+      },
+      {
+        "command": [
+          "powershell",
+          "-NoProfile",
+          "-File",
+          "${WORKTREE}/Telegram/tg_cli/tools/test_hosted_console_accounts_packet30.ps1",
+          "-BinaryPath",
+          "${BUILD}/Debug/tg.exe",
+          "-DevProfile",
+          "${REPO}/../tg-dev-profile"
+        ],
+        "env": {
+          "QT": "5.15.19"
+        },
+        "exitCode": 0,
+        "name": "packet30-test",
+        "status": "pass",
+        "stderr": "",
+        "stdout": "HOSTED_CONSOLE_ACCOUNTS_PACKET30_TESTS=PASS\n"
+      },
+      {
+        "command": [
+          "git",
+          "worktree",
+          "remove",
+          "--force",
+          "${WORKTREE}"
+        ],
+        "directoryExists": false,
+        "gitExitCode": 0,
+        "name": "worktree-remove",
+        "registered": false,
+        "registrationError": "",
+        "status": "pass",
+        "stderr": "",
+        "stdout": ""
+      },
+      {
+        "command": [
+          "git",
+          "branch",
+          "-D",
+          "tg-rehearsal-a5126d502f"
+        ],
+        "name": "rebase-branch-delete",
+        "status": "pass",
+        "stderr": "",
+        "stdout": "Deleted branch tg-rehearsal-a5126d502f (was 03ec74b6f9).\n"
+      },
+      {
+        "head": "d6c9060c5abbd2b2ec439697ea649c324fa20faf",
+        "indexTree": "5834984c7796abf7480fc217346d39b55d636f24",
+        "name": "primary-integrity",
+        "status": "pass"
+      }
+    ],
+    "primaryIntegrity": {
+      "headUnchanged": true,
+      "indexTreeUnchanged": true,
+      "localConfigUnchanged": true,
+      "statusUnchanged": true
+    },
+    "semanticMode": "rebase",
+    "syntheticCommit": "0296d75037db316345843274b6c1b64ae7852987",
+    "target": "upstream/dev",
+    "targetSha": "f238e46ff988ec502290f6e691bd67c11cf5c75a",
+    "temporaryBase": "f238e46ff988ec502290f6e691bd67c11cf5c75a",
+    "worktree": "${WORKTREE}"
+  }
+}

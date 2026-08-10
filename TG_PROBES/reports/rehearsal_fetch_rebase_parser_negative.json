@@ -1,0 +1,9 @@
+{
+  "exitCode": 2,
+  "generatedAtUtc": "2026-08-10T07:56:47Z",
+  "mode": "rehearsal",
+  "schemaVersion": 1,
+  "summary": {
+    "error": "rehearsal fetch policy is mutually exclusive: use either --no-fetch or --fetch"
+  }
+}

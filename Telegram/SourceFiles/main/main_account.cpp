@@ -169,11 +169,10 @@ void Account::prepareToStartAdded(
 }
 
 void Account::watchProxyChanges() {
-	// TG_CHANGE_BEGIN: account-network-proxy-changes
-	using ProxyChange = TgCli::Capabilities::ProxyChange;
-
+	// TG_CHANGE_BEGIN: account-network-proxy-changes-source
 	_networkCapabilities->proxyChanges(
-	) | rpl::on_next([=](const ProxyChange &change) {
+	) | rpl::on_next([=](const TgCli::Capabilities::ProxyChange &change) {
+		// TG_CHANGE_END: account-network-proxy-changes-source
 		const auto key = [&](const MTP::ProxyData &proxy) {
 			return (proxy.type == MTP::ProxyData::Type::Mtproto)
 				? std::make_pair(proxy.host, proxy.port)
@@ -189,7 +188,6 @@ void Account::watchProxyChanges() {
 			_mtpForKeysDestroy->restart();
 		}
 	}, _lifetime);
-	// TG_CHANGE_END: account-network-proxy-changes
 }
 
 void Account::watchSessionChanges() {

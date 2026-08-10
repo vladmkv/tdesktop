@@ -147,8 +147,9 @@ StartResult Domain::start(const QByteArray &passcode) {
 		startFromScratch();
 		return StartResult::Success;
 	}
-	// TG_CHANGE_BEGIN: storage-domain-owner-account-factory
+	// TG_CHANGE_BEGIN: storage-domain-owner-account-factory-legacy-alloc
 	auto legacy = _owner->createAccountForStorage(0);
+	// TG_CHANGE_END: storage-domain-owner-account-factory-legacy-alloc
 	const auto result = legacy->legacyStart(passcode);
 	if (result == StartResult::Success) {
 		_oldVersion = legacy->local().oldMapVersion();
@@ -166,6 +167,7 @@ void Domain::startAdded(
 	account->start(std::move(config));
 }
 
+// TG_CHANGE_BEGIN: storage-domain-snapshot-storage-read-classification-method
 SnapshotStorageStatus Domain::classifySnapshotStorage() const {
 	const auto modernStatus = ClassifyModernSnapshotStorage(_dataName);
 	if (modernStatus != SnapshotStorageStatus::ProfileNotFound) {
@@ -173,7 +175,7 @@ SnapshotStorageStatus Domain::classifySnapshotStorage() const {
 	}
 	return ClassifyLegacySnapshotStorage(_dataName);
 }
-
+// TG_CHANGE_END: storage-domain-snapshot-storage-read-classification-method
 void Domain::startWithSingleAccount(
 		const QByteArray &passcode,
 		std::unique_ptr<Main::Account> account) {
@@ -281,7 +283,9 @@ Domain::StartModernResult Domain::startModern(
 		if (index >= 0
 			&& index < Main::Domain::kPremiumMaxAccounts
 			&& tried.emplace(index).second) {
+			// TG_CHANGE_BEGIN: storage-domain-owner-account-factory-modern-loop
 			auto account = _owner->createAccountForStorage(index);
+			// TG_CHANGE_END: storage-domain-owner-account-factory-modern-loop
 			auto config = account->prepareToStart(_localKey);
 			const auto sessionId = account->willHaveSessionUniqueId(
 				config.get());
@@ -339,11 +343,12 @@ void Domain::writeAccounts() {
 }
 
 void Domain::startFromScratch() {
+	// TG_CHANGE_BEGIN: storage-domain-owner-account-factory-scratch
 	startWithSingleAccount(
 		QByteArray(),
 		_owner->createAccountForStorage(0));
+	// TG_CHANGE_END: storage-domain-owner-account-factory-scratch
 }
-// TG_CHANGE_END: storage-domain-owner-account-factory
 
 bool Domain::checkPasscode(const QByteArray &passcode) const {
 	Expects(!_passcodeKeySalt.isEmpty());

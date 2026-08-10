@@ -11,6 +11,7 @@ if ([string]::IsNullOrWhiteSpace($BinaryPath)) {
 if (-not (Test-Path -LiteralPath $BinaryPath)) {
     throw "Binary not found: $BinaryPath"
 }
+$BinaryPath = (Resolve-Path -LiteralPath $BinaryPath).Path
 if ([string]::IsNullOrWhiteSpace($TempRoot)) {
     $TempRoot = Join-Path $env:TEMP ("tg_packet26_review_" + [Guid]::NewGuid().ToString("N"))
 }

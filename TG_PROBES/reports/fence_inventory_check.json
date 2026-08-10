@@ -1,0 +1,12 @@
+{
+  "exitCode": 0,
+  "generatedAtUtc": "2026-08-10T07:56:24Z",
+  "mode": "inventory",
+  "schemaVersion": 1,
+  "summary": {
+    "driftCount": 0,
+    "drifts": [],
+    "manifest": "TG_PROBES/tg_change_fence_manifest.json",
+    "operation": "check"
+  }
+}

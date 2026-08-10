@@ -1,0 +1,12 @@
+{
+  "exitCode": 0,
+  "generatedAtUtc": "2026-08-10T07:55:40Z",
+  "mode": "validate",
+  "schemaVersion": 1,
+  "summary": {
+    "base": "12e8d4a956",
+    "checkedFileCount": 87,
+    "violationCount": 0,
+    "violations": []
+  }
+}
