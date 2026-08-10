@@ -93,6 +93,8 @@ DeclareSetting(QString, ConsoleProfileSnapshotManifestPath);
 // TG_CHANGE_END: core-console-launch-state
 // TG_CHANGE_BEGIN: core-console-accounts-launch-state
 DeclareSetting(bool, ConsoleAccountsMode);
+DeclareSetting(bool, ConsoleChatsMode);
+DeclareSetting(int, ConsoleChatsLimit);
 DeclareSetting(QString, ConsoleAccountIndex);
 DeclareSetting(QString, ConsoleFormat);
 // TG_CHANGE_END: core-console-accounts-launch-state

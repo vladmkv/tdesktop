@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0/A1/A2/A3/A4/A5/A6 completed; A7 packet 23 blocked cleanly at 3/3 and restored to `d7daf02d01`; A7.1 packet 24, A7.2 packet 25, and A7.3 packet 26 completed; A8.0 live-profile ownership-identity migration FAILED (packet 28) and remains unsolved; scope pivoted to a dedicated workspace-level dev profile (`../tg-dev-profile`, outside the Git repo) for development, bypassing A8.0 rather than solving it; A8 (profile status) is DONE against the dev profile (commit `ba65a3d41b`); A9 packet 30 implementation/validation complete and awaiting user acceptance before commit; A10 not started **high**
+Status: [TODO] A0-A9 completed; packet 31 accepted/committed as `8959a81420`; A10.0 source decisions are folded into A10.1/A10.2 and packet 32 is superseded; A8.0 live-profile ownership migration remains deferred because the dedicated dev profile bypasses it **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -283,19 +283,19 @@ Definition of Done:
 - A focused A9 commit emits deterministic text/JSON for the real dev account using only existing Domain/Account/Session identity APIs; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
 
 Roadmap pointer:
-- Active pre-A10 gate: packet 31 acceptance (`PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md`). Implementation and report bundle are complete; A10 remains blocked until explicit user acceptance.
+- Packet 31 was accepted and committed as `8959a81420`. Packet 32 is retained as superseded planning history; A10.1 is complete and A10.2 is next.
 
 ### A10: Existing Chat List And History Viewer Reuse
-Status: [TODO] Refined in `PLAN_tg_console_mode.md`; implementation blocked on A10.0 proofs.
+Status: [TODO] A10.0 source decisions are folded into A10.1/A10.2; A10.1 is complete and A10.2 is next.
 Description: build chats and paged read as thin adapters over existing Telegram dialog/history request, ingestion, list, item, and media models.
-1. A10.0 proves existing session readiness, desktop dialog ordering, and `HistoryMessagesViewer` error/timeout semantics.
-2. A10.1 reuses `ApiWrap::requestDialogs`, `Data::Session::chatsListLoadedEvents`, and an existing `Dialogs::MainList` iteration path.
-3. A10.2 reuses `Data::HistoryMessagesViewer` and existing `HistoryItem`/media models with no read receipts or downloads.
-4. A10.3a adds shared command handlers; A10.3b adds the interactive REPL over those handlers.
-5. No TG-owned MTProto request implementation, chat/message model, or `Window::Controller` construction.
+1. A10.1 uses the selected A9 session, explicit `requestDialogs(nullptr)`, `chatsListLoaded(nullptr)`, and `chatsList(nullptr)->indexed()->all()`.
+	- [DONE] 2026-08-10 runtime result: `-console-chats` dev-profile smoke emitted history-backed rows in indexed order; the user confirmed the first 10 match Desktop after excluding non-history rows. CDB showed message ingestion instantiates history views, so hosted chats requires existing font/style/emoji initialization before requesting dialogs; no window/controller was constructed.
+2. A10.2 reuses `Data::HistoryMessagesViewer`; first emission, including empty, succeeds, and a 30 s no-emission timeout returns `history-no-progress` with lifetime detachment and no retry/error seam.
+3. A10.3a adds shared command handlers; A10.3b adds the interactive REPL over those handlers.
+4. No TG-owned MTProto request implementation, chat/message model, or `Window::Controller` construction.
 
 Definition of Done:
-- A10.0 commits the three API decisions; A10.1 lists ordered real chats; A10.2 reads bounded deterministic history pages without read receipts/downloads; A10.3a provides shared handlers; A10.3b provides the interactive loop; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
+- A10.1 lists ordered real chats; A10.2 reads bounded deterministic history pages without read receipts/downloads; A10.3a provides shared handlers; A10.3b provides the interactive loop; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
 
 ## Stop Conditions
 - A capability becomes a generic Core::Application mirror or mixes unrelated responsibilities.
@@ -327,6 +327,7 @@ After each protected edit:
 - 2026-07-30: A1 completed. Added TG_PROBES/NOTE_tg_probe_14_a1_inventory.md with full scoped mapping for main_account/main_session/main_domain/storage_account/storage_domain.
 - 2026-07-30: A2 completed. Added TG-owned capability interfaces and desktop forwarding implementations under Telegram/tg_cli/capabilities/.
 - 2026-07-30: tg_cli Debug build and run pass. Desktop Telegram build hit fatal error C1033 on vc143.pdb lock; follow-up desktop run/build must occur after lock is cleared.
+- 2026-08-10: The preceding A2 PDB-lock note is historical, not an open blocker. A2.1 later recorded a successful desktop Debug build and startup/connect smoke; packet 31 additionally completed fresh isolated full Telegram merge and rebase builds with primary-state integrity checks before commit `8959a81420`.
 - 2026-07-30: Review found A0 full-branch checker failure (unfenced AGENTS/dav1d), mixed-hunk deletion gap, direct-include fragility, and unverified desktop A2 behavior. Prior build history also contained `No space left on device`; validation blocker is environmental but not proven to be only a PDB lock.
 - 2026-07-30: Added PLAN_tg_probe_17_a3_account_network_injection.md with exact ownership, overload, fence IDs, validation, and stop conditions.
 - 2026-07-30: A0.1 completed via PLAN_tg_probe_18_a0_1_fence_corrections.md. Added per-deleted-line deletion anchors in checker hunk parsing, expanded self-tests (mixed replacement fail path, valid replacement pass path, adjacent blocks, duplicate IDs), fenced AGENTS.md (`tg-cli-agent-guidance`) and prepare.py dav1d stage (`dav1d-github-mirror`), removed obsolete policy exception, and validated with self-test PASS, base `12e8d4a956` PASS, prepare.py py_compile PASS, dav1d print-path (`p` then quit), and `git diff --check` PASS.

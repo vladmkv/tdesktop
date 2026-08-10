@@ -2,7 +2,7 @@
 Parent: PLAN_tg_probe_14_core_extraction.md
 Previous packet: PLAN_tg_probe_30_a9_existing_account_enumeration.md
 Policy: ../TG_CHANGE_POLICY.md
-Status: [TODO] Independent review found report-reuse and validation defects; corrections and fresh full rehearsals are required before user acceptance. No commit performed, and the pre-A10 gate remains closed. **high**
+Status: [DONE] Review corrections and fresh full merge/rebase rehearsals passed; user accepted and committed packet 31 as `8959a81420`. **high**
 
 ## Purpose
 Deliver an implementation-ready, reusable pre-A10 maintenance toolchain that strengthens fence quality discipline and rehearses upstream merge/rebase safety without modifying the current branch state.

@@ -74,14 +74,16 @@ Companion note: NOTE_tg_console_mode.md
 
 ### Next Implementor Queue
 Execute in this exact order; do not combine commits:
-1. [DONE] Pre-A10 fence quality and merge rehearsal toolchain (packet 31) implementation complete; pending user acceptance. **high**
+1. [DONE] Pre-A10 fence quality and merge rehearsal toolchain (packet 31) accepted and committed as `8959a81420`. **high**
 	- Description: deliver reusable fence-quality, manifest, inventory, and disposable merge/rebase rehearsal tooling by extending the existing checker, then shrink broad fences (especially `storage-domain-owner-account-factory`) without semantic code changes.
 	- Definition of Done: `PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md` implementation/report bundle is complete; A10 remains blocked until explicit user acceptance is recorded.
-2. A10.0: read-only API proof packet for existing session readiness, desktop-order dialog iteration, and `HistoryMessagesViewer` timeout/error semantics. **high**
-	- Description: resolve the three remaining API choices with bounded executable/read-only evidence before writing chat/history feature code.
-	- Definition of Done: exact session-ready signal and timeout are recorded; one existing dialog-list iteration path is proven to match desktop ordering; history viewer cancellation/error policy is selected; no feature implementation or duplicate request/model code is added; proof results are committed to the plan. This item is blocked until packet 31 is accepted.
-3. A10.1: chats command using existing Telegram dialog loading and list models. **high**
-	- Description: request dialogs through `ApiWrap`, wait through `Data::Session`, iterate the A10.0-selected `Dialogs::MainList`, and format rows only.
+2. [DONE] A10.0: source decisions folded into A10.1/A10.2; no separate proof packet is required. Readiness uses the selected A9 session plus `requestDialogs(nullptr)` and `chatsListLoaded(nullptr)`; chat order is `chatsList(nullptr)->indexed()->all()`; history uses first-emission success with a bounded `history-no-progress` result. **high**
+	- Outcome: packet 32 is superseded as a standalone gate. Its source-backed decisions remain implementation and validation requirements below.
+3. [DONE] A10.1: chats command using existing Telegram dialog loading and list models. **high**
+	- Description: acquire the selected A9 session, call `ApiWrap::requestDialogs(nullptr)`, wait for `Data::Session::chatsListLoaded(nullptr)`, iterate `Dialogs::MainList::indexed()->all()`, and format rows only.
+	- Current outcome (2026-08-10): `-console-chats` starts the selected A9 account, waits for top-level dialog readiness, and emits dev-profile history-backed rows in existing indexed order. `-console-chats-limit <count>` defaults to 100 and has a source-level inclusive 1..1000 launcher gate. Fresh Debug validation with limit 3 emitted exactly three rows as stable ID, escaped title, peer type, unread count, pinned state, and UTC ISO last-message date. Under `-console-format json`, one compact JSON line parsed with `requestedLimit:3`, `count:3`, and exactly three rows with ID/title/type/unread/pinned/UTC-date fields; the normal text rows remained present. Limit 0 exited 1. CDB proved that dialog ingestion constructs history views and requires the existing font/style/emoji initialization sequence; the hosted branch now initializes `SetCustomFont`, `StartFonts`, `StartManager`, and `Ui::Emoji::Init` without constructing a window.
+	- Repeatable coverage: `Telegram/tg_cli/tools/run_hosted_console_chats_demo.ps1 -Limit 3` verifies exactly three text rows, a three-row compact JSON document, and invalid-limit exit code 1 against the dedicated dev profile.
+	- Outcome: user confirmed the first 10 history-backed CLI titles match the Desktop top-level order after excluding Desktop-only non-history entries.
 	- Definition of Done: one command lists the first N real dev-profile chats with stable typed IDs, title/type/unread/pinned/date; order matches desktop; bounded timeout/cancel works; no windows, read receipts, downloads, custom sorting, or duplicate model; regressions/builds/fences pass.
 4. A10.2: paged read command using `Data::HistoryMessagesViewer()` and existing message/media models. **high**
 	- Description: resolve a stable chat ID to the existing `History`, consume bounded viewer pages, and format existing `HistoryItem` text and metadata without implementing MTProto history requests.
@@ -105,8 +107,8 @@ Current readiness:
 - A8 (profile status) is DONE against the dev profile: `tg.exe -console-profile-snapshot -workdir <profile> -console-log <path>` prints `snapshot-storage-status:ready|passcode-required|passcode-required-legacy|profile-corrupt|profile-not-found`, proven not to mutate `tdata`, with fail-closed argument guards. Commit `ba65a3d41b`.
 - During A8 implementation, found and fixed three real runtime defects, not just packet-29 scope-splitting: (1) every console-mode launcher gate was dead code because flags were read before `Launcher::init()`/`processArguments()` ran; (2) the fail-closed abort path called `QCoreApplication::exit()` before any event loop existed and hung forever instead of terminating; (3) profile-status mode tripped checkpoint-lock enforcement meant only for `-console` checkpoint mode. All three are fixed and verified end to end (real `ready`, empty-dir `profile-not-found`, all four guards reject, `tdata` byte-identical before/after, packet-26 regression still passes).
 - A9 packet 30 implementation and full Definition-of-Done validation are complete and user-accepted after running `run_hosted_console_accounts_demo.ps1` against the persistent dev profile. A10 has not started.
-- Active pre-A10 gate is packet 31 acceptance (`TG_PROBES/PLAN_tg_probe_31_fence_quality_and_merge_rehearsal.md`). Implementation is complete; no A10 implementation begins before packet-31 acceptance.
-- A10 (chats/history) is not started.
+- A10.0's source decisions were folded into A10.1/A10.2 on 2026-08-10; packet 32 is retained as superseded planning history and does not block implementation.
+- A10.1 chats is in progress and remains TODO; A10.2 history is not started.
 
 ### A9 Refined Packet: Reuse Existing Account List
 
@@ -149,7 +151,7 @@ Description:
 - Build `chats` and `read` as thin TG-owned orchestration/formatting adapters over the existing Telegram session, dialog list, history viewer, update ingestion, and media models.
 
 Definition of Done:
-- A10.0 proofs are committed first; A10.1 then lists real chats; A10.2 reads bounded history pages; A10.3a unifies command handlers; A10.3b adds the interactive REPL; all A10 validation and stop conditions below pass without duplicate MTProto/model code.
+- A10.1 lists real chats using the recorded readiness and ordering decisions; A10.2 reads bounded history pages using the recorded no-progress policy; A10.3a unifies command handlers; A10.3b adds the interactive REPL; all A10 validation and stop conditions below pass without duplicate MTProto/model code.
 
 Locked reuse rules:
 - Do not implement MTProto dialog/history requests in TG-owned code.
@@ -157,10 +159,10 @@ Locked reuse rules:
 - Do not require `Window::Controller`; the audited list/read APIs are model/session APIs.
 - First demo never marks messages read and never downloads media.
 
-A10.0 proof packet (must complete before feature code):
-1. **Session-ready proof:** after A9 startup, prove the minimum existing readiness signal: active `Main::Session` plus updates bootstrap completion that triggers `ApiWrap::requestDialogs()`. Record the exact producer/callback and timeout behavior.
-2. **Dialog-order proof:** prove which existing list matches desktop-visible ordering (pinned + indexed semantics versus `Dialogs::MainList::indexed()->all()` alone). Select one existing iteration path; do not merge/order rows in TG code.
-3. **History-error proof:** trace `Data::HistoryMessagesViewer()` through `ApiWrap::requestHistory()`. Decide explicitly whether V0 accepts timeout/no-progress as its error contract or needs one small additive error callback seam. No implementation until this is decided.
+Recorded source decisions:
+1. **Session-ready:** acquire the A9-selected `Main::Session`, explicitly call `ApiWrap::requestDialogs(nullptr)`, then proceed only when `Data::Session::chatsListLoaded(nullptr)` is true or emits. A10.1 uses a 15 s session timeout and a 30 s dialog timeout with explicit lifetime/timer cleanup.
+2. **Dialog order:** iterate `session.data().chatsList(nullptr)->indexed()->all()` forward with no pinned concatenation, filtering, or TG-owned comparator.
+3. **History error policy:** A10.2 treats the first `HistoryMessagesViewer()` emission, including an empty slice, as success. It returns `history-no-progress` after 30 s without an emission, destroys its subscription lifetime on timeout/cancellation, and adds neither retry logic nor an error callback seam.
 
 A10.1 chats implementation after A10.0 passes:
 1. Reuse `ApiWrap::requestDialogs(nullptr)` to start load.

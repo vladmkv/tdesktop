@@ -107,6 +107,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // TG_CHANGE_END: application-console-profile-snapshot-storage-read-include
 // TG_CHANGE_BEGIN: application-console-accounts-include
 #include "../../tg_cli/hosted/hosted_console_accounts_mode.h"
+#include "../../tg_cli/hosted/hosted_console_chats_mode.h"
 // TG_CHANGE_END: application-console-accounts-include
 
 #include <QtCore/QStandardPaths>
@@ -301,10 +302,12 @@ void Application::run() {
 	_notifications = std::make_unique<Window::Notifications::System>();
 
 	// TG_CHANGE_BEGIN: application-console-accounts-branch
-	if (cConsoleAccountsMode()
+	if ((cConsoleAccountsMode() || cConsoleChatsMode())
 		&& (_domain->local().classifySnapshotStorage()
 			!= Storage::SnapshotStorageStatus::Ready)) {
-		const auto exitCode = TgCli::Hosted::RunHostedConsoleAccountsMode(*this);
+		const auto exitCode = cConsoleChatsMode()
+			? 1
+			: TgCli::Hosted::RunHostedConsoleAccountsMode(*this);
 		crl::on_main(this, [=] {
 			Quit();
 			QCoreApplication::exit(exitCode);
@@ -314,6 +317,18 @@ void Application::run() {
 	startLocalStorage();
 	if (cConsoleAccountsMode()) {
 		const auto exitCode = TgCli::Hosted::RunHostedConsoleAccountsMode(*this);
+		crl::on_main(this, [=] {
+			Quit();
+			QCoreApplication::exit(exitCode);
+		});
+		return;
+	}
+	if (cConsoleChatsMode()) {
+		style::SetCustomFont(settings().customFontFamily());
+		style::internal::StartFonts();
+		style::StartManager(cScale());
+		Ui::Emoji::Init();
+		const auto exitCode = TgCli::Hosted::RunHostedConsoleChatsMode(*this);
 		crl::on_main(this, [=] {
 			Quit();
 			QCoreApplication::exit(exitCode);

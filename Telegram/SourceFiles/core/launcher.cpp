@@ -388,11 +388,11 @@ int Launcher::exec() {
 	// TG_CHANGE_BEGIN: launcher-console-gates-init-order
 	// Arguments must be parsed before any console gate is evaluated.
 	init();
-	if (cConsoleAccountsMode()
+	if ((cConsoleAccountsMode() || cConsoleChatsMode())
 		&& (cConsoleOwnerProbeMode() || cConsoleProfileSnapshotMode())) {
 		fprintf(
 			stderr,
-			"FATAL: -console-accounts cannot be combined with another console probe mode\n");
+			"FATAL: console account modes cannot be combined with another console probe mode\n");
 		return 1;
 	}
 	// TG_CHANGE_END: launcher-console-gates-init-order
@@ -480,37 +480,37 @@ int Launcher::exec() {
 	}
 	// TG_CHANGE_END: launcher-console-profile-snapshot-gates-validate
 	// TG_CHANGE_BEGIN: launcher-console-accounts-gates
-	if (cConsoleAccountsMode()) {
+	if (cConsoleAccountsMode() || cConsoleChatsMode()) {
 		if (cConsoleProfileSnapshotMode()) {
 			fprintf(
 				stderr,
-				"FATAL: -console-accounts cannot be combined with -console-profile-snapshot\n");
+				"FATAL: console account modes cannot be combined with -console-profile-snapshot\n");
 			return 1;
 		}
 		if (cConsoleOwnerProbeMode()) {
 			fprintf(
 				stderr,
-				"FATAL: -console-accounts cannot be combined with -console-owner-probe\n");
+				"FATAL: console account modes cannot be combined with -console-owner-probe\n");
 			return 1;
 		}
 		if (!customWorkingDir()) {
 			fprintf(
 				stderr,
-				"FATAL: accounts mode requires explicit -workdir\n");
+				"FATAL: chats and accounts modes require explicit -workdir\n");
 			return 1;
 		}
 		const auto workdir = QDir(customWorkingDirPath()).canonicalPath();
 		if (workdir.isEmpty()) {
 			fprintf(
 				stderr,
-				"FATAL: accounts mode workdir does not exist: %s\n",
+				"FATAL: chats and accounts modes workdir does not exist: %s\n",
 				customWorkingDirPath().toUtf8().constData());
 			return 1;
 		}
 		if (cConsoleLogPath().isEmpty()) {
 			fprintf(
 				stderr,
-				"FATAL: accounts mode requires explicit -console-log\n");
+				"FATAL: chats and accounts modes require explicit -console-log\n");
 			return 1;
 		}
 		const auto logPath = QDir(cConsoleLogPath()).absolutePath();
@@ -528,14 +528,21 @@ int Launcher::exec() {
 			&& format != QStringLiteral("json")) {
 			fprintf(
 				stderr,
-				"FATAL: accounts mode supports only -console-format text|json\n");
+				"FATAL: chats and accounts modes support only -console-format text|json\n");
+			return 1;
+		}
+		if (cConsoleChatsMode()
+			&& (cConsoleChatsLimit() < 1 || cConsoleChatsLimit() > 1000)) {
+			fprintf(
+				stderr,
+				"FATAL: -console-chats-limit must be an integer in range 1..1000\n");
 			return 1;
 		}
 	}
 
 	// TG_CHANGE_END: launcher-console-accounts-gates
 	// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-enforce
-	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode()) {
+	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode()) {
 		const auto guard = TgCli::Hosted::EnforceHostedConsoleCheckpointGuard(
 			customWorkingDir(),
 			customWorkingDirPath());
@@ -739,6 +746,8 @@ void Launcher::processArguments() {
 		// TG_CHANGE_BEGIN: launcher-console-argument-parse
 		{ "-console"        , KeyFormat::NoValues },
 		{ "-console-accounts" , KeyFormat::NoValues },
+		{ "-console-chats" , KeyFormat::NoValues },
+		{ "-console-chats-limit" , KeyFormat::OneValue },
 		{ "-console-account-index" , KeyFormat::OneValue },
 		{ "-console-format" , KeyFormat::OneValue },
 		{ "-console-owner-probe" , KeyFormat::NoValues },
@@ -800,9 +809,21 @@ void Launcher::processArguments() {
 	gConsoleProfileSnapshotMode = parseResult.contains(
 		"-console-profile-snapshot");
 	gConsoleAccountsMode = parseResult.contains("-console-accounts");
+	gConsoleChatsMode = parseResult.contains("-console-chats");
+	gConsoleChatsLimit = 100;
+	if (parseResult.contains("-console-chats-limit")) {
+		auto ok = false;
+		gConsoleChatsLimit = parseResult.value(
+			"-console-chats-limit",
+			{}).join(QString()).trimmed().toInt(&ok);
+		if (!ok) {
+			gConsoleChatsLimit = 0;
+		}
+	}
 	gConsoleMode = parseResult.contains("-console")
 		|| gConsoleProfileSnapshotMode
-		|| gConsoleAccountsMode;
+		|| gConsoleAccountsMode
+		|| gConsoleChatsMode;
 	gConsoleExitRequested = parseResult.contains("-console-exit");
 	gConsoleLogPath = parseResult.value("-console-log", {}).join(QString());
 	gConsoleAccountIndex = parseResult.value(
