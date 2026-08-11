@@ -1,7 +1,7 @@
 # PLAN_tg_probe_14_core_extraction
 Parent: ../PLAN_tg_console_mode.md
 Results: NOTE_tg_fallback_architectures.md
-Status: [TODO] A0-A9 and A10.1-A10.3b completed; packet 31 accepted/committed as `8959a81420`; A10.0 source decisions are folded into A10.1/A10.2 and packet 32 is superseded; A8.0 live-profile ownership migration remains deferred because the dedicated dev profile bypasses it **high**
+Status: [TODO] A0-A9 and A10.1-A10.3a completed; A10.3b terminal-attached REPL is reopened as a core V0 blocker; packet 31 accepted/committed as `8959a81420`; A10.0 source decisions are folded into A10.1/A10.2 and packet 32 is superseded; A8.0 live-profile ownership migration remains deferred because the dedicated dev profile bypasses it **high**
 
 ## Architecture
 Permit a bounded protected-source refactor that exposes four narrow capability seams shared by tg and tg_cli.
@@ -283,19 +283,20 @@ Definition of Done:
 - A focused A9 commit emits deterministic text/JSON for the real dev account using only existing Domain/Account/Session identity APIs; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
 
 Roadmap pointer:
-- Packet 31 was accepted and committed as `8959a81420`. Packet 32 is retained as superseded planning history; A10.1 through A10.3b are complete.
+- Packet 31 was accepted and committed as `8959a81420`. Packet 32 is retained as superseded planning history; A10.1 through A10.3a are complete, while A10.3b requires parent-terminal attachment.
 
 ### A10: Existing Chat List And History Viewer Reuse
-Status: [DONE] A10.0 source decisions are folded into A10.1/A10.2; A10.1 through A10.3b are complete.
+Status: [TODO] A10.0 source decisions are folded into A10.1/A10.2; A10.1 through A10.3a are complete, while A10.3b is a core V0 blocker.
 Description: build chats and paged read as thin adapters over existing Telegram dialog/history request, ingestion, list, item, and media models.
 1. A10.1 uses the selected A9 session, explicit `requestDialogs(nullptr)`, `chatsListLoaded(nullptr)`, and `chatsList(nullptr)->indexed()->all()`.
 	- [DONE] 2026-08-10 runtime result: `-console-chats` dev-profile smoke emitted history-backed rows in indexed order; the user confirmed the first 10 match Desktop after excluding non-history rows. CDB showed message ingestion instantiates history views, so hosted chats requires existing font/style/emoji initialization before requesting dialogs; no window/controller was constructed.
 2. [DONE] A10.2 reuses `Data::HistoryMessagesViewer`; first emission, including empty, succeeds, and a 30 s no-emission timeout returns `history-no-progress` with lifetime detachment and no retry/error seam. `-console-read-cursor` strictly reconstructs the existing `Data::MessagePosition`, and its next-page anchor is excluded from the following bounded page. Fresh private/channel smoke verified text/JSON DTO output, non-overlap, and source-level absence of mark-read/download/save calls. No safe current API/config fixture can force a no-emission runtime case; that timeout branch remains source-evidenced only.
-3. [DONE] A10.3a added shared command handlers; A10.3b added the interactive REPL over those handlers, with successful-read cursor continuation for `more`.
-4. No TG-owned MTProto request implementation, chat/message model, or `Window::Controller` construction.
+3. [DONE] A10.3a added shared command handlers with successful-read cursor continuation for `more`.
+4. [TODO] A10.3b requires an explicit frontend/backend architecture decision before further implementation. The current redirected-stdin loop passes automation but exits immediately under a direct Windows PowerShell launch, so it is not an interactive console application on any supported platform yet.
+5. No TG-owned MTProto request implementation, chat/message model, or `Window::Controller` construction.
 
 Definition of Done:
-- A10.1 lists ordered real chats; A10.2 reads bounded deterministic history pages without read receipts/downloads; A10.3a provides shared handlers; A10.3b provides the interactive loop; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
+- A10.1 lists ordered real chats; A10.2 reads bounded deterministic history pages without read receipts/downloads; A10.3a provides shared handlers; A10.3b provides a human-usable terminal-attached interactive loop; all pass and stop conditions in `PLAN_tg_console_mode.md` are satisfied.
 
 ## Stop Conditions
 - A capability becomes a generic Core::Application mirror or mixes unrelated responsibilities.

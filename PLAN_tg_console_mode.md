@@ -96,10 +96,10 @@ Execute in this exact order; do not combine commits:
 	- Operator wrapper: `Telegram/tg_cli/tools/run_hosted_console_command.ps1` manages the dev-profile log and UTF-8 output; invoke it with explicit PowerShell parameters, for example `chats -Limit 10`.
 	- Validation: `Telegram/tg_cli/tools/run_hosted_console_command_demo.ps1` exercises one-shot accounts/chats/read plus help, quit, and one-shot `more`.
 	- Definition of Done: commands have one parser/result contract, deterministic text plus experimental JSON where applicable, stable IDs and account selection flow through unchanged, and automated tests prove one-shot handlers produce the same results as direct A9/A10 calls.
-6. [DONE] A10.3b: interactive REPL loop over the shared handlers. **high**
-	- Description: keep the hosted Telegram process/session alive, read terminal commands repeatedly, dispatch through A10.3a, print results, and exit cleanly on `quit`/EOF/Ctrl+C.
-	- Outcome (2026-08-10): `-console-repl` initializes the hosted Domain once, consumes UTF-8 terminal lines through the A10.3a parser/dispatcher, serializes command execution, and retains a successful read's returned successor cursor for `more`. The finite TG-owned smoke script supplied a malformed UTF-8 command before valid commands and verified the loop continued through accounts, chats, read, more, help, and quit. Fresh Debug Telegram build, REPL smoke, legacy hosted checkpoint regression, one-shot dispatcher regression, upstream-base fence validation, and `git diff --check` passed.
-	- Definition of Done: a user can run `accounts`, `chats`, `read <chat-id> [limit]`, `more`, `help`, and `quit` in one process; malformed commands do not terminate the loop; per-command timeout/cancel works; terminal UTF-8 is correct; no windows/read receipts/downloads; one-shot/REPL parity, regressions, builds, fences, and clean teardown pass.
+6. [TODO] A10.3b: terminal-attached interactive REPL. **high**
+- Description: turn the current pipe-fed command loop into a real cross-platform terminal application. When the hosted console executable is launched from a supported terminal on Windows, macOS, or Linux, it must remain running, show a `tg>` prompt, accept user-typed UTF-8 lines, dispatch through A10.3a, and return to the prompt after each command.
+- Current failure (2026-08-11): the finite redirected-stdin smoke passes, but a human Windows PowerShell launch receives EOF and exits immediately because the GUI-subsystem executable does not have usable parent-console standard handles. This is evidence of the broader terminal-attachment gap, not a PowerShell-only product requirement and not a completed follow-up.
+- Architecture gate: do not continue the hosted terminal-attachment implementation until an explicit frontend/backend decision is recorded. Candidate directions are a full-runtime console target, a private hosted backend/frontend split, or a standalone TDLib client.
 7. Live-profile ownership architecture (canonical/alias identity). **future**
 	- Description: design a backward-compatible ownership identity so old/new binaries and equivalent path spellings cannot concurrently own one physical desktop profile.
 	- Definition of Done: old-old, old-new, new-old, and new-new canonical/alias/case/junction matrix has exactly one owner per cell; no deadlock or pre-ownership profile write; ambiguous states fail closed; desktop startup compatibility is proven. Until then this track remains deferred and the dev profile is mandatory.
@@ -197,6 +197,9 @@ A10.3b interactive REPL after handlers pass:
 4. Serialize commands: no overlapping account/dialog/history mutations in the first REPL version.
 5. Clean exit cancels outstanding work, destroys command lifetimes, and tears down Domain/Session without a crash or leaked process.
 
+Decision gate:
+- Do not mark A10.3b, V0, or Stage 4 complete until an architecture direction provides a usable human terminal session and passes manual acceptance.
+
 A10 validation:
 - List at least one real chat from the dedicated dev profile and compare identity/title/order with desktop.
 - Read one bounded page twice with deterministic message ids/order.
@@ -220,7 +223,7 @@ Current identity is MD5 of `QDir(cWorkingDir()).absolutePath()`: it is path-stri
 The dedicated dev profile sidesteps this because only the development build uses it; it does not fix production shared-profile ownership. Reopen only with a new migration design that passes old-old, old-new, new-old, new-new across canonical/alias/case/junction spellings with exactly one owner, no deadlock, no pre-ownership writes, and bounded fail-closed ambiguity. A profile-root lock alone is insufficient because older Telegram binaries do not participate in it.
 
 ### First Runnable Read-Only Version (V0)
-V0 is reached after A10.3b and uses the hosted `tg.exe` backend (the separate `tg_cli.exe` remains a skeleton until a later packaging split). It provides both one-shot commands and an interactive prompt:
+V0 remains blocked until the terminal-attached A10.3b acceptance passes. It uses the hosted `tg.exe` backend (the separate `tg_cli.exe` remains a skeleton until a later packaging split) and provides both one-shot commands and an interactive prompt:
 - `tg.exe -console-command accounts -workdir <dev-profile>`
 - `tg.exe -console-command chats --limit <count> -workdir <dev-profile>`
 - `tg.exe -console-command read <chat-id> --limit <count> -workdir <dev-profile>`
@@ -335,7 +338,8 @@ V0 requirements:
 - Produce an RFC if pursued; do not mix with primary tg_cli delivery.
 
 ## Devlog
-- 2026-08-10: A10.3b completed without new Telegram backend logic or any `Window::Controller`. Added `-console-repl` with shared dispatcher parsing, synchronous command serialization, EOF/quit termination, and a SIGINT exit path. Fixed the hosted sandbox classification so REPL follows the account-mode lifecycle rather than the checkpoint guard. Read adapters now preserve the output page's successor cursor only after a successful read, and `more` dispatches that successor read; no prior read remains a nonfatal result. Fresh Debug build and REPL/legacy/one-shot smoke coverage passed; the fence checker passes against mandatory upstream base `12e8d4a956`.
+- 2026-08-10: Implemented a pipe-fed `-console-repl` loop without new Telegram backend logic or any `Window::Controller`. It has shared dispatcher parsing, synchronous command serialization, EOF/quit termination, and a SIGINT exit path; the redirected-stdin smoke passes.
+- 2026-08-11: Reopened A10.3b as a core V0 blocker: direct PowerShell launch exits immediately because the GUI-subsystem process lacks usable parent-console handles. Replace the pipe-only acceptance with the terminal-attached REPL contract above.
 - 2026-07-30: Performed deep static build/runtime dependency analysis.
 - 2026-07-30: Found Qt is not only UI in this codebase; core + mtproto heavily depend on QObject/QThread/QNetwork/QCoreApplication behavior.
 - 2026-07-30: Determined full Qt removal is a re-platforming effort; recommended phased approach is a parallel console target with retained QtCore/QtNetwork substrate.
