@@ -203,6 +203,7 @@ int Sandbox::start() {
 		&& !cConsoleAccountsMode()
 		&& !cConsoleChatsMode()
 		&& !cConsoleReadMode()
+		&& !cConsoleSendMode()
 		&& !cConsoleReplMode()
 		&& !cConsoleCommandMode()
 		&& !TgCli::Hosted::HostedConsoleCheckpointOwnsWorkdirLock()) {
@@ -476,6 +477,7 @@ void Sandbox::socketError(QLocalSocket::LocalSocketError e) {
 			&& !cConsoleAccountsMode()
 			&& !cConsoleChatsMode()
 			&& !cConsoleReadMode()
+			&& !cConsoleSendMode()
 			&& !cConsoleReplMode()
 			&& !cConsoleCommandMode()
 			&& !TgCli::Hosted::HostedConsoleCheckpointOwnsWorkdirLock()) {

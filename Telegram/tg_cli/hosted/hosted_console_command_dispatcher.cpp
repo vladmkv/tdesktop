@@ -3,6 +3,7 @@
 #include "hosted_console_accounts_mode.h"
 #include "hosted_console_chats_mode.h"
 #include "hosted_console_read_mode.h"
+#include "hosted_console_send_mode.h"
 #include "hosted_console_status_writer.h"
 #include "settings.h"
 
@@ -16,6 +17,7 @@ namespace {
 [[nodiscard]] bool IsCommandOption(const QString &value) {
 	return value == QStringLiteral("--limit")
 		|| value == QStringLiteral("--cursor")
+		|| value == QStringLiteral("--text")
 		|| value == QStringLiteral("--account-index")
 		|| value == QStringLiteral("--format");
 }
@@ -42,6 +44,7 @@ namespace {
 	auto result = HostedConsoleCommandRequest{
 		.limit = cConsoleChatsLimit(),
 		.chatId = cConsoleReadPeerId(),
+		.text = cConsoleSendText(),
 		.cursor = cConsoleReadCursor(),
 		.accountIndex = cConsoleAccountIndex(),
 		.format = cConsoleFormat(),
@@ -50,6 +53,8 @@ namespace {
 		result.command = HostedConsoleCommand::Accounts;
 	} else if (cConsoleChatsMode()) {
 		result.command = HostedConsoleCommand::Chats;
+	} else if (cConsoleSendMode()) {
+		result.command = HostedConsoleCommand::Send;
 	} else {
 		result.command = HostedConsoleCommand::Read;
 		result.limit = cConsoleReadLimit();
@@ -81,6 +86,8 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 	} else if (name == QStringLiteral("read")) {
 		result.command = HostedConsoleCommand::Read;
 		result.limit = 20;
+	} else if (name == QStringLiteral("send")) {
+		result.command = HostedConsoleCommand::Send;
 	} else if (name == QStringLiteral("more")) {
 		result.command = HostedConsoleCommand::More;
 	} else if (name == QStringLiteral("help")) {
@@ -93,11 +100,20 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 
 	for (auto index = 1; index != arguments.size(); ++index) {
 		const auto value = arguments[index];
-		if (result.command == HostedConsoleCommand::Read
+		if ((result.command == HostedConsoleCommand::Read
+			|| result.command == HostedConsoleCommand::Send)
 			&& result.chatId.isEmpty()
 			&& !IsCommandOption(value)) {
 			result.chatId = value;
 			continue;
+		}
+		if (value == QStringLiteral("--text")) {
+			if (result.command != HostedConsoleCommand::Send
+				|| ++index == arguments.size()) {
+				return Invalid(QStringLiteral("invalid-text"));
+			}
+			result.text = arguments.mid(index).join(QStringLiteral(" "));
+			break;
 		}
 		if (!IsCommandOption(value) || ++index == arguments.size()) {
 			return Invalid(QStringLiteral("invalid-arguments"));
@@ -120,7 +136,8 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 		} else if (value == QStringLiteral("--account-index")) {
 			if (result.command != HostedConsoleCommand::Accounts
 				&& result.command != HostedConsoleCommand::Chats
-				&& result.command != HostedConsoleCommand::Read) {
+				&& result.command != HostedConsoleCommand::Read
+				&& result.command != HostedConsoleCommand::Send) {
 				return Invalid(QStringLiteral("invalid-account-index"));
 			}
 			result.accountIndex = optionValue;
@@ -128,6 +145,7 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 			if (result.command != HostedConsoleCommand::Accounts
 				&& result.command != HostedConsoleCommand::Chats
 				&& result.command != HostedConsoleCommand::Read
+				&& result.command != HostedConsoleCommand::Send
 				|| (optionValue != QStringLiteral("text")
 					&& optionValue != QStringLiteral("json"))) {
 				return Invalid(QStringLiteral("invalid-format"));
@@ -135,8 +153,13 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 			result.format = optionValue;
 		}
 	}
-	if (result.command == HostedConsoleCommand::Read && result.chatId.isEmpty()) {
+	if ((result.command == HostedConsoleCommand::Read
+		|| result.command == HostedConsoleCommand::Send)
+		&& result.chatId.isEmpty()) {
 		return Invalid(QStringLiteral("missing-chat-id"));
+	}
+	if (result.command == HostedConsoleCommand::Send && result.text.isEmpty()) {
+		return Invalid(QStringLiteral("missing-text"));
 	}
 	return { .request = std::move(result) };
 }
@@ -145,22 +168,26 @@ bool HostedConsoleCommandRequiresUiInitialization() {
 	const auto parsed = CurrentRequest();
 	return parsed.request
 		&& (parsed.request->command == HostedConsoleCommand::Chats
-			|| parsed.request->command == HostedConsoleCommand::Read);
+			|| parsed.request->command == HostedConsoleCommand::Read
+			|| parsed.request->command == HostedConsoleCommand::Send);
 }
 
 bool ApplyHostedConsoleCommandRequest(const HostedConsoleCommandRequest &request) {
 	cSetConsoleAccountsMode(request.command == HostedConsoleCommand::Accounts);
 	cSetConsoleChatsMode(request.command == HostedConsoleCommand::Chats);
 	cSetConsoleReadMode(request.command == HostedConsoleCommand::Read);
+	cSetConsoleSendMode(request.command == HostedConsoleCommand::Send);
 	cSetConsoleChatsLimit(request.limit);
 	cSetConsoleReadLimit(request.limit);
 	cSetConsoleReadPeerId(request.chatId);
+	cSetConsoleSendText(request.text);
 	cSetConsoleReadCursor(request.cursor);
 	cSetConsoleAccountIndex(request.accountIndex);
 	cSetConsoleFormat(request.format);
 	return request.command == HostedConsoleCommand::Accounts
 		|| request.command == HostedConsoleCommand::Chats
-		|| request.command == HostedConsoleCommand::Read;
+		|| request.command == HostedConsoleCommand::Read
+		|| request.command == HostedConsoleCommand::Send;
 }
 
 HostedConsoleCommandResult RunHostedConsoleCommand(
@@ -181,7 +208,8 @@ HostedConsoleCommandResult RunHostedConsoleCommand(
 		const HostedConsoleCommandRequest &request) {
 	if ((request.command == HostedConsoleCommand::Accounts
 		|| request.command == HostedConsoleCommand::Chats
-		|| request.command == HostedConsoleCommand::Read)
+		|| request.command == HostedConsoleCommand::Read
+		|| request.command == HostedConsoleCommand::Send)
 		&& !ApplyHostedConsoleCommandRequest(request)) {
 		const auto written = WriteLine(QStringLiteral("command-error:apply-request"));
 		(void)written;
@@ -203,6 +231,8 @@ HostedConsoleCommandResult RunHostedConsoleCommand(
 		}
 		return { .exitCode = result.exitCode };
 	}
+	case HostedConsoleCommand::Send:
+		return { .exitCode = RunHostedConsoleSendMode(application) };
 	case HostedConsoleCommand::More: {
 		if (!context.previousRead || context.previousRead->cursor.isEmpty()) {
 			const auto moreWritten = WriteLine(
@@ -222,7 +252,7 @@ HostedConsoleCommandResult RunHostedConsoleCommand(
 	}
 	case HostedConsoleCommand::Help: {
 		const auto helpWritten = WriteLine(QStringLiteral(
-			"command-help:accounts|chats [--limit N]|read <chat-id> [--limit N] [--cursor CURSOR]|more|help|quit"));
+			"command-help:accounts|chats [--limit N]|read <chat-id> [--limit N] [--cursor CURSOR]|send <chat-id> --text <text> [--format text|json]|more|help|quit"));
 		(void)helpWritten;
 		return {};
 	}

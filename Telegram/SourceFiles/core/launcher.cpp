@@ -390,6 +390,7 @@ int Launcher::exec() {
 	// Arguments must be parsed before any console gate is evaluated.
 	init();
 	if ((cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()
+		|| cConsoleSendMode()
 		|| cConsoleReplMode())
 		&& (cConsoleOwnerProbeMode() || cConsoleProfileSnapshotMode())) {
 		fprintf(
@@ -483,6 +484,7 @@ int Launcher::exec() {
 	// TG_CHANGE_END: launcher-console-profile-snapshot-gates-validate
 	// TG_CHANGE_BEGIN: launcher-console-accounts-gates
 	if (cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()
+		|| cConsoleSendMode()
 		|| cConsoleReplMode()
 		|| cConsoleCommandMode()) {
 		if (cConsoleProfileSnapshotMode()) {
@@ -500,21 +502,21 @@ int Launcher::exec() {
 		if (!customWorkingDir()) {
 			fprintf(
 				stderr,
-				"FATAL: chats, read, and accounts modes require explicit -workdir\n");
+				"FATAL: chats, read, send, and accounts modes require explicit -workdir\n");
 			return 1;
 		}
 		const auto workdir = QDir(customWorkingDirPath()).canonicalPath();
 		if (workdir.isEmpty()) {
 			fprintf(
 				stderr,
-				"FATAL: chats, read, and accounts modes workdir does not exist: %s\n",
+				"FATAL: chats, read, send, and accounts modes workdir does not exist: %s\n",
 				customWorkingDirPath().toUtf8().constData());
 			return 1;
 		}
 		if (cConsoleLogPath().isEmpty()) {
 			fprintf(
 				stderr,
-				"FATAL: chats, read, and accounts modes require explicit -console-log\n");
+				"FATAL: chats, read, send, and accounts modes require explicit -console-log\n");
 			return 1;
 		}
 		const auto logPath = QDir(cConsoleLogPath()).absolutePath();
@@ -549,11 +551,18 @@ int Launcher::exec() {
 				"FATAL: -console-read-limit must be an integer in range 1..100\n");
 			return 1;
 		}
+		if (cConsoleSendMode()
+			&& (cConsoleReadPeerId().isEmpty() || cConsoleSendText().isEmpty())) {
+			fprintf(
+				stderr,
+				"FATAL: -console-send requires <stable-chat-id> <text>\n");
+			return 1;
+		}
 	}
 
 	// TG_CHANGE_END: launcher-console-accounts-gates
 	// TG_CHANGE_BEGIN: launcher-console-checkpoint-guard-enforce
-	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode() && !cConsoleReadMode() && !cConsoleReplMode() && !cConsoleCommandMode()) {
+	if (cConsoleMode() && !cConsoleProfileSnapshotMode() && !cConsoleAccountsMode() && !cConsoleChatsMode() && !cConsoleReadMode() && !cConsoleSendMode() && !cConsoleReplMode() && !cConsoleCommandMode()) {
 		const auto guard = TgCli::Hosted::EnforceHostedConsoleCheckpointGuard(
 			customWorkingDir(),
 			customWorkingDirPath());
@@ -762,6 +771,7 @@ void Launcher::processArguments() {
 		{ "-console-read" , KeyFormat::OneValue },
 		{ "-console-read-limit" , KeyFormat::OneValue },
 		{ "-console-read-cursor" , KeyFormat::OneValue },
+		{ "-console-send" , KeyFormat::AllLeftValues },
 		{ "-console-command" , KeyFormat::OneValue },
 		{ "-console-repl" , KeyFormat::NoValues },
 		{ "-console-account-index" , KeyFormat::OneValue },
@@ -841,6 +851,12 @@ void Launcher::processArguments() {
 	gConsoleReadCursor = parseResult.value(
 		"-console-read-cursor",
 		{}).join(QString());
+	gConsoleSendMode = parseResult.contains("-console-send");
+	if (gConsoleSendMode) {
+		const auto sendArguments = parseResult.value("-console-send", {});
+		gConsoleReadPeerId = sendArguments.value(0);
+		gConsoleSendText = sendArguments.mid(1).join(QStringLiteral(" "));
+	}
 	gConsoleCommandMode = parseResult.contains("-console-command");
 	gConsoleCommandArguments = parseResult.value("-console-command", {});
 	gConsoleReplMode = parseResult.contains("-console-repl");
@@ -862,6 +878,7 @@ void Launcher::processArguments() {
 		|| gConsoleAccountsMode
 		|| gConsoleChatsMode
 		|| gConsoleReadMode
+		|| gConsoleSendMode
 		|| gConsoleReplMode
 		|| gConsoleCommandMode;
 	gConsoleExitRequested = parseResult.contains("-console-exit");

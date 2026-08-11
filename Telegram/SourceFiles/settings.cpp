@@ -55,6 +55,8 @@ bool gConsoleReadMode = false;
 QString gConsoleReadPeerId;
 int gConsoleReadLimit = 20;
 QString gConsoleReadCursor;
+bool gConsoleSendMode = false;
+QString gConsoleSendText;
 QString gConsoleAccountIndex;
 QString gConsoleFormat;
 bool gConsoleCommandMode = false;

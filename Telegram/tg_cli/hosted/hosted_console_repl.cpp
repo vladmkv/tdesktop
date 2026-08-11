@@ -27,6 +27,16 @@ void HandleInterrupt(int) {
 }
 
 [[nodiscard]] QStringList CommandTokens(const QString &line) {
+	const auto textOption = QRegularExpression(QStringLiteral("\\s+--text\\s+"));
+	const auto match = textOption.match(line);
+	if (match.hasMatch()) {
+		auto result = line.left(match.capturedStart()).trimmed().split(
+			QRegularExpression(QStringLiteral("\\s+")),
+			Qt::SkipEmptyParts);
+		result.push_back(QStringLiteral("--text"));
+		result.push_back(line.mid(match.capturedEnd()));
+		return result;
+	}
 	return line.trimmed().split(
 		QRegularExpression(QStringLiteral("\\s+")),
 		Qt::SkipEmptyParts);

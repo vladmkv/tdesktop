@@ -270,8 +270,9 @@ V0 requirements:
 	- REPL and one-shot paths return equivalent results.
 	- Empty, permission, timeout, and network errors do not crash.
 
-6. [TODO] Stage 5: Text sending (**high**)
+6. [DONE] Stage 5: Text sending (**high**)
 - Description: add a thin send command over Telegram's existing `ApiWrap`/`Data::Histories` send path after read-only behavior is stable.
+- Outcome (2026-08-11): hosted `send <stable-chat-id> --text <text>` uses the existing `Data::Histories::sendPreparedMessage` path, reports success only after its update-applied completion callback, and maps preflight invalid peers, existing permission checks, and MTP network/server errors separately. The smoke script rejects an invalid stable ID without sending. The approved self-chat send `Stage 5 confirmation` to `user3527271` received server acknowledgment and was confirmed visible in Debug Telegram Saved Messages.
 - Definition of Done: private and permitted channel/supergroup sends receive server acknowledgment and appear in desktop; stable peer selectors are reused; permission/invalid-peer/network outcomes are distinct; no duplicate send protocol/model logic; full read-only regression passes.
 - Implement send command for private chats and channels/supergroups where permitted.
 - Define stable peer selector syntax for REPL and scripts.

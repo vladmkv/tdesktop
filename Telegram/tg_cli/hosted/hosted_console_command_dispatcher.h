@@ -15,6 +15,7 @@ enum class HostedConsoleCommand {
 	Accounts,
 	Chats,
 	Read,
+	Send,
 	More,
 	Help,
 	Quit,
@@ -24,6 +25,7 @@ struct HostedConsoleCommandRequest {
 	HostedConsoleCommand command = HostedConsoleCommand::Help;
 	int limit = 0;
 	QString chatId;
+	QString text;
 	QString cursor;
 	QString accountIndex;
 	QString format;

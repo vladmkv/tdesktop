@@ -99,6 +99,8 @@ DeclareSetting(bool, ConsoleReadMode);
 DeclareSetting(QString, ConsoleReadPeerId);
 DeclareSetting(int, ConsoleReadLimit);
 DeclareSetting(QString, ConsoleReadCursor);
+DeclareSetting(bool, ConsoleSendMode);
+DeclareSetting(QString, ConsoleSendText);
 DeclareSetting(QString, ConsoleAccountIndex);
 DeclareSetting(QString, ConsoleFormat);
 DeclareSetting(bool, ConsoleCommandMode);

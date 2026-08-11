@@ -306,6 +306,7 @@ void Application::run() {
 
 	// TG_CHANGE_BEGIN: application-console-accounts-branch
 	if ((cConsoleAccountsMode() || cConsoleChatsMode() || cConsoleReadMode()
+		|| cConsoleSendMode()
 		|| cConsoleReplMode()
 		|| cConsoleCommandMode())
 		&& (_domain->local().classifySnapshotStorage()
@@ -365,7 +366,7 @@ void Application::run() {
 		});
 		return;
 	}
-	if (cConsoleReadMode()) {
+	if (cConsoleReadMode() || cConsoleSendMode()) {
 		style::SetCustomFont(settings().customFontFamily());
 		style::internal::StartFonts();
 		style::StartManager(cScale());
