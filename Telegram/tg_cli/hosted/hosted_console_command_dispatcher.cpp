@@ -4,6 +4,7 @@
 #include "hosted_console_chats_mode.h"
 #include "hosted_console_read_mode.h"
 #include "hosted_console_send_mode.h"
+#include "hosted_console_message_mutation_mode.h"
 #include "hosted_console_status_writer.h"
 #include "settings.h"
 
@@ -18,6 +19,7 @@ namespace {
 	return value == QStringLiteral("--limit")
 		|| value == QStringLiteral("--cursor")
 		|| value == QStringLiteral("--text")
+		|| value == QStringLiteral("--yes")
 		|| value == QStringLiteral("--account-index")
 		|| value == QStringLiteral("--format");
 }
@@ -88,6 +90,14 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 		result.limit = 20;
 	} else if (name == QStringLiteral("send")) {
 		result.command = HostedConsoleCommand::Send;
+	} else if (name == QStringLiteral("edit")) {
+		result.command = HostedConsoleCommand::Edit;
+	} else if (name == QStringLiteral("delete")) {
+		result.command = HostedConsoleCommand::Delete;
+	} else if (name == QStringLiteral("confirm")) {
+		result.command = HostedConsoleCommand::Confirm;
+	} else if (name == QStringLiteral("cancel")) {
+		result.command = HostedConsoleCommand::Cancel;
 	} else if (name == QStringLiteral("more")) {
 		result.command = HostedConsoleCommand::More;
 	} else if (name == QStringLiteral("help")) {
@@ -101,19 +111,38 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 	for (auto index = 1; index != arguments.size(); ++index) {
 		const auto value = arguments[index];
 		if ((result.command == HostedConsoleCommand::Read
-			|| result.command == HostedConsoleCommand::Send)
+			|| result.command == HostedConsoleCommand::Send
+			|| result.command == HostedConsoleCommand::Edit
+			|| result.command == HostedConsoleCommand::Delete)
 			&& result.chatId.isEmpty()
 			&& !IsCommandOption(value)) {
 			result.chatId = value;
 			continue;
 		}
+		if ((result.command == HostedConsoleCommand::Edit
+			|| result.command == HostedConsoleCommand::Delete)
+			&& !result.messageId
+			&& !IsCommandOption(value)) {
+			if (!ParsePositiveLimit(value, INT_MAX, result.messageId)) {
+				return Invalid(QStringLiteral("invalid-message-id"));
+			}
+			continue;
+		}
 		if (value == QStringLiteral("--text")) {
-			if (result.command != HostedConsoleCommand::Send
+			if ((result.command != HostedConsoleCommand::Send
+				&& result.command != HostedConsoleCommand::Edit)
 				|| ++index == arguments.size()) {
 				return Invalid(QStringLiteral("invalid-text"));
 			}
 			result.text = arguments.mid(index).join(QStringLiteral(" "));
 			break;
+		}
+		if (value == QStringLiteral("--yes")) {
+			if (result.command != HostedConsoleCommand::Delete) {
+				return Invalid(QStringLiteral("invalid-confirmation"));
+			}
+			result.text = QStringLiteral("yes");
+			continue;
 		}
 		if (!IsCommandOption(value) || ++index == arguments.size()) {
 			return Invalid(QStringLiteral("invalid-arguments"));
@@ -137,7 +166,9 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 			if (result.command != HostedConsoleCommand::Accounts
 				&& result.command != HostedConsoleCommand::Chats
 				&& result.command != HostedConsoleCommand::Read
-				&& result.command != HostedConsoleCommand::Send) {
+				&& result.command != HostedConsoleCommand::Send
+				&& result.command != HostedConsoleCommand::Edit
+				&& result.command != HostedConsoleCommand::Delete) {
 				return Invalid(QStringLiteral("invalid-account-index"));
 			}
 			result.accountIndex = optionValue;
@@ -146,6 +177,8 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 				&& result.command != HostedConsoleCommand::Chats
 				&& result.command != HostedConsoleCommand::Read
 				&& result.command != HostedConsoleCommand::Send
+				&& result.command != HostedConsoleCommand::Edit
+				&& result.command != HostedConsoleCommand::Delete
 				|| (optionValue != QStringLiteral("text")
 					&& optionValue != QStringLiteral("json"))) {
 				return Invalid(QStringLiteral("invalid-format"));
@@ -154,11 +187,20 @@ HostedConsoleCommandParseResult ParseHostedConsoleCommand(
 		}
 	}
 	if ((result.command == HostedConsoleCommand::Read
-		|| result.command == HostedConsoleCommand::Send)
+		|| result.command == HostedConsoleCommand::Send
+		|| result.command == HostedConsoleCommand::Edit
+		|| result.command == HostedConsoleCommand::Delete)
 		&& result.chatId.isEmpty()) {
 		return Invalid(QStringLiteral("missing-chat-id"));
 	}
-	if (result.command == HostedConsoleCommand::Send && result.text.isEmpty()) {
+	if ((result.command == HostedConsoleCommand::Edit
+		|| result.command == HostedConsoleCommand::Delete)
+		&& !result.messageId) {
+		return Invalid(QStringLiteral("missing-message-id"));
+	}
+	if ((result.command == HostedConsoleCommand::Send
+		|| result.command == HostedConsoleCommand::Edit)
+		&& result.text.isEmpty()) {
 		return Invalid(QStringLiteral("missing-text"));
 	}
 	return { .request = std::move(result) };
@@ -169,7 +211,9 @@ bool HostedConsoleCommandRequiresUiInitialization() {
 	return parsed.request
 		&& (parsed.request->command == HostedConsoleCommand::Chats
 			|| parsed.request->command == HostedConsoleCommand::Read
-			|| parsed.request->command == HostedConsoleCommand::Send);
+			|| parsed.request->command == HostedConsoleCommand::Send
+			|| parsed.request->command == HostedConsoleCommand::Edit
+			|| parsed.request->command == HostedConsoleCommand::Delete);
 }
 
 bool ApplyHostedConsoleCommandRequest(const HostedConsoleCommandRequest &request) {
@@ -187,7 +231,9 @@ bool ApplyHostedConsoleCommandRequest(const HostedConsoleCommandRequest &request
 	return request.command == HostedConsoleCommand::Accounts
 		|| request.command == HostedConsoleCommand::Chats
 		|| request.command == HostedConsoleCommand::Read
-		|| request.command == HostedConsoleCommand::Send;
+		|| request.command == HostedConsoleCommand::Send
+		|| request.command == HostedConsoleCommand::Edit
+		|| request.command == HostedConsoleCommand::Delete;
 }
 
 HostedConsoleCommandResult RunHostedConsoleCommand(
@@ -209,7 +255,9 @@ HostedConsoleCommandResult RunHostedConsoleCommand(
 	if ((request.command == HostedConsoleCommand::Accounts
 		|| request.command == HostedConsoleCommand::Chats
 		|| request.command == HostedConsoleCommand::Read
-		|| request.command == HostedConsoleCommand::Send)
+		|| request.command == HostedConsoleCommand::Send
+		|| request.command == HostedConsoleCommand::Edit
+		|| request.command == HostedConsoleCommand::Delete)
 		&& !ApplyHostedConsoleCommandRequest(request)) {
 		const auto written = WriteLine(QStringLiteral("command-error:apply-request"));
 		(void)written;
@@ -233,6 +281,52 @@ HostedConsoleCommandResult RunHostedConsoleCommand(
 	}
 	case HostedConsoleCommand::Send:
 		return { .exitCode = RunHostedConsoleSendMode(application) };
+	case HostedConsoleCommand::Edit:
+		return { .exitCode = RunHostedConsoleMessageMutation(
+			application,
+			{ .edit = true, .chatId = request.chatId, .messageId = request.messageId, .text = request.text }) };
+	case HostedConsoleCommand::Delete:
+		if (request.text == QStringLiteral("yes")) {
+			return { .exitCode = RunHostedConsoleMessageMutation(
+				application,
+				{ .edit = false, .chatId = request.chatId, .messageId = request.messageId }) };
+		}
+		if (!context.interactive) {
+			const auto written = WriteLine(QStringLiteral("delete-error:missing-confirmation"));
+			(void)written;
+			return { .exitCode = 1 };
+		}
+		context.pendingDelete = request;
+		{
+			const auto written = WriteLine(QStringLiteral("delete-confirmation-required:" )
+				+ request.chatId + QStringLiteral(":") + QString::number(request.messageId));
+			(void)written;
+		}
+		return {};
+	case HostedConsoleCommand::Confirm:
+		if (!context.pendingDelete) {
+			const auto written = WriteLine(QStringLiteral("delete-error:no-pending-confirmation"));
+			(void)written;
+			return { .exitCode = 1 };
+		}
+		{
+			auto confirmed = *context.pendingDelete;
+			context.pendingDelete.reset();
+			confirmed.text = QStringLiteral("yes");
+			return RunHostedConsoleCommand(application, context, confirmed);
+		}
+	case HostedConsoleCommand::Cancel:
+		if (!context.pendingDelete) {
+			const auto written = WriteLine(QStringLiteral("delete-error:no-pending-confirmation"));
+			(void)written;
+			return { .exitCode = 1 };
+		}
+		context.pendingDelete.reset();
+		{
+			const auto written = WriteLine(QStringLiteral("delete-cancelled"));
+			(void)written;
+		}
+		return {};
 	case HostedConsoleCommand::More: {
 		if (!context.previousRead || context.previousRead->cursor.isEmpty()) {
 			const auto moreWritten = WriteLine(
@@ -252,7 +346,7 @@ HostedConsoleCommandResult RunHostedConsoleCommand(
 	}
 	case HostedConsoleCommand::Help: {
 		const auto helpWritten = WriteLine(QStringLiteral(
-			"command-help:accounts|chats [--limit N]|read <chat-id> [--limit N] [--cursor CURSOR]|send <chat-id> --text <text> [--format text|json]|more|help|quit"));
+			"command-help:accounts|chats [--limit N]|read <chat-id> [--limit N] [--cursor CURSOR]|send <chat-id> --text <text> [--format text|json]|edit <chat-id> <message-id> --text <text> [--format text|json]|delete <chat-id> <message-id> --yes [--format text|json]|confirm|cancel|more|help|quit"));
 		(void)helpWritten;
 		return {};
 	}

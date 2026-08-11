@@ -83,6 +83,14 @@ public:
 		not_null<History*> history,
 		const QVector<MTPint> &ids,
 		bool revoke);
+	// TG_CHANGE_BEGIN: hosted-console-delete-result-callbacks
+	void deleteMessages(
+		not_null<History*> history,
+		const QVector<MTPint> &ids,
+		bool revoke,
+		Fn<void()> done,
+		Fn<void(const MTP::Error &)> fail);
+	// TG_CHANGE_END: hosted-console-delete-result-callbacks
 	void deleteAllMessages(
 		not_null<History*> history,
 		MsgId deleteTillId,

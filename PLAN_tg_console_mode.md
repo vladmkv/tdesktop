@@ -281,12 +281,15 @@ V0 requirements:
 	- Sent text appears in tg desktop for the same account.
 	- Permission, invalid-peer, and network failures are handled without crash.
 
-7. [TODO] Stage 6: Edit/delete own messages (**medium**)
+7. [DONE] Stage 6: Edit/delete own messages (**medium**)
 - Description: expose existing edit and revoke/delete operations with Telegram's ownership, rights, and time-window checks.
+- Outcome (2026-08-11): edit of self-chat message `502754` was server-acknowledged and confirmed visible in Debug Telegram. A distinct disposable self-chat message `502755` was server-acknowledged deleted and confirmed absent in CLI readback and Debug Telegram. One-shot delete requires `--yes`; REPL delete requires `confirm` or may be safely `cancel`led. Existing permission/time-window/server outcomes are mapped distinctly.
 - Definition of Done: own text can be edited; delete-for-everyone works only when allowed; REPL confirmation and one-shot `--yes` are enforced; decline/missing confirmation makes no mutation; permission/time/network errors are distinct; Stage 3–5 regression passes.
 - Implement edit for own text messages only.
 - Implement delete-for-everyone where Telegram permits it.
 - Prompt before delete in REPL; require --yes in one-shot mode.
+- [TODO] Automate disposable self-chat mutation acceptance. **medium**
+	- Create one uniquely tagged self-chat message, read its ID, edit and verify it, then delete and verify absence in one `-AllowMutation` opt-in smoke script; retain it as the Stage 6 reusable utility.
 - Acceptance test:
 	- Edits/deletions appear in tg desktop.
 	- Declined/missing confirmation causes no mutation.

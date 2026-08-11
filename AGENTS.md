@@ -98,6 +98,12 @@ For any tg_cli feature work, protected-source edits, or upstream merge/rebase re
 
 Then locate any additional matching probe docs under `TG_PROBES/NOTE_*.md` and `TG_PROBES/PLAN_*.md` relevant to the current stage.
 
+### TG CLI Validation Script Lifecycle
+
+- For an agent-run validation requiring more than one terminal operation or setup state, first create a throwaway PowerShell script under `$env:TEMP` and retain its script and logs until the current feature packet is accepted or superseded.
+- If the same validation must be rerun, promote that script into `Telegram/tg_cli/tools/` and add it to the relevant smoke or test utility suite; update the script rather than recreating an ad hoc command sequence.
+- Scripts that can mutate remote Telegram state must default to non-mutating validation and require an explicit opt-in parameter for live mutation.
+
 <!-- TG_CHANGE_END: tg-cli-agent-guidance -->
 ## Troubleshooting
 

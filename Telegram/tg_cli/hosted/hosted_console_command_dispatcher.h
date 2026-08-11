@@ -16,6 +16,10 @@ enum class HostedConsoleCommand {
 	Chats,
 	Read,
 	Send,
+	Edit,
+	Delete,
+	Confirm,
+	Cancel,
 	More,
 	Help,
 	Quit,
@@ -24,6 +28,7 @@ enum class HostedConsoleCommand {
 struct HostedConsoleCommandRequest {
 	HostedConsoleCommand command = HostedConsoleCommand::Help;
 	int limit = 0;
+	int messageId = 0;
 	QString chatId;
 	QString text;
 	QString cursor;
@@ -44,6 +49,8 @@ struct HostedConsoleReadCursorContext {
 
 struct HostedConsoleCommandContext {
 	std::optional<HostedConsoleReadCursorContext> previousRead;
+	std::optional<HostedConsoleCommandRequest> pendingDelete;
+	bool interactive = false;
 };
 
 struct HostedConsoleCommandResult {

@@ -67,7 +67,7 @@ int RunHostedConsoleRepl(Core::Application &application) {
 
 	auto input = QTextStream(stdin, QIODevice::ReadOnly);
 	input.setCodec("UTF-8");
-	auto context = HostedConsoleCommandContext();
+	auto context = HostedConsoleCommandContext{ .interactive = true };
 	while (!Interrupted) {
 		if (!WriteLine(QStringLiteral("repl-prompt"))) {
 			return 1;

@@ -28,6 +28,8 @@ $logPath = Join-Path $env:TEMP ("tg-repl-demo-" + [Guid]::NewGuid().ToString("N"
 try {
     $commands = @(
         ("not-a-command-" + [char]0x00E9),
+        "delete user0 1",
+        "cancel",
         "accounts",
         "chats --limit 3",
         "read $ReadChatId --limit 3",
@@ -57,6 +59,8 @@ try {
     foreach ($marker in @(
         "repl-started",
         "command-error:unknown-command:not-a-command-",
+        "delete-confirmation-required:user0:1",
+        "delete-cancelled",
         "accounts-mode:done",
         "chats-count:3",
         "command-help:",
