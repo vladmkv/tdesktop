@@ -5,9 +5,11 @@ param(
     [Parameter(Mandatory = $true, Position = 0)]
     [ValidateSet("accounts", "chats", "read", "send", "edit", "delete", "more", "help", "quit")]
     [string]$Command,
+    [Parameter(Position = 1)]
     [string]$ChatId = "",
     [int]$Limit = 0,
     [string]$Cursor = "",
+    [Parameter(Position = 2)]
     [int]$MessageId = 0,
     [string]$Text = "",
     [switch]$Yes,
