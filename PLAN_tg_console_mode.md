@@ -337,6 +337,8 @@ V0 requirements:
 - Evaluate replacing Qt runtime substrate only after stable tg_cli exists.
 - Produce an RFC if pursued; do not mix with primary tg_cli delivery.
 
+12. [DONE] Documented the hosted CLI attempt at the repository root. The upstream Telegram Desktop README is preserved as `README.upstream.md`; the new root README states the usable one-shot commands, dedicated-profile requirement, hosted architecture, `tg_cli.exe` skeleton status, and terminal REPL blocker without presenting V0 as complete.
+
 ## Devlog
 - 2026-08-10: Implemented a pipe-fed `-console-repl` loop without new Telegram backend logic or any `Window::Controller`. It has shared dispatcher parsing, synchronous command serialization, EOF/quit termination, and a SIGINT exit path; the redirected-stdin smoke passes.
 - 2026-08-11: Reopened A10.3b as a core V0 blocker: direct PowerShell launch exits immediately because the GUI-subsystem process lacks usable parent-console handles. Replace the pipe-only acceptance with the terminal-attached REPL contract above.

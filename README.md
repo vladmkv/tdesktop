@@ -1,99 +1,53 @@
-# [Telegram Desktop][telegram_desktop] – Official Messenger
+# Telegram CLI Experiment
 
-This is the complete source code and the build instructions for the official [Telegram][telegram] messenger desktop client, based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol.
+This branch explores a terminal-oriented Telegram client while reusing the existing Telegram Desktop runtime. It is an experimental development branch, not an official Telegram Desktop distribution.
 
-[![Version](https://badge.fury.io/gh/telegramdesktop%2Ftdesktop.svg)](https://github.com/telegramdesktop/tdesktop/releases)
-[![Build Status](https://github.com/telegramdesktop/tdesktop/workflows/Windows./badge.svg)](https://github.com/telegramdesktop/tdesktop/actions)
-[![Build Status](https://github.com/telegramdesktop/tdesktop/workflows/MacOS./badge.svg)](https://github.com/telegramdesktop/tdesktop/actions)
-[![Build Status](https://github.com/telegramdesktop/tdesktop/workflows/Linux./badge.svg)](https://github.com/telegramdesktop/tdesktop/actions)
-[![Built with Depot](https://img.shields.io/badge/Built%20with-Depot.dev-46A75A)](https://depot.dev)
+The original upstream Telegram Desktop README is preserved in [README.upstream.md](README.upstream.md).
 
-[![Preview of Telegram Desktop][preview_image]][preview_image_url]
+## Current Status
 
-The source code is published under GPLv3 with OpenSSL exception, the license is available [here][license].
+The hosted one-shot CLI works against a dedicated Telegram Desktop development profile. It supports:
 
-## Supported systems
+- `accounts`
+- `chats`
+- `read` and paged `more`
+- `send`
+- `edit`
+- `delete`
+- experimental JSON output
 
-The latest version is available for
+The interactive terminal REPL is blocked. The hosted executable is a Windows GUI-subsystem process, so a direct PowerShell launch does not reliably retain usable parent-console input/output handles. The pipe-fed REPL smoke passes, but this is not considered a usable human terminal session.
 
-* [Windows 7 and above (64 bit)](https://telegram.org/dl/desktop/win64) ([portable](https://telegram.org/dl/desktop/win64_portable))
-* [Windows 7 and above (32 bit)](https://telegram.org/dl/desktop/win) ([portable](https://telegram.org/dl/desktop/win_portable))
-* [macOS 10.13 and above](https://telegram.org/dl/desktop/mac)
-* [Linux static build for 64 bit](https://telegram.org/dl/desktop/linux)
-* [Snap](https://snapcraft.io/telegram-desktop)
-* [Flatpak](https://flathub.org/apps/details/org.telegram.desktop)
+`tg_cli.exe` exists only as a QtCore skeleton. It does not connect to Telegram runtime or provide real commands. The working command implementation is hosted inside the full Telegram Desktop executable, built as `tg.exe`.
 
-## Old system versions
+## Using The Working Commands
 
-Version **4.9.9** was the last that supports older systems
+Build the Debug Telegram target, close every Telegram Desktop process using the development profile, then run commands through the wrapper from this repository root:
 
-* [macOS 10.12](https://updates.tdesktop.com/tmac/tsetup.4.9.9.dmg)
-* [Linux with glibc < 2.28 static build](https://updates.tdesktop.com/tlinux/tsetup.4.9.9.tar.xz)
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Telegram\tg_cli\tools\run_hosted_console_command.ps1 chats -Limit 10
+```
 
-Version **2.4.4** was the last that supports older systems
+Examples:
 
-* [OS X 10.10 and 10.11](https://updates.tdesktop.com/tosx/tsetup-osx.2.4.4.dmg)
-* [Linux static build for 32 bit](https://updates.tdesktop.com/tlinux32/tsetup32.2.4.4.tar.xz)
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Telegram\tg_cli\tools\run_hosted_console_command.ps1 accounts
+powershell -ExecutionPolicy Bypass -File .\Telegram\tg_cli\tools\run_hosted_console_command.ps1 read user123 -Limit 10
+powershell -ExecutionPolicy Bypass -File .\Telegram\tg_cli\tools\run_hosted_console_command.ps1 send user123 "hello"
+```
 
-Version **1.8.15** was the last that supports older systems
+Use stable peer selectors from `chats`: `user<ID>`, `chat<ID>`, and `channel<ID>`. Sending, editing, and deleting affect the real account in the selected development profile.
 
-* [Windows XP and Vista](https://updates.tdesktop.com/tsetup/tsetup.1.8.15.exe) ([portable](https://updates.tdesktop.com/tsetup/tportable.1.8.15.zip))
-* [OS X 10.8 and 10.9](https://updates.tdesktop.com/tmac/tsetup.1.8.15.dmg)
-* [OS X 10.6 and 10.7](https://updates.tdesktop.com/tmac32/tsetup32.1.8.15.dmg)
+## Architecture And Limits
 
-## Third-party
+- The working path is a hosted `tg.exe -console` mode inside Telegram Desktop's linked runtime.
+- It reuses existing account, session, chat, history, and API models; it does not implement a second MTProto client or duplicate Telegram data models.
+- Development uses a dedicated isolated profile, never a concurrently-used Desktop profile.
+- Chats and history do not download media or mark messages read by default.
+- Existing upstream-source changes are constrained to named `TG_CHANGE` fences and are checked by `Telegram/tg_cli/tools/check_tg_change_fences.py`.
 
-* Qt 6 ([LGPL](http://doc.qt.io/qt-6/lgpl.html)) and Qt 5.15 ([LGPL](http://doc.qt.io/qt-5/lgpl.html)) slightly patched
-* OpenSSL 3.2.1 ([Apache License 2.0](https://openssl-library.org/source/license/apache-license-2.0.txt))
-* WebRTC ([New BSD License](https://github.com/desktop-app/tg_owt/blob/master/LICENSE))
-* zlib ([zlib License](http://www.zlib.net/zlib_license.html))
-* LZMA SDK 9.20 ([public domain](http://www.7-zip.org/sdk.html))
-* liblzma ([public domain](http://tukaani.org/xz/))
-* Google Breakpad ([License](https://chromium.googlesource.com/breakpad/breakpad/+/master/LICENSE))
-* Google Crashpad ([Apache License 2.0](https://chromium.googlesource.com/crashpad/crashpad/+/master/LICENSE))
-* GYP ([BSD License](https://github.com/bnoordhuis/gyp/blob/master/LICENSE))
-* Ninja ([Apache License 2.0](https://github.com/ninja-build/ninja/blob/master/COPYING))
-* OpenAL Soft ([LGPL](https://github.com/kcat/openal-soft/blob/master/COPYING))
-* Opus codec ([BSD License](http://www.opus-codec.org/license/))
-* FFmpeg ([LGPL](https://www.ffmpeg.org/legal.html))
-* Guideline Support Library ([MIT License](https://github.com/Microsoft/GSL/blob/master/LICENSE))
-* Range-v3 ([Boost License](https://github.com/ericniebler/range-v3/blob/master/LICENSE.txt))
-* Open Sans font ([Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html))
-* Vazirmatn font ([SIL Open Font License 1.1](https://github.com/rastikerdar/vazirmatn/blob/master/OFL.txt))
-* Emoji alpha codes ([MIT License](https://github.com/emojione/emojione/blob/master/extras/alpha-codes/LICENSE.md))
-* xxHash ([BSD License](https://github.com/Cyan4973/xxHash/blob/dev/LICENSE))
-* QR Code generator ([MIT License](https://github.com/nayuki/QR-Code-generator#license))
-* CMake ([New BSD License](https://github.com/Kitware/CMake/blob/master/Copyright.txt))
-* Hunspell ([LGPL](https://github.com/hunspell/hunspell/blob/master/COPYING.LESSER))
-* Ada ([Apache License 2.0](https://github.com/ada-url/ada/blob/main/LICENSE-APACHE))
+## Next Decision
 
-## Build instructions
+Before further REPL work, the frontend/backend architecture must be chosen: a full-runtime console target, a private hosted backend/frontend split, or a separate TDLib client. The planned TDLib/Python alternative is documented in the sibling `tgpy` project.
 
-* [Windows (32-bit and 64-bit)][win]
-* [macOS][mac]
-* [GNU/Linux using Docker][linux]
-
-[//]: # (LINKS)
-[telegram]: https://telegram.org
-[telegram_desktop]: https://desktop.telegram.org
-[telegram_api]: https://core.telegram.org
-[telegram_proto]: https://core.telegram.org/mtproto
-[license]: LICENSE
-[win]: docs/building-win.md
-[mac]: docs/building-mac.md
-[linux]: docs/building-linux.md
-[preview_image]: https://github.com/telegramdesktop/tdesktop/blob/dev/docs/assets/preview.png "Preview of Telegram Desktop"
-[preview_image_url]: https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/docs/assets/preview.png
-
-## Thanks to
-
-<a href="https://depot.dev">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://depot.dev/assets/brand/1693758816/depot-logo-horizontal-on-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://depot.dev/assets/brand/1693758816/depot-logo-horizontal-on-light.svg">
-    <img alt="Depot" src="https://depot.dev/assets/brand/1693758816/depot-logo-horizontal-on-light.svg" width="150">
-  </picture>
-</a>
-
-CI infrastructure sponsored by [Depot](https://depot.dev) — fast GitHub Actions runners.
-
+Detailed scope, evidence, and remaining work are tracked in `PLAN_tg_console_mode.md` and `TG_PROBES/`.
